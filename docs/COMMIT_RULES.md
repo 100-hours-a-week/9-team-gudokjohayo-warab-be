@@ -39,3 +39,6 @@ BREAKING CHANGE: modify authentication method to OAuth2
 - **50자 이내로 간결하게**
 - **추가 설명이 필요하면 본문(`body`) 작성 가능**
 - **CI/CD 자동화를 위한 `[skip ci]` 옵션 사용 가능**
+
+##  4. 참고
+- [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)

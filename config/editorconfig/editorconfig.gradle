@@ -1,0 +1,15 @@
+apply plugin: 'org.ec4j.editorconfig'
+
+// EditorConfig 설정
+editorconfig {
+    includes = ['src/**']
+    excludes = ['build/**', '.gradle/**', 'gradle/**', 'bin/**']
+}
+
+// check 태스크에 editorconfigCheck 의존성 추가
+check.dependsOn tasks.named('editorconfigCheck')
+
+// checkstyleMain 태스크가 editorconfigCheck 후에 실행되도록 설정
+tasks.named('checkstyleMain').configure {
+    mustRunAfter tasks.named('editorconfigCheck')
+}
