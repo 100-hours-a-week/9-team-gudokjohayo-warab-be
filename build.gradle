@@ -66,3 +66,13 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.register('copyGitHooks', Copy) {
+	from file('.githooks')
+	into file('.git/hooks')
+	fileMode 0755
+}
+
+tasks.named('compileJava').configure {
+	dependsOn tasks.named('copyGitHooks')
+}
