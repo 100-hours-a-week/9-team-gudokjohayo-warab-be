@@ -1,28 +1,11 @@
 root = true
 
 [*]
-# [encoding-utf8]
-charset = utf-8
-
-# [newline-lf]
-end_of_line = lf
-
-# [newline-eof]
-insert_final_newline = true
-
-[*.bat]
-end_of_line = crlf
+indent_style = space      # 탭 대신 스페이스 사용
+indent_size = 4          # 들여쓰기 4칸
+charset = utf-8          # UTF-8 인코딩
+trim_trailing_whitespace = true  # 불필요한 공백 제거
+insert_final_newline = true  # 파일 끝 개행 추가
 
 [*.java]
-# [indentation-tab]
-indent_style = tab
-
-# [4-spaces-tab]
-indent_size = 4
-tab_width = 4
-
-# [no-trailing-spaces]
-trim_trailing_whitespace = true
-
-[line-length-120]
-max_line_length = 120
+max_line_length = 120  # Java 코드의 최대 길이 120자

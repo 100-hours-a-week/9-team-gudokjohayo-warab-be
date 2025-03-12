@@ -1,0 +1,20 @@
+#!/bin/sh
+
+echo "🔍 Running pre-commit hook..."
+
+# 코드 스타일 검사 (Checkstyle)
+./gradlew checkstyleMain checkstyleTest
+if [ $? -ne 0 ]; then
+    echo "❌ Checkstyle failed! Fix the issues before committing."
+    exit 1
+fi
+
+# 테스트 실행 (선택)
+./gradlew test
+if [ $? -ne 0 ]; then
+    echo "❌ Tests failed! Fix the issues before committing."
+    exit 1
+fi
+
+echo "✅ pre-commit checks passed!"
+exit 0
