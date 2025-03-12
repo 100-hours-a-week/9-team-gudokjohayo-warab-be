@@ -1,0 +1,11 @@
+#!/bin/sh
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat $COMMIT_MSG_FILE)
+
+# 정규식을 사용하여 Semantic Commit 메시지 패턴 검사
+if ! echo "$COMMIT_MSG" | grep -Eq "^(feat|fix|docs|style|refactor|test|chore|perf|build|ci|revert|BREAKING CHANGE)(\([a-zA-Z0-9_-]+\))?: .{1,72}$"; then
+  echo "❌ ERROR: Commit message does not follow the conventional format!"
+  echo "✅ Allowed format: <type>(<scope>): <message>"
+  echo "Example: feat(auth): add login API"
+  exit 1
+fi
