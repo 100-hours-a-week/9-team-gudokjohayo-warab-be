@@ -56,13 +56,12 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
 	// Configuration Processor (설정 자동완성 지원)
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'`q
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	// Test Dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
-
 
 tasks.named('test') {
 	useJUnitPlatform()
