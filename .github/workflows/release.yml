@@ -36,7 +36,10 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies  # ✅ npm install 실행 (필수!)
+      - name: Create package.json if not exists  # ✅ package.json 강제 생성
+        run: echo '{}' > package.json
+
+      - name: Install dependencies
         run: npm install
 
       - name: Run semantic-release
