@@ -109,9 +109,14 @@ tasks.named('compileJava').configure {
 // Release 관련 설정 추가
 release {
     versionPropertyFile = 'gradle.properties'
-    failOnCommitNeeded = false  // 변경 사항 있을 때도 실행 가능하게
+    failOnCommitNeeded = false
     failOnPublishNeeded = false
     failOnSnapshotDependencies = false
+
+    git {
+        requireBranch.set('develop') // 🔥 'develop'에서도 실행 가능하게 설정
+        preTagCommitMessage.set("chore(release): bump version to ${project.version}") // ✅ 올바른 속성 사용
+    }
 }
 
 // 현재 버전 출력 태스크 추가
