@@ -4,6 +4,13 @@ on:
     branches:
       - main
       - develop
+
+# 권한 설정 추가
+permissions:
+  contents: write  # 저장소 콘텐츠 수정 권한
+  issues: write    # 이슈 생성 권한
+  pull-requests: write  # PR 권한
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -12,6 +19,8 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          # 토큰을 명시적으로 전달
+          token: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -32,5 +41,6 @@ jobs:
         
       - name: Semantic Release
         env:
+          # 토큰을 환경 변수로 전달
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
