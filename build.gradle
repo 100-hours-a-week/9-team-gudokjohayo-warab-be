@@ -3,6 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '3.4.3'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'com.diffplug.spotless' version '6.22.0' // Spotless 플러그인 추가
+	id 'checkstyle'
 }
 
 spotless {
@@ -15,6 +16,17 @@ spotless {
 	}
 }
 
+checkstyle {
+	toolVersion = '10.18.0' // Checkstyle 버전 지정
+	configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml") // Checkstyle 규칙 파일
+}
+
+tasks.withType(Checkstyle).configureEach {
+    reports {
+        xml.required = false
+        html.required = true
+    }
+}
 
 
 group = 'gudokjohayo'
@@ -89,4 +101,3 @@ tasks.register('copyGitHooks', Copy) {
 tasks.named('compileJava').configure {
 	dependsOn tasks.named('copyGitHooks')
 }
-
