@@ -36,10 +36,8 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Generate package-lock.json  # ✅ package-lock.json 생성
-        run: |
-          echo '{}' > package.json
-          npm install --package-lock-only  # 🔥 lock 파일 강제 생성
+      - name: Install dependencies  # ✅ npm install 실행 (필수!)
+        run: npm install
 
       - name: Run semantic-release
         env:
