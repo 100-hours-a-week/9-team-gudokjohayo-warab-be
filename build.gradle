@@ -1,20 +1,21 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.4.3'
-	id 'io.spring.dependency-management' version '1.1.7'
-	id 'com.diffplug.spotless' version '6.22.0' // Spotless 플러그인 추가
-	id 'checkstyle'
-    id 'net.researchgate.release' version '3.0.2' // 버전 자동화 플러그인 추가
+    id 'java'
+    id 'org.springframework.boot' version '3.4.3'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.diffplug.spotless' version '6.22.0'
+    id 'checkstyle'
+    id 'org.ajoberstar.grgit' version '5.2.1'
 }
 
+// 기존코드 유지
 spotless {
-	java {
-		target 'src/**/*.java' // Java 코드 대상
-		googleJavaFormat() // Google Java 스타일 적용
-		removeUnusedImports() // 사용하지 않는 import 자동 제거
-		trimTrailingWhitespace() // 불필요한 공백 제거
-		endWithNewline() // 파일 끝 개행 유지
-	}
+    java {
+        target 'src/**/*.java'
+        googleJavaFormat()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }
 
 tasks.withType(Checkstyle).configureEach {
@@ -26,102 +27,208 @@ tasks.withType(Checkstyle).configureEach {
 
 checkstyle {
     toolVersion = '10.18.0'
-    configFile = file("$rootDir/config/checkstyle/naver-checkstyle-rule.xml") // ✅ 절대 경로 사용
+    configFile = file("$rootDir/config/checkstyle/naver-checkstyle-rule.xml")
     configProperties = [
         "suppressionFile": file("$rootDir/config/checkstyle/naver-checkstyle-suppressions.xml")
     ]
 }
+// 기존코드 유지
 
 group = 'gudokjohayo'
-version = '0.0.1-SNAPSHOT'
+
+// 버전 관리 개선
+def versionPropsFile = file("version.properties")
+if (!versionPropsFile.exists()) {
+    // 버전 파일이 없으면 생성
+    versionPropsFile.text = "version=0.1.0-SNAPSHOT"
+}
+
+def versionProps = new Properties()
+versionPropsFile.withInputStream { versionProps.load(it) }
+version = versionProps.getProperty('version', '0.1.0-SNAPSHOT')
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
-}
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-}
-
-repositories {
-	mavenCentral()
-}
-
-dependencies {
-	// Core Dependencies
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'org.springframework.boot:spring-boot-starter-cache'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
-	// Security
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
-	// JSON Support (LocalDateTime 처리)
-	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-
-	// 비동기 API 호출을 위한 WebClient (필요하면)
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-
-	// Logging
-	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
-
-	// Lombok
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-
-	// PostgreSQL Driver
-	runtimeOnly 'org.postgresql:postgresql'
-
-	// DevTools (개발용)
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-	// Configuration Processor (설정 자동완성 지원)
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	// Test Dependencies
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation 'org.junit.jupiter:junit-jupiter' // 일단 추가
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-tasks.named('test') {
-	useJUnitPlatform()
-}
-
-tasks.register('copyGitHooks', Copy) {
-	from file('.githooks')
-	into file('.git/hooks')
-    eachFile { file -> file.setMode(0755) } // ✅ setMode() 사용
-}
-
-tasks.named('compileJava').configure {
-	dependsOn tasks.named('copyGitHooks')
-}
-
-// Release 관련 설정 추가
-release {
-    versionPropertyFile = 'gradle.properties'
-    failOnCommitNeeded = false
-    failOnPublishNeeded = false
-    failOnSnapshotDependencies = false
-
-    git {
-        requireBranch.set('develop') // 🔥 'develop'에서도 실행 가능하게 설정
-        preTagCommitMessage.set("chore(release): bump version to ${project.version}") // ✅ 올바른 속성 사용
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
-// 현재 버전 출력 태스크 추가
-tasks.register('printVersion') {
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+// 기존코드 유지
+dependencies {
+    // Core Dependencies
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    // JSON Support (LocalDateTime 처리)
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    // 비동기 API 호출을 위한 WebClient (필요하면)
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // Logging
+    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // PostgreSQL Driver
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // DevTools (개발용)
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // Configuration Processor (설정 자동완성 지원)
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    // Test Dependencies
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+// 기존코드 유지
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// 기존코드 유지
+tasks.register('copyGitHooks', Copy) {
+    from file('.githooks')
+    into file('.git/hooks')
+    eachFile { file -> file.setMode(0755) }
+}
+
+tasks.named('compileJava').configure {
+    dependsOn tasks.named('copyGitHooks')
+}
+// 기존코드 유지
+
+// 커밋 분석 및 버전 업데이트 태스크 개선
+task analyzeCommitsAndUpdateVersion {
+    doLast {
+        def grgit = org.ajoberstar.grgit.Grgit.open(dir: project.rootDir)
+        def commits = grgit.log(maxCommits: 20).collect { it.shortMessage }
+
+        def hasMajorChanges = commits.any {
+            it.contains("BREAKING CHANGE") || it.contains("!:")
+        }
+        def hasMinorChanges = commits.any {
+            it.startsWith("feat") || it.startsWith("feat:")
+        }
+        def hasPatchChanges = commits.any {
+            it.startsWith("fix") || it.startsWith("fix:") ||
+                it.startsWith("docs") || it.startsWith("docs:") ||
+                it.startsWith("refactor") || it.startsWith("refactor:") ||
+                it.startsWith("style") || it.startsWith("style:") ||
+                it.startsWith("deploy") || it.startsWith("deploy:")
+        }
+
+        // 현재 버전 파싱
+        def currentVersion = version.toString()
+        def isSnapshot = currentVersion.endsWith('-SNAPSHOT')
+        currentVersion = currentVersion.replace('-SNAPSHOT', '')
+
+        // 버전 형식 검증
+        if (!currentVersion.matches('^\\d+\\.\\d+\\.\\d+$')) {
+            throw new GradleException("Invalid version format: ${currentVersion}. Expected format: MAJOR.MINOR.PATCH")
+        }
+
+        def versionParts = currentVersion.split('\\.')
+        def major = Integer.parseInt(versionParts[0])
+        def minor = Integer.parseInt(versionParts[1])
+        def patch = Integer.parseInt(versionParts[2])
+
+        // 변경 타입에 따라 버전 증가
+        if (hasMajorChanges) {
+            major++
+            minor = 0
+            patch = 0
+            println "Major version bump due to breaking changes"
+        } else if (hasMinorChanges) {
+            minor++
+            patch = 0
+            println "Minor version bump due to new features"
+        } else if (hasPatchChanges) {
+            patch++
+            println "Patch version bump due to fixes or minor changes"
+        } else {
+            println "No version changes needed based on recent commits"
+        }
+
+        // 새 버전 생성
+        def newVersion = "${major}.${minor}.${patch}${isSnapshot ? '-SNAPSHOT' : ''}"
+
+        if (newVersion != version.toString()) {
+            println "Updating version from ${version} to ${newVersion}"
+
+            // 버전 파일 업데이트
+            versionProps.setProperty('version', newVersion)
+            versionPropsFile.withOutputStream {
+                versionProps.store(it, "Version updated automatically based on commit analysis")
+            }
+
+            // Gradle 프로젝트 버전 업데이트 (현재 빌드에는 적용되지 않음)
+            project.version = newVersion
+
+            // 애플리케이션 버전 파일도 업데이트
+            updateApplicationVersionFile(newVersion)
+        }
+
+        // grgit 닫기
+        grgit.close()
+    }
+}
+
+// 애플리케이션 버전 파일 업데이트 메소드
+def updateApplicationVersionFile(String version) {
+    def appVersionFile = file("${projectDir}/src/main/resources/version.properties")
+    if (!appVersionFile.parentFile.exists()) {
+        appVersionFile.parentFile.mkdirs()
+    }
+    appVersionFile.text = "application.version=${version}"
+    println "Updated application version file with version ${version}"
+}
+
+// 버전 정보 업데이트 태스크
+task updateAppVersion {
+    doLast {
+        updateApplicationVersionFile(project.version)
+    }
+}
+
+// 버전 출력 태스크
+task printVersion {
     doLast {
         println "Current version: ${project.version}"
+    }
+}
+
+// 빌드 시 버전 정보 업데이트
+processResources.dependsOn updateAppVersion
+
+// 시멘틱 릴리즈를 위한 추가 태스크
+task release {
+    dependsOn analyzeCommitsAndUpdateVersion
+    doLast {
+        println "Released version: ${project.version}"
     }
 }

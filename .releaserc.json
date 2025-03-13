@@ -1,7 +1,23 @@
 {
   "branches": ["main", "develop"],
   "plugins": [
-    "@semantic-release/commit-analyzer",
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "releaseRules": [
+          {"type": "feat", "release": "minor"},
+          {"type": "fix", "release": "patch"},
+          {"type": "docs", "release": "patch"},
+          {"type": "refactor", "release": "patch"},
+          {"type": "style", "release": "patch"},
+          {"type": "test", "scope": "*", "release": false},
+          {"type": "chore", "scope": "*", "release": false},
+          {"type": "deploy", "release": "patch"},
+          {"type": "BREAKING CHANGE", "release": "major"}
+        ]
+      }
+    ],
     "@semantic-release/release-notes-generator",
     [
       "@semantic-release/changelog",
@@ -13,7 +29,7 @@
     [
       "@semantic-release/git",
       {
-        "assets": ["CHANGELOG.md"],
+        "assets": ["CHANGELOG.md", "build.gradle", "src/main/resources/version.properties"],
         "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
     ],

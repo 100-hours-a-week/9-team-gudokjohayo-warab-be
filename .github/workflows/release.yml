@@ -1,35 +1,36 @@
-name: Release
-
+name: Semantic Release
 on:
   push:
     branches:
       - main
       - develop
-
 jobs:
   release:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  
-
-      - name: Set up JDK
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Setup Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
-
-      - name: Set up Gradle
-        uses: gradle/gradle-build-action@v2
-
-      - name: Grant execute permission for Gradle wrapper
-        run: chmod +x gradlew
-
-      - name: Release new version  # ✅ Gradle 기반 릴리즈 실행
-        run: ./gradlew release
-
-      - name: Print current version
-        run: ./gradlew printVersion
+          
+      - name: Install dependencies
+        run: npm install -g semantic-release @semantic-release/git @semantic-release/changelog conventional-changelog-conventionalcommits
+        
+      - name: Analyze Commits
+        run: ./gradlew analyzeCommits
+        
+      - name: Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
