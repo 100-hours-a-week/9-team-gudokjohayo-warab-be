@@ -28,21 +28,8 @@ jobs:
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x gradlew
 
-      - name: Build project
-        run: ./gradlew build
+      - name: Release new version  # ✅ Gradle 기반 릴리즈 실행
+        run: ./gradlew release
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Create package.json if not exists  # ✅ package.json 강제 생성
-        run: echo '{}' > package.json
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
+      - name: Print current version
+        run: ./gradlew printVersion
