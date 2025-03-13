@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - develop  # 🚀 develop 브랜치에서도 실행되도록 추가
+      - develop
 
 jobs:
   release:
@@ -14,13 +14,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # 모든 커밋 내역 가져오기 (태그 자동 생성 위해 필요)
+          fetch-depth: 0  
 
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'  # 필요 시 Java 버전 변경
+          java-version: '17'
 
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v2
@@ -37,8 +37,8 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
-      - name: Install semantic-release
-        run: npm install -g semantic-release @semantic-release/git @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/github
+      - name: Install dependencies  # ✅ package-lock.json 생성 단계 추가
+        run: npm install
 
       - name: Run semantic-release
         env:
