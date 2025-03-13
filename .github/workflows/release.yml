@@ -35,10 +35,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'npm'
 
-      - name: Install dependencies  # ✅ package-lock.json 생성 단계 추가
-        run: npm install
+      - name: Generate package-lock.json  # ✅ package-lock.json 생성
+        run: |
+          echo '{}' > package.json
+          npm install --package-lock-only  # 🔥 lock 파일 강제 생성
 
       - name: Run semantic-release
         env:
