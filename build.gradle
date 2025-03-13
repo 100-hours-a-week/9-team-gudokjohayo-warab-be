@@ -16,18 +16,20 @@ spotless {
 	}
 }
 
-checkstyle {
-	toolVersion = '10.18.0' // Checkstyle 버전 지정
-	configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml") // Checkstyle 규칙 파일
-}
-
 tasks.withType(Checkstyle).configureEach {
     reports {
-        xml.required = false
+        xml.required = true
         html.required = true
     }
 }
 
+checkstyle {
+    toolVersion = '10.18.0'
+    configFile = file("$rootDir/config/checkstyle/naver-checkstyle-rule.xml") // ✅ 절대 경로 사용
+    configProperties = [
+        "suppressionFile": file("$rootDir/config/checkstyle/naver-checkstyle-suppressions.xml")
+    ]
+}
 
 group = 'gudokjohayo'
 version = '0.0.1-SNAPSHOT'
@@ -85,6 +87,7 @@ dependencies {
 	// Test Dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter' // 일단 추가
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
@@ -95,7 +98,7 @@ tasks.named('test') {
 tasks.register('copyGitHooks', Copy) {
 	from file('.githooks')
 	into file('.git/hooks')
-	fileMode 0755
+    eachFile { file -> file.setMode(0755) } // ✅ setMode() 사용
 }
 
 tasks.named('compileJava').configure {
