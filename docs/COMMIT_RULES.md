@@ -41,4 +41,4 @@ BREAKING CHANGE: modify authentication method to OAuth2
 - **CI/CD 자동화를 위한 `[skip ci]` 옵션 사용 가능**
 
 ##  4. 참고
-- [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+- [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) 
