@@ -1,25 +1,40 @@
 # <type>([scope]): <commit message>
 #
-# 작업의 성격을 나타내는 타입을 지정하세요. (예: feat, fix, docs, refactor, style, test, chore, deploy, BREAKING CHANGE)
-# [scope]는 선택 사항이며, 변경된 모듈/파일명을 적어줍니다. (예: api, db, security)
-# commit message는 현재형으로 작성하며 50자 이내로 간결하게 설명하세요.
+# 📝 커밋 메시지 작성 규칙 (Conventional Commit 스타일)
+# - <type> → 커밋 타입 (feat, fix, docs, refactor, style, test, chore, deploy, BREAKING CHANGE)
+# - [scope] → (선택) 변경된 모듈/파일명을 입력 (예: db, api, service)
+# - <commit message> → 변경 내용을 간결하게 작성
+# - 커밋 메시지는 현재형 동사로 시작하고, 50자 이내로 작성
 #
-# 예시:
-# feat(api): add user authentication
-# fix(db): resolve PostgreSQL connection issue
-# docs: update API documentation
-# refactor(service): optimize game filtering logic
-# style: reformat code to improve readability
-# test(auth): improve test coverage for login API
-# chore(dependencies): update Spring Boot version
-# deploy: update Dockerfile configuration
-# BREAKING CHANGE: modify authentication method to OAuth2
+# 🎯 버전 증가 규칙:
+# - 🟢 `feat:` (새로운 기능 추가) → Minor 버전 증가 (`x.Y.0`)
+# - 🟢 `fix:` (버그 수정) → Patch 버전 증가 (`x.y.Z`)
+# - 🟢 `docs:` (문서 변경) → Patch 버전 증가
+# - 🟢 `refactor:` (코드 리팩토링, 기능 변경 없음) → Patch 버전 증가
+# - 🟢 `style:` (코드 스타일 변경, 기능 변경 없음) → Patch 버전 증가
+# - 🟢 `deploy:` (배포 관련 작업) → Patch 버전 증가
+# - ⚠️ `BREAKING CHANGE:` (하위 호환성 깨짐) → Major 버전 증가 (`X.0.0`)
+# - ⚪ `test:` (테스트 코드 추가/변경) → 버전 증가 없음
+# - ⚪ `chore:` (빌드, 설정 변경) → 버전 증가 없음
 
+# 📝 예제:
+# feat(api): add user authentication  ⬅️ Minor 버전 증가
+# fix(db): resolve PostgreSQL connection issue  ⬅️ Patch 버전 증가
+# docs: update API documentation  ⬅️ Patch 버전 증가
+# refactor(service): optimize game filtering logic  ⬅️ Patch 버전 증가
+# style: reformat code to improve readability  ⬅️ Patch 버전 증가
+# test(auth): improve test coverage for login API  ⬅️ 버전 증가 없음
+# chore(dependencies): update Spring Boot version  ⬅️ 버전 증가 없음
+# deploy: update Dockerfile configuration  ⬅️ Patch 버전 증가
+# BREAKING CHANGE: modify authentication method to OAuth2  ⬅️ Major 버전 증가
+
+# 📝 커밋 메시지 템플릿 (여기서부터 입력하세요)
 <type>([scope]): <commit message>
 
-# 추가 설명이 필요하면 본문(body)을 작성하세요.
-# 한 줄을 띄운 후, 변경 사항을 더 자세히 기술할 수 있습니다.
+# (선택) 추가 설명이 필요하면 여기에 작성
 #
 # - 변경한 주요 내용
 # - 왜 이 변경이 필요한지
 # - 관련된 이슈 번호 (예: Closes #123)
+#
+# 🛠 CI/CD 자동화를 위한 `[skip ci]` 옵션 사용 가능
