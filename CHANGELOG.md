@@ -1,5 +1,7 @@
 # Change Log
 
+## [1.0.3](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.0.2...v1.0.3) (2025-03-14)
+
 ## [1.0.2](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.0.1...v1.0.2) (2025-03-14)
 
 ## [1.0.1](https://github.com/100-hours-a-week/9-team-store-warab-be/compare/v1.0.0...v1.0.1) (2025-03-14)
