@@ -33,7 +33,7 @@ checkstyle {
     ]
 }
 
-group = 'gudokjohayo'
+group = 'store'
 
 // 버전 관리
 def versionPropsFile = file("version.properties")
