@@ -1,0 +1,2 @@
+#!/bin/sh
+git config commit.template "$(git rev-parse --show-toplevel)/.gitmessage.txt"
