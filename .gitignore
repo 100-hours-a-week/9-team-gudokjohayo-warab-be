@@ -146,4 +146,4 @@ bin/
 docs/HELP.md
 
 .DS_Store
-application.yml
+application-secret.properties
