@@ -55,8 +55,8 @@ public class UserEntity {
 
   @Builder
   public UserEntity(String nickname, String discordLink, Set<CategoryEntity> categories) {
-      this.nickname = nickname;
-      this.discordLink = discordLink;
-      this.categories = categories;
+    this.nickname = nickname;
+    this.discordLink = discordLink;
+    this.categories = categories;
   }
 }

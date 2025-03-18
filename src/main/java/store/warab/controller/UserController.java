@@ -49,10 +49,10 @@ public class UserController {
         Map.of("message", "available_discord_link", "duplication", isDuplicated));
   }
 
-    //회원 정보 수정
-    @PatchMapping("/profile")
-    public ResponseEntity<ApiResponse> updateProfile(@RequestBody UserDto userDto) {
-      UserDto updatedUserDto = userService.updateUserInfo(userDto);
-      return ResponseEntity.ok(new ApiResponse("user_profile_update_success", userDto));
-    }
+  // 회원 정보 수정
+  @PatchMapping("/profile")
+  public ResponseEntity<ApiResponse> updateProfile(@RequestBody UserDto userDto) {
+    UserDto updatedUserDto = userService.updateUserInfo(userDto);
+    return ResponseEntity.ok(new ApiResponse("user_profile_update_success", userDto));
+  }
 }
