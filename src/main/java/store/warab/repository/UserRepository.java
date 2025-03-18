@@ -6,7 +6,7 @@ import store.warab.entity.UserEntity;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
-    boolean existsByDiscordLink(String discordLink);
+  boolean existsByDiscordLink(String discordLink);
 
-    boolean existsByNickname(String nickname);
+  boolean existsByNickname(String nickname);
 }
