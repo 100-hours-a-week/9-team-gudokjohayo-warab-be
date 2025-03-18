@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -56,8 +55,8 @@ public class UserEntity {
 
   @Builder
   public UserEntity(String nickname, String discordLink, Set<CategoryEntity> categories) {
-      this.nickname = nickname;
-      this.discordLink = discordLink;
-      this.categories = categories;
+    this.nickname = nickname;
+    this.discordLink = discordLink;
+    this.categories = categories;
   }
 }
