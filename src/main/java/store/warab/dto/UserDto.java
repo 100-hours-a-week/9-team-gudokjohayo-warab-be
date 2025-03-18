@@ -1,23 +1,23 @@
 package store.warab.dto;
 
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import store.warab.entity.CategoryEntity;
 import store.warab.entity.UserEntity;
 
+import java.util.Set;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class UserDto {
-  private Long id;
-  private String nickname;
-  private String discordLink;
-  private Set<CategoryEntity> categories;
+    private Long id;
+    private String nickname;
+    private String discordLink;
+    private Set<CategoryEntity> categories;
 
-  public static UserDto fromEntity(UserEntity user) {
-    return new UserDto(
-        user.getId(), user.getNickname(), user.getDiscordLink(), user.getCategories());
-  }
+    public static UserDto fromEntity(UserEntity user) {
+        return new UserDto(user.getId(), user.getNickname(), user.getDiscordLink(), user.getCategories());
+    }
 }

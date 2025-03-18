@@ -14,14 +14,9 @@ public class UserService {
   private static UserRepository userRepository;
 
   public UserDto getUserById(long userId) {
-    UserEntity user =
-        userRepository
-            .findById(userId)
-            .orElseThrow(
-                () ->
-                    new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다" + userId) {});
-    return UserDto.fromEntity(user);
+      UserEntity user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다" + userId) {
+      });
+      return UserDto.fromEntity(user);
   }
 
   public boolean isNicknameDuplicated(String nickname) {
@@ -35,6 +30,7 @@ public class UserService {
   public String getUserNicknameById(long userId) {
     Optional<UserEntity> user = userRepository.findById(userId);
 
+    return user.map(UserEntity::getNickname).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다: " + userId));
     return user.map(UserEntity::getNickname)
         .orElseThrow(
             () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다: " + userId));
