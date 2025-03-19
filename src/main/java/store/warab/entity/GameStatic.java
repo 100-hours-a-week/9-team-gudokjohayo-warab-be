@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -15,25 +17,36 @@ public class GameStatic {
   private Long id;
 
   private String title;
-  private String originalTitle;
+  private String original_title;
   private String description;
-  private String releaseDate;
+  private String release_date;
   private String publisher;
   private String developer;
   private String thumbnail;
-  private Integer playerCount;
+  private Integer player_count;
   private Integer price;
 
   // 🔹 FK를 갖는 쪽(GameDynamic)에서 관계를 설정하므로 mappedBy 사용
   @OneToOne(
-      mappedBy = "gameStatic",
+      mappedBy = "game_static",
       cascade = CascadeType.ALL,
       fetch = FetchType.LAZY,
       optional = true)
-  private GameDynamic gameDynamic;
+  private GameDynamic game_dynamic;
 
-  // ✅ getter 추가
-  public GameDynamic getGameDynamic() {
-    return gameDynamic;
+    // ✅ 다대다 관계 매핑: 중간 테이블 (game_category) 사용
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<GameCategory> game_categories;
+
+    // ✅ 카테고리 목록을 편하게 가져오는 메서드 추가
+    public List<Category> getCategories() {
+        return game_categories.stream()
+            .map(GameCategory::getCategory)
+            .toList();
+    }
+
+    // ✅ getter 추가
+    public GameDynamic getGameDynamic() {
+        return game_dynamic;
   }
 }
