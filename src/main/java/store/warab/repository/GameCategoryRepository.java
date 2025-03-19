@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository;
 import store.warab.entity.GameCategory;
 
 @Repository
-public interface GameCategoryRepository extends JpaRepository<GameCategory, Long> {
-}
+public interface GameCategoryRepository extends JpaRepository<GameCategory, Long> {}

@@ -2,7 +2,6 @@ package store.warab.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
 import store.warab.common.exception.EntityNotFoundException;
 import store.warab.dto.GameDetailResponseDto;
@@ -28,18 +27,19 @@ public class GameService {
     this.categoryRepository = categoryRepository;
   }
 
-  public GameDetailResponseDto getGameDetail(Long game_id)
-  {
-      // 1️⃣ GameStatic 조회 (게임이 존재하는지 확인)
-      GameStatic game_static = gameStaticRepository.findById(game_id)
-          .orElseThrow(() -> new EntityNotFoundException("게임을 찾을 수 없습니다."));
+  public GameDetailResponseDto getGameDetail(Long game_id) {
+    // 1️⃣ GameStatic 조회 (게임이 존재하는지 확인)
+    GameStatic game_static =
+        gameStaticRepository
+            .findById(game_id)
+            .orElseThrow(() -> new EntityNotFoundException("게임을 찾을 수 없습니다."));
 
-      // 2️⃣ GameDynamic 조회 (존재하지 않을 수도 있음)
-      GameDynamic game_dynamic = gameDynamicRepository.findById(game_id).orElse(null);
+    // 2️⃣ GameDynamic 조회 (존재하지 않을 수도 있음)
+    GameDynamic game_dynamic = gameDynamicRepository.findById(game_id).orElse(null);
 
-      // 3️⃣ DTO 변환 후 반환
-      return new GameDetailResponseDto(game_static, game_dynamic);
-}
+    // 3️⃣ DTO 변환 후 반환
+    return new GameDetailResponseDto(game_static, game_dynamic);
+  }
 
   public List<GameSearchResponseDto> filterGames(
       String query,
@@ -112,7 +112,6 @@ public class GameService {
         // ✅ null 값 제거
         .filter(dto -> dto != null)
         // ✅ 6️⃣ 최대 개수 제한
-        .limit(limit != null ? limit : 20)
         .collect(Collectors.toList());
   }
 }

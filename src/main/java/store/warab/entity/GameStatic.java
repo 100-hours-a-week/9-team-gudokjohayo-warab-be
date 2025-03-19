@@ -1,8 +1,6 @@
 package store.warab.entity;
 
 import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,10 +37,12 @@ public class GameStatic {
   @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<GameCategory> game_categories;
 
-  // ✅ 카테고리 목록을 편하게 가져오는 메서드 추가
-  public List<Category> getCategories() {
-    return game_categories.stream().map(GameCategory::getCategory).toList();
-  }
+    public List<GameCategory> getGame_categories() {
+        if (game_categories == null) {
+            return List.of();  // ✅ Null 방지 (빈 리스트 반환)
+        }
+        return game_categories;
+    }
 
   // ✅ getter 추가
   public GameDynamic getGameDynamic() {
