@@ -7,21 +7,21 @@ import store.warab.entity.GameStatic;
 
 @Getter
 @Setter
-public class GameSearchResponseDTO {
+public class GameSearchResponseDto {
   private Long id;
   private String title;
-    private String thumbnail;
+  private String thumbnail;
   private Integer price;
-  private Integer lowestPrice;
+  private Integer lowest_price;
 
-  public GameSearchResponseDTO(GameStatic gameStatic, GameDynamic gameDynamic) {
+  public GameSearchResponseDto(GameStatic gameStatic, GameDynamic gameDynamic) {
     this.id = gameStatic.getId();
     this.title = gameStatic.getTitle();
     this.thumbnail = gameStatic.getThumbnail();
     this.price = gameStatic.getPrice();
 
     if (gameDynamic != null) {
-      this.lowestPrice = gameDynamic.getLowest_price();
+      this.lowest_price = gameDynamic.getLowest_price();
     }
   }
 }

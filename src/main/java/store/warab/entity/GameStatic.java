@@ -1,10 +1,11 @@
 package store.warab.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -23,7 +24,7 @@ public class GameStatic {
   private String publisher;
   private String developer;
   private String thumbnail;
-  private Integer player_count;
+  private Integer play_mode;
   private Integer price;
 
   // 🔹 FK를 갖는 쪽(GameDynamic)에서 관계를 설정하므로 mappedBy 사용
@@ -34,19 +35,17 @@ public class GameStatic {
       optional = true)
   private GameDynamic game_dynamic;
 
-    // ✅ 다대다 관계 매핑: 중간 테이블 (game_category) 사용
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<GameCategory> game_categories;
+  // ✅ 다대다 관계 매핑: 중간 테이블 (game_category) 사용
+  @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<GameCategory> game_categories;
 
-    // ✅ 카테고리 목록을 편하게 가져오는 메서드 추가
-    public List<Category> getCategories() {
-        return game_categories.stream()
-            .map(GameCategory::getCategory)
-            .toList();
-    }
+  // ✅ 카테고리 목록을 편하게 가져오는 메서드 추가
+  public List<Category> getCategories() {
+    return game_categories.stream().map(GameCategory::getCategory).toList();
+  }
 
-    // ✅ getter 추가
-    public GameDynamic getGameDynamic() {
-        return game_dynamic;
+  // ✅ getter 추가
+  public GameDynamic getGameDynamic() {
+    return game_dynamic;
   }
 }

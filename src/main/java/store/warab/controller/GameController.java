@@ -1,32 +1,32 @@
 package store.warab.controller;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import store.warab.dto.GameSearchResponseDTO;
-import store.warab.service.GameSearchService;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import store.warab.dto.GameDetailResponseDto;
+import store.warab.dto.GameSearchResponseDto;
+import store.warab.service.GameService;
 
 @RestController
 @RequestMapping("/v1/games")
-///v1/games?query=elden&&category_ids=1&category_ids=2&category_ids=3
-//    &rating_min=4&rating_max=5
-//    &price_min=0&price_max=100000
-//    &players_min=2&players_max=8
-//    &online_players_min=0&online_players_max=1000&
-//mode=default&sort=price_asc&limit=10
 
-public class GameSearchController {
-  private final GameSearchService gameSearchService;
+public class GameController {
+  private final GameService gameService;
 
-  public GameSearchController(GameSearchService gameSearchService) {
+  public GameController(GameService gameService) {
     System.out.println("create GameController");
-    this.gameSearchService = gameSearchService;
+    this.gameService = gameService;
   }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<GameDetailResponseDto> getGameDetail(@PathVariable Long id) {
+        GameDetailResponseDto gameDetail = gameService.getGameDetail(id);
+        return ResponseEntity.ok(gameDetail);
+    }
+
   @GetMapping
-  public List<GameSearchResponseDTO> getFilteredGames(
+  public List<GameSearchResponseDto> getFilteredGames(
       @RequestParam(required = false) String query,
       @RequestParam(required = false) List<Long> category_ids,
       @RequestParam(required = false) Integer rating_min,
@@ -40,7 +40,7 @@ public class GameSearchController {
       @RequestParam(required = false) String mode,
       @RequestParam(required = false) String sort,
       @RequestParam(required = false) Integer limit) {
-    return gameSearchService.filterGames(
+    return gameService.filterGames(
         query,
         category_ids,
         rating_min,
