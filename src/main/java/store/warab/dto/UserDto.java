@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import store.warab.entity.CategoryEntity;
-import store.warab.entity.UserEntity;
+import store.warab.entity.User;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,7 +16,7 @@ public class UserDto {
   private String discordLink;
   private Set<CategoryEntity> categories;
 
-  public static UserDto fromEntity(UserEntity user) {
+  public static UserDto fromEntity(User user) {
     return new UserDto(
         user.getId(), user.getNickname(), user.getDiscordLink(), user.getCategories());
   }

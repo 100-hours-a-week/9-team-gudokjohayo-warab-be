@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import store.warab.dto.UserDto;
-import store.warab.entity.UserEntity;
+import store.warab.entity.User;
 import store.warab.repository.UserRepository;
 
 @Service
@@ -14,7 +14,7 @@ public class UserService {
   private static UserRepository userRepository;
 
   public UserDto getUserById(long userId) {
-    UserEntity user =
+    User user =
         userRepository
             .findById(userId)
             .orElseThrow(
@@ -33,29 +33,29 @@ public class UserService {
   }
 
   public String getUserNicknameById(long userId) {
-    Optional<UserEntity> user = userRepository.findById(userId);
+    Optional<User> user = userRepository.findById(userId);
 
-    return user.map(UserEntity::getNickname)
+    return user.map(User::getNickname)
         .orElseThrow(
             () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다: " + userId));
   }
 
   public String getUserDiscordLinkById(long userId) {
-    Optional<UserEntity> user = userRepository.findById(userId);
+    Optional<User> user = userRepository.findById(userId);
 
-    return user.map(UserEntity::getDiscordLink).orElse(null);
+    return user.map(User::getDiscordLink).orElse(null);
   }
 
   public UserDto updateUserInfo(UserDto userDto) {
-    UserEntity userEntity =
+    User userEntity =
         userRepository
             .findById(userDto.getId())
             .orElseThrow(
                 () ->
                     new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다: " + userDto.getId()));
-    UserEntity user =
-        UserEntity.builder()
+    User user =
+        User.builder()
             .nickname(
                 userDto.getNickname() != null ? userDto.getNickname() : userEntity.getNickname())
             .discordLink(
@@ -67,7 +67,7 @@ public class UserService {
                     ? userDto.getCategories()
                     : userEntity.getCategories())
             .build();
-    UserEntity updatedUserEntity = userRepository.save(user);
+    User updatedUserEntity = userRepository.save(user);
     return UserDto.fromEntity(updatedUserEntity);
   }
 }
