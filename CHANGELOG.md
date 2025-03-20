@@ -1,5 +1,12 @@
 # Change Log
 
+# [1.4.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.3.0...v1.4.0) (2025-03-20)
+
+
+### Features
+
+* 로그아웃 후 쿠키 만료 구현 ([ad12d53](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/ad12d530b4045acf082ae3e0ef0c345052d5c1b4))
+
 # [1.3.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.2.0...v1.3.0) (2025-03-20)
 
 
