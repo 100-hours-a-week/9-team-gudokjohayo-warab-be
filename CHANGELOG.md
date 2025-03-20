@@ -1,5 +1,12 @@
 # Change Log
 
+# [1.2.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.1.0...v1.2.0) (2025-03-20)
+
+
+### Features
+
+* 댓글 CRUD 구현 ([5fafa36](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/5fafa36a8c0e322305a5d178287cdf8751f5ad0e))
+
 # [1.1.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.0.3...v1.1.0) (2025-03-20)
 
 
