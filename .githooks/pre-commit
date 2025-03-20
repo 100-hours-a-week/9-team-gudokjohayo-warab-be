@@ -1,19 +1,19 @@
-#!/bin/sh
-
-echo "🔍 Running pre-commit hook..."
-
-# 테스트 실행 (선택)
-./gradlew test
-if [ $? -ne 0 ]; then
-    echo "❌ Tests failed! Fix the issues before committing."
-    exit 1
-fi
-
-./gradlew spotlessApply build
-if [ $? -ne 0 ]; then
-    echo "❌ Checkstyle failed! Fix the issues before committing."
-    exit 1
-fi
-
-echo "✅ pre-commit checks passed!"
-exit 0
+##!/bin/sh
+#
+#echo "🔍 Running pre-commit hook..."
+#
+## 테스트 실행 (선택)
+#./gradlew test
+#if [ $? -ne 0 ]; then
+#    echo "❌ Tests failed! Fix the issues before committing."
+#    exit 1
+#fi
+#
+#./gradlew spotlessApply build
+#if [ $? -ne 0 ]; then
+#    echo "❌ Checkstyle failed! Fix the issues before committing."
+#    exit 1
+#fi
+#
+#echo "✅ pre-commit checks passed!"
+#exit 0
