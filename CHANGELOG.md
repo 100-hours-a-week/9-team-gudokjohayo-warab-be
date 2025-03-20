@@ -1,5 +1,19 @@
 # Change Log
 
+# [1.3.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.2.0...v1.3.0) (2025-03-20)
+
+
+### Bug Fixes
+
+* 2차 업데이트 - 게임 검색 기능 성능 개선 및 필터 적용 ([3a5c028](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/3a5c028f03e54d6d9a0d388c77dd2638df98717b))
+* 게임 상세 정보 조회 응답에서 카테고리 정보 추가 ([600c4f8](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/600c4f83d5d4bce80eefa3f1f2455ab0660d4b1d))
+* 백엔드 mvp 1차 merge 성공 ([4768510](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/47685104a5436b1b51847fa93c21f7bbb4097682))
+
+
+### Features
+
+* 게임 상세 정보 조회 기능 추가. ([b53c6b0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/b53c6b030f508b93c417e540dde3df68f2ff3e69))
+
 # [1.2.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.1.0...v1.2.0) (2025-03-20)
 
 
