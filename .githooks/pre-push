@@ -1,13 +1,13 @@
-##!/bin/sh
-#
-#echo "🚀 Running pre-push hook..."
-#
-## 빌드 및 테스트 실행
-#./gradlew build
-#if [ $? -ne 0 ]; then
-#    echo "❌ Build or tests failed! Push rejected."
-#    exit 1
-#fi
-#
-#echo "✅ pre-push checks passed!"
-#exit 0
+#!/bin/sh
+
+echo "🚀 Running pre-push hook..."
+
+# 빌드 및 테스트 실행
+./gradlew build
+if [ $? -ne 0 ]; then
+    echo "❌ Build or tests failed! Push rejected."
+    exit 1
+fi
+
+echo "✅ pre-push checks passed!"
+exit 0

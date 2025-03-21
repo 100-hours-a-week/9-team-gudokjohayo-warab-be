@@ -37,7 +37,7 @@ public class GameDetailResponseDto {
     this.publisher = gameStatic.getPublisher();
     this.player_count = gameStatic.getPlay_mode();
     this.categories = gameStatic.getGame_categories().stream()
-      .map(gc -> gc.getCategory().getCategory_name())
+      .map(gc -> gc.getCategory().getCategoryName())
       .collect(Collectors.toList());
       List<GameCategory> a = gameStatic.getGame_categories();
       Stream<GameCategory> b = gameStatic.getGame_categories().stream();

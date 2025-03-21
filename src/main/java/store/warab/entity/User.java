@@ -36,7 +36,7 @@ public class User {
             name = "user_category",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<CategoryEntity> categories = new HashSet<>();
+    private Set<Category> categories = new HashSet<>();
 
 
     @CreatedDate
@@ -64,7 +64,7 @@ public class User {
     }
 
     @Builder
-    public User(String kakaoId, String nickname, String discordLink, Set<CategoryEntity> categories) {
+    public User(String kakaoId, String nickname, String discordLink, Set<Category> categories) {
         this.kakaoId = kakaoId;
         this.nickname = nickname;
         this.discordLink = discordLink;
