@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.4.1](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.4.0...v1.4.1) (2025-03-21)
+
+
+### Bug Fixes
+
+* MVP 임시 통합 - 이후 리팩토링 예정 ([c1d1b4b](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/c1d1b4b4f9ae1c02d9157cd2cac08eee02559fc4))
+
 # [1.4.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.3.0...v1.4.0) (2025-03-20)
 
 
