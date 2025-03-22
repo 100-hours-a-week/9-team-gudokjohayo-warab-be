@@ -6,10 +6,11 @@ import org.springframework.stereotype.Repository;
 import store.warab.entity.Comment;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Integer> {
-
-    // 특정 게임에 해당하는 모든 댓글 조회
-    List<Comment> findByGameId(Integer gameId);
+public interface CommentRepository extends JpaRepository<Comment, Long> {
+    List<Comment> findByGameStaticIdAndDeletedAtIsNull(Long gameId);
+    Optional<Comment> findByIdAndDeletedAtIsNull(Long commentId);
+    Optional<Comment> findByIdAndGameStaticIdAndDeletedAtIsNull(Long commentId, Long gameId);
 }

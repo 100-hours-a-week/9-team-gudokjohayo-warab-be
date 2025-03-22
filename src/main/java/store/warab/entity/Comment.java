@@ -16,19 +16,13 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    /**
-     * TODO: user_id -> 실제 User 엔티티와의 @ManyToOne 관계 설정 예정
-     */
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
-
-    /**
-     * TODO: game_id -> 실제 Game 엔티티와의 @ManyToOne 관계 설정 예정
-     */
-
-    @Column(name = "game_id", nullable = false)
-    private Integer gameId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "game_id")
+    private GameStatic gameStatic;
 
     @Column(length = 100, nullable = false)
     private String content;  // varchar(100)
@@ -47,5 +41,21 @@ public class Comment {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public GameStatic getGameStatic() {
+        return gameStatic;
+    }
+
+    public void setGameStatic(GameStatic gameStatic) {
+        this.gameStatic = gameStatic;
     }
 }

@@ -1,14 +1,20 @@
 package store.warab.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import store.warab.entity.Comment;
 import store.warab.service.CommentService;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/comment") // URL
-@CrossOrigin(origins = "http://localhost:3000") // 프론트 3000번 포트 허용
+@RequestMapping("/games/{gameId}/comment")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CommentController {
 
     private final CommentService commentService;
@@ -18,73 +24,56 @@ public class CommentController {
     }
 
     /**
-     * [POST] /api/comment
+     * [POST] /games/{gameId}/comment
      * 새 댓글 생성
      */
     @PostMapping
-    public Comment createComment(@RequestBody CommentRequest request) {
-        return commentService.createComment(
-            request.getUserId(),
-            request.getGameId(),
-            request.getContent());
+    public ResponseEntity<Map<String, String>> createComment(
+            @PathVariable Long gameId,
+            @RequestBody CommentRequest request) {
+        commentService.createComment(request.getNickname(), gameId, request.getContent());
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(Collections.singletonMap("message", "comment_create_success"));
     }
 
     /**
-     * [GET] /api/comments/game/{gameId}
+     * [GET] /games/{gameId}/comment
      * 특정 게임에 달린 댓글 목록
      */
-    @GetMapping("/{game}/{gameId}")
-    public List<Comment> getCommentsByGame(@PathVariable Integer gameId, @PathVariable String nickname) {
+    @GetMapping
+    public List<Comment> getCommentsByGame(@PathVariable Long gameId) {
         return commentService.getCommentsByGameId(gameId);
     }
 
     /**
-     * [PUT] /api/comment/{commentId}
+     * [PATCH] /games/{gameId}/comment/{commentId}
      * 댓글 수정
      */
-    @PutMapping("/{commentId}")
-    public Comment updateComment(@PathVariable Integer commentId,
-                                 @RequestBody CommentRequest request) {
-        return commentService.updateComment(commentId, request.getContent());
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<Void> updateComment(
+            @PathVariable Long gameId,
+            @PathVariable Long commentId,
+            @RequestBody CommentRequest request) {
+        commentService.updateComment(gameId, commentId, request.getContent());
+        return ResponseEntity.ok().build();
     }
 
     /**
-     * [DELETE] /api/comment/{commentId}
-     * 댓글 삭제(softDelete 여부에 따라 분기)
+     * [DELETE] /games/{gameId}/comment/{commentId}
+     * 댓글 삭제(소프트 딜리트)
      */
     @DeleteMapping("/{commentId}")
-    public void deleteComment(@PathVariable Integer commentId,
-                              @RequestParam(defaultValue = "false") boolean softDelete) {
-        commentService.deleteComment(commentId, softDelete);
+    public ResponseEntity<Void> deleteComment(
+            @PathVariable Long gameId,
+            @PathVariable Long commentId) {
+        commentService.deleteComment(gameId, commentId);
+        return ResponseEntity.ok().build();
     }
 
-    /**
-     * 댓글 생성/수정 시 받을 DTO
-     */
+    @Getter
+    @Setter
     public static class CommentRequest {
-        private Integer userId;
-        private Integer gameId;
+        private String nickname;
         private String content;
-
-        public Integer getUserId() {
-            return userId;
-        }
-        public void setUserId(Integer userId) {
-            this.userId = userId;
-        }
-
-        public Integer getGameId() {
-            return gameId;
-        }
-        public void setGameId(Integer gameId) {
-            this.gameId = gameId;
-        }
-
-        public String getContent() {
-            return content;
-        }
-        public void setContent(String content) {
-            this.content = content;
-        }
     }
 }
