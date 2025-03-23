@@ -38,8 +38,14 @@ jobs:
               run: |
                   mkdir -p src/main/resources
                   cat <<EOF > src/main/resources/application-secrets.properties
-                  spring.database.id=${{ secrets.SPRING_DATABASE_ID }}
-                  # 추가 시크릿은 여기에 작성
+                  spring.datasource.url=${{ secrets.DATABASE_URL }}
+                  spring.datasource.username=${{ secrets.DATABASE_USER }}
+                  spring.datasource.password=${{ secrets.DATABASE_PASSWD }}
+                  spring.security.oauth2.client.registration.kakao.client-id=${{ secrets.KAKAO_CLIENT_ID }}
+                  spring.security.oauth2.client.registration.kakao.client-secret=${{ secrets.KAKAO_CLIENT_SECRET }}
+                  spring.jwt.secret=${{ secrets.JWT_SECRET_KEY }}
+                  sentry.auth.token=${{ secrets.SENTRY_TOKEN }}
+                  sentry.dsn=${{ secrets.SENTRY_DSN }}
                   EOF
 
             - name: Determine environment
