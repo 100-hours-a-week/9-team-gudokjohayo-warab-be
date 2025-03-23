@@ -8,7 +8,7 @@ import store.warab.dto.GameSearchResponseDto;
 import store.warab.service.GameService;
 
 @RestController
-@RequestMapping("/v1/games")
+@RequestMapping("/api/v1/games")
 public class GameController {
   private final GameService gameService;
 
