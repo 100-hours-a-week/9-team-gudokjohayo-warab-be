@@ -15,7 +15,7 @@ public class OAuth2UserInfo {
 
   public static OAuth2UserInfo ofKakao(Map<String, Object> attributes) {
     return OAuth2UserInfo.builder()
-        .kakao_id("kakao_" + attributes.get("id").toString()) // 카카오 고유 ID 사용
+        .kakao_id(String.valueOf(attributes.get("id"))) // 카카오 고유 ID를 String으로 변환
         .nickname((String) ((Map) attributes.get("properties")).get("profile_nickname"))
         .build();
   }

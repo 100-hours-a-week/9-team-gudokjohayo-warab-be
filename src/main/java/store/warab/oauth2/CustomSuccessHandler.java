@@ -32,7 +32,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     // OAuth2User
     OAuth2User customUserDetails = (OAuth2User) authentication.getPrincipal();
     // String username = customUserDetails.getAttribute("username");
-    String kakaoId = customUserDetails.getAttribute("id");
+    Long kakaoIdNum = customUserDetails.getAttribute("id");
+    String kakaoId = String.valueOf(kakaoIdNum);
 
     // DB에서 사용자 정보 조회
     User user =
