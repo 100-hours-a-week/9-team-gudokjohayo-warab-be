@@ -1,5 +1,12 @@
 # Change Log
 
+# [1.5.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.4.1...v1.5.0) (2025-03-23)
+
+
+### Features
+
+* **cd:** create deploy.yaml ([f16bdf8](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/f16bdf87694bed7e05a4f47cda501c3ac86a1821))
+
 ## [1.4.1](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.4.0...v1.4.1) (2025-03-21)
 
 
