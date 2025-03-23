@@ -72,7 +72,7 @@ jobs:
 
             - name: Update patch-deployment.yaml
               run: |
-                  sed -i "s|image:.*|image: ${{ secrets.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}-${{ steps.env.outputs.env }}|" \
+                  sed -i "s|image:.*|image: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}-${{ steps.env.outputs.env }}|" \
                     deploy/k8s/overlays/${{ steps.env.outputs.env }}/patch-deployment.yaml
 
             - name: Commit & push to warab-deploy
