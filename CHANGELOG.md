@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.6.2](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.6.1...v1.6.2) (2025-03-23)
+
+
+### Bug Fixes
+
+* **api:** add kakao exception api ([29f6214](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/29f621490936ca68ad5ee35f06cd05dd53d4dcce))
+
 ## [1.6.1](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.6.0...v1.6.1) (2025-03-23)
 
 
