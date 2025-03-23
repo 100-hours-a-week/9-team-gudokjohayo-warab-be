@@ -1,5 +1,7 @@
 package store.warab.jwt;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -40,13 +42,39 @@ public class JWTUtil {
         .before(new Date());
   }
 
-  public String createJwt(String username, Long expiredMs) {
+  // JWT 토큰 생성
+  public String createJwt(Long userId, Long expiredMs) {
 
     return Jwts.builder()
-        .claim("username", username)
+        .claim("userId", userId)
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + expiredMs))
         .signWith(secretKey)
         .compact();
+  }
+
+  // JWT 토큰에서 ID 추출
+  public Long getUserIdFromToken(String token) {
+    try {
+      Claims claims =
+          Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
+
+      return claims.get("userId", Long.class);
+
+    } catch (JwtException e) {
+      throw new RuntimeException("유효하지 않은 JWT 토큰입니다.", e);
+    }
+  }
+
+  // 토큰 만료 확인
+  public boolean isTokenExpired(String token) {
+    try {
+      Claims claims =
+          Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
+
+      return claims.getExpiration().before(new Date());
+    } catch (JwtException e) {
+      return true; // 토큰 파싱 중 에러가 발생하면 만료된 것으로 처리
+    }
   }
 }

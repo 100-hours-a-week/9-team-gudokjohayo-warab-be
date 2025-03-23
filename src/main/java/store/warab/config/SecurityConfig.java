@@ -73,9 +73,6 @@ public class SecurityConfig {
     // HTTP Basic 인증 방식 disable
     http.httpBasic((auth) -> auth.disable());
 
-    // JWT Filter 추가
-    http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-
     // oauth2
     http.oauth2Login(
         (oauth2) ->
@@ -90,9 +87,17 @@ public class SecurityConfig {
                       response.sendRedirect("/login?error"); // 실패시 리다이렉트
                     }));
 
+    // JWT Filter 추가
+    http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+
     // 경로별 인가 작업
     http.authorizeHttpRequests(
         (auth) -> auth.requestMatchers("/").permitAll().anyRequest().authenticated());
+
+    // 경로별 인가 작업
+    //      http.authorizeHttpRequests(
+    //          (auth) -> auth.
+    //              anyRequest().permitAll()); // 모든 요청 허용
 
     // 세션 설정
     http.sessionManagement(
