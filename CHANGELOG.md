@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.5.1](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.0...v1.5.1) (2025-03-23)
+
+
+### Bug Fixes
+
+* properties 정리 ([1c2a468](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/1c2a46811bfc118785984b85ce4e9f156bf0edbe))
+
 # [1.5.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.4.1...v1.5.0) (2025-03-23)
 
 
