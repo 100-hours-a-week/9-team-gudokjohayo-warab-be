@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.5.2](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.1...v1.5.2) (2025-03-23)
+
+
+### Bug Fixes
+
+* **cd:** add dockefile ([c3438e9](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/c3438e9f9829ab0ddc56d802bcbe60201c4cc7aa))
+* **merge:** develop + deploy ([4aa5196](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/4aa51964e03b434e674e81cbe22c062f0d8db51d))
+
 ## [1.5.1](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.0...v1.5.1) (2025-03-23)
 
 
