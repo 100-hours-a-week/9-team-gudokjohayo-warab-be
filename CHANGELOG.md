@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.5.4](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.3...v1.5.4) (2025-03-23)
+
+
+### Bug Fixes
+
+* **cd:** Dockerfile error update ([2bc8dde](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/2bc8dde025a049e5e2eecf5c677262030f29dbd2))
+
 ## [1.5.3](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.2...v1.5.3) (2025-03-23)
 
 
