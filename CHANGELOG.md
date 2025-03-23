@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.6.1](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.6.0...v1.6.1) (2025-03-23)
+
+
+### Bug Fixes
+
+* api 경로 통합 + cors origin 추가 ([1856af1](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/1856af1c24990d7679087faa09db4a9fd6114fdd))
+
 # [1.6.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.9...v1.6.0) (2025-03-23)
 
 
