@@ -1,5 +1,12 @@
 # Change Log
 
+# [1.6.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.9...v1.6.0) (2025-03-23)
+
+
+### Features
+
+* **api:** create HealthController(alb health check) ([72d3395](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/72d33952d64623fb06f03c5c8622006d932effcc))
+
 ## [1.5.9](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.8...v1.5.9) (2025-03-23)
 
 
