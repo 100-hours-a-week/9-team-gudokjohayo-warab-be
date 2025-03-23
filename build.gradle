@@ -18,6 +18,14 @@ spotless {
     }
 }
 
+jar{
+    enabled = false
+}
+
+bootJar {
+    archiveFileName = 'app.jar'
+}
+
 tasks.withType(Checkstyle).configureEach {
     reports {
         xml.required = true
