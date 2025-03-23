@@ -13,7 +13,6 @@ env:
 jobs:
     deploy:
         runs-on: ubuntu-latest
-
         permissions:
             contents: write
 
@@ -67,7 +66,7 @@ jobs:
             - name: Checkout warab-deploy
               uses: actions/checkout@v3
               with:
-                  repository: your-username/warab-deploy
+                  repository: kjr2020/warab-deploy
                   token: ${{ secrets.DEPLOY_REPO_PAT }}
                   path: deploy
 
