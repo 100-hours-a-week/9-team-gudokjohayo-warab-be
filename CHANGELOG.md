@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.5.5](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.4...v1.5.5) (2025-03-23)
+
+
+### Bug Fixes
+
+* **cd:** update dockerfile ([83c8733](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/83c8733c2b3c79270f8cf7879f6b73e65740a8b9))
+* **merge:** develop ([9aee49f](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/9aee49fc44cb8b957296277dc5f818415db3857a))
+
 ## [1.5.4](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.3...v1.5.4) (2025-03-23)
 
 
