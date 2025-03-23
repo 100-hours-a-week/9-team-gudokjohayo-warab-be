@@ -1,5 +1,5 @@
 # 1단계: 빌드
-FROM gradle:8.5-jdk17-alpine as builder
+FROM gradle:8.5-jdk17-alpine AS builder
 
 WORKDIR /app
 COPY --chown=gradle:gradle . /app
@@ -8,7 +8,7 @@ COPY --chown=gradle:gradle . /app
 RUN gradle build -x test --no-daemon
 
 # 2단계: 실행 이미지
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jdk-alpine
 
 WORKDIR /app
 
