@@ -2,8 +2,6 @@ package store.warab.repository;
 
 import io.lettuce.core.dynamic.annotation.Param;
 import java.util.List;
-
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -11,19 +9,20 @@ import store.warab.entity.GameStatic;
 
 @Repository
 public interface GameStaticRepository extends JpaRepository<GameStatic, Long> {
-//    @EntityGraph(attributePaths = {"game_categories.category"})
+  //    @EntityGraph(attributePaths = {"game_categories.category"})
   List<GameStatic> findAll();
-    // ✅ 기존 findAll() 유지 (필요한 경우를 대비)
-    //    @EntityGraph(attributePaths = {"gameDynamic"}) // ✅ N+1 문제 해결: gameDynamic을 한 번에 가져오기
+
+  // ✅ 기존 findAll() 유지 (필요한 경우를 대비)
+  //    @EntityGraph(attributePaths = {"gameDynamic"}) // ✅ N+1 문제 해결: gameDynamic을 한 번에 가져오기
 
   // ✅ DB에서 직접 필터링하여 가져오는 메서드 추가
   // ✅ DB에서 직접 필터링하여 가져오는 메서드 (COALESCE 포함)
   @Query(
       "SELECT gs FROM GameStatic gs "
           + "LEFT JOIN gs.game_dynamic gd "
-//          ✅ game_dynamic과 조인 추가 (game_dynamic 필드 존재 확인 필요)
-//          "JOIN gs.game_categories gc "
-          + "LEFT JOIN gs.game_categories gc "  // ✅ INNER JOIN → LEFT JOIN 변경
+          //          ✅ game_dynamic과 조인 추가 (game_dynamic 필드 존재 확인 필요)
+          //          "JOIN gs.game_categories gc "
+          + "LEFT JOIN gs.game_categories gc " // ✅ INNER JOIN → LEFT JOIN 변경
           + // ✅ gameCategories가 GameStatic에 존재하는지 확인 필요
           "WHERE (:category_ids IS NULL OR gc.category.id IN :category_ids) "
           +

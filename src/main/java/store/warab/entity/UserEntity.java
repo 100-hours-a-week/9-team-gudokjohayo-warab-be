@@ -1,23 +1,23 @@
-//package store.warab.entity;
+// package store.warab.entity;
 //
-//import jakarta.persistence.*;
-//import java.time.LocalDateTime;
-//import java.util.HashSet;
-//import java.util.Set;
-//import lombok.AllArgsConstructor;
-//import lombok.Builder;
-//import lombok.Getter;
-//import lombok.NoArgsConstructor;
-//import org.springframework.data.annotation.CreatedDate;
-//import org.springframework.data.annotation.LastModifiedDate;
+// import jakarta.persistence.*;
+// import java.time.LocalDateTime;
+// import java.util.HashSet;
+// import java.util.Set;
+// import lombok.AllArgsConstructor;
+// import lombok.Builder;
+// import lombok.Getter;
+// import lombok.NoArgsConstructor;
+// import org.springframework.data.annotation.CreatedDate;
+// import org.springframework.data.annotation.LastModifiedDate;
 //
-//@Getter
-//@Builder
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Entity
-//@Table(name = "users")
-//public class UserEntity {
+// @Getter
+// @Builder
+// @NoArgsConstructor
+// @AllArgsConstructor
+// @Entity
+// @Table(name = "users")
+// public class UserEntity {
 //  @Id
 //  @GeneratedValue(strategy = GenerationType.IDENTITY)
 //  private Long id;
@@ -59,4 +59,4 @@
 //    this.discordLink = discordLink;
 //    this.categories = categories;
 //  }
-//}
+// }

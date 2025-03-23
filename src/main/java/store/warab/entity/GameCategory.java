@@ -21,5 +21,4 @@ public class GameCategory {
   @ManyToOne
   @JoinColumn(name = "category_id")
   private Category category;
-
 }

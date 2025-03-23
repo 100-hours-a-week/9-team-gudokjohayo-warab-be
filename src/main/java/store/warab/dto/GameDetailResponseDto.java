@@ -4,9 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import lombok.Getter;
-import store.warab.entity.Category;
 import store.warab.entity.GameCategory;
 import store.warab.entity.GameDynamic;
 import store.warab.entity.GameStatic;
@@ -36,11 +34,12 @@ public class GameDetailResponseDto {
     this.developer = gameStatic.getDeveloper();
     this.publisher = gameStatic.getPublisher();
     this.player_count = gameStatic.getPlay_mode();
-    this.categories = gameStatic.getGame_categories().stream()
-      .map(gc -> gc.getCategory().getCategoryName())
-      .collect(Collectors.toList());
-      List<GameCategory> a = gameStatic.getGame_categories();
-      Stream<GameCategory> b = gameStatic.getGame_categories().stream();
+    this.categories =
+        gameStatic.getGame_categories().stream()
+            .map(gc -> gc.getCategory().getCategoryName())
+            .collect(Collectors.toList());
+    List<GameCategory> a = gameStatic.getGame_categories();
+    Stream<GameCategory> b = gameStatic.getGame_categories().stream();
     if (gameDynamic != null) {
       this.lowest_price = gameDynamic.getLowest_price();
       this.rating = gameDynamic.getRating();

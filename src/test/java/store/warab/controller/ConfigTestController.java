@@ -1,15 +1,15 @@
-//package store.warab.controller;
+// package store.warab.controller;
 //
-//import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RestController;
+// import org.springframework.beans.factory.annotation.Value;
+// import org.springframework.boot.test.context.SpringBootTest;
+// import org.springframework.web.bind.annotation.GetMapping;
+// import org.springframework.web.bind.annotation.RequestMapping;
+// import org.springframework.web.bind.annotation.RestController;
 //
-//@SpringBootTest
-//@RestController
-//@RequestMapping("/config")
-//public class ConfigTestController {
+// @SpringBootTest
+// @RestController
+// @RequestMapping("/config")
+// public class ConfigTestController {
 //
 //    @Value("${SPRING_DATASOURCE_URL}")
 //    private String datasourceUrl;
@@ -21,4 +21,4 @@
 //    public String checkConfig() {
 //        return "DB URL: " + datasourceUrl + " | " + kakaoClientId + kakaoClientId;
 //    }
-//}
+// }

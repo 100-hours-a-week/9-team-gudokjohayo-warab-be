@@ -2,11 +2,9 @@ package store.warab.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import store.warab.dto.GameDetailResponseDto;
 import store.warab.dto.GameSearchResponseDto;
 import store.warab.entity.GameDynamic;
@@ -35,9 +33,8 @@ public class GameService {
     GameStatic game_static =
         gameStaticRepository
             .findById(game_id)
-              .orElseThrow(() ->
-    new ResponseStatusException(
-            HttpStatus.NOT_FOUND, "게임을 찾을 수 없습니다.") {});
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게임을 찾을 수 없습니다.") {});
 
     // 2️⃣ GameDynamic 조회 (존재하지 않을 수도 있음)
     GameDynamic game_dynamic = gameDynamicRepository.findById(game_id).orElse(null);

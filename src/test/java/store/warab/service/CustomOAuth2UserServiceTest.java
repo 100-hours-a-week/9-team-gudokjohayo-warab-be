@@ -1,26 +1,26 @@
-//package store.warab.service;
+// package store.warab.service;
 //
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.MockitoAnnotations;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.security.oauth2.client.registration.ClientRegistration;
-//import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-//import org.springframework.security.oauth2.core.user.OAuth2User;
-//import store.warab.entity.User;
-//import store.warab.repository.UserRepository;
-//import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+// import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.Test;
+// import org.mockito.InjectMocks;
+// import org.mockito.Mock;
+// import org.mockito.MockitoAnnotations;
+// import org.springframework.boot.test.context.SpringBootTest;
+// import org.springframework.security.oauth2.client.registration.ClientRegistration;
+// import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+// import org.springframework.security.oauth2.core.user.OAuth2User;
+// import store.warab.entity.User;
+// import store.warab.repository.UserRepository;
+// import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 //
-//import java.util.HashMap;
-//import java.util.Map;
-//import java.util.Optional;
+// import java.util.HashMap;
+// import java.util.Map;
+// import java.util.Optional;
 //
-//import static org.junit.jupiter.api.Assertions.assertNotNull;
-//import static org.mockito.Mockito.*;
+// import static org.junit.jupiter.api.Assertions.assertNotNull;
+// import static org.mockito.Mockito.*;
 //
-//public class CustomOAuth2UserServiceTest {
+// public class CustomOAuth2UserServiceTest {
 //
 //    @Mock
 //    private UserRepository userRepository;
@@ -34,9 +34,11 @@
 //    @BeforeEach
 //    public void setUp() {
 //        //MockitoAnnotations.openMocks(this);
-//        //customOAuth2UserService = new CustomOAuth2UserService(userRepository, clientRegistrationRepository);
+//        //customOAuth2UserService = new CustomOAuth2UserService(userRepository,
+// clientRegistrationRepository);
 //        MockitoAnnotations.openMocks(this);
-//        customOAuth2UserService = spy(new CustomOAuth2UserService(userRepository, clientRegistrationRepository));
+//        customOAuth2UserService = spy(new CustomOAuth2UserService(userRepository,
+// clientRegistrationRepository));
 //    }
 //
 //    @Test
@@ -97,4 +99,4 @@
 //        verify(userRepository, never()).save(any(User.class));
 //    }
 //
-//}
+// }

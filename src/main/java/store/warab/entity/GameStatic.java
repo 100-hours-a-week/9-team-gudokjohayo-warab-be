@@ -37,12 +37,12 @@ public class GameStatic {
   @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<GameCategory> game_categories;
 
-    public List<GameCategory> getGame_categories() {
-        if (game_categories == null) {
-            return List.of();  // ✅ Null 방지 (빈 리스트 반환)
-        }
-        return game_categories;
+  public List<GameCategory> getGame_categories() {
+    if (game_categories == null) {
+      return List.of(); // ✅ Null 방지 (빈 리스트 반환)
     }
+    return game_categories;
+  }
 
   // ✅ getter 추가
   public GameDynamic getGameDynamic() {

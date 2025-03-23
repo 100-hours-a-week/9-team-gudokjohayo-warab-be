@@ -1,7 +1,7 @@
 package store.warab.config;
 
-
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,37 +16,42 @@ import store.warab.jwt.JWTUtil;
 import store.warab.oauth2.CustomSuccessHandler;
 import store.warab.service.CustomOAuth2UserService;
 
-import java.util.Collections;
-//import store.warab.service.CustomOAuth2UserService;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.security.config.Customizer;
+// import store.warab.service.CustomOAuth2UserService;
+// import lombok.RequiredArgsConstructor;
+// import org.springframework.security.config.Customizer;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final CustomSuccessHandler customSuccessHandler;
-    private final JWTUtil jwtUtil;
+  private final CustomOAuth2UserService customOAuth2UserService;
+  private final CustomSuccessHandler customSuccessHandler;
+  private final JWTUtil jwtUtil;
 
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler, JWTUtil jwtUtil) {
-        this.customOAuth2UserService = customOAuth2UserService;
-        this.customSuccessHandler = customSuccessHandler;
-        this.jwtUtil = jwtUtil;
-    }
+  public SecurityConfig(
+      CustomOAuth2UserService customOAuth2UserService,
+      CustomSuccessHandler customSuccessHandler,
+      JWTUtil jwtUtil) {
+    this.customOAuth2UserService = customOAuth2UserService;
+    this.customSuccessHandler = customSuccessHandler;
+    this.jwtUtil = jwtUtil;
+  }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        //CORS
-        http
-            .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    // CORS
+    http.cors(
+        corsCustomizer ->
+            corsCustomizer.configurationSource(
+                new CorsConfigurationSource() {
 
-                @Override
-                public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                  @Override
+                  public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 
                     CorsConfiguration configuration = new CorsConfiguration();
 
-                    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                    configuration.setAllowedOrigins(
+                        Collections.singletonList("http://localhost:3000"));
                     configuration.setAllowedMethods(Collections.singletonList("*"));
                     configuration.setAllowCredentials(true);
                     configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -56,48 +61,43 @@ public class SecurityConfig {
                     configuration.setExposedHeaders(Collections.singletonList("Authorization"));
 
                     return configuration;
-                }
-            }));
-
-        //csrf disable
-        http
-            .csrf((auth) -> auth.disable());
-
-        //From 로그인 방식 disable
-        http
-            .formLogin((auth) -> auth.disable());
-
-        //HTTP Basic 인증 방식 disable
-        http
-            .httpBasic((auth) -> auth.disable());
-
-        //JWT Filter 추가
-        http
-        .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-
-        //oauth2
-        http
-            .oauth2Login((oauth2) -> oauth2
-                .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-                    .userService(customOAuth2UserService))
-                .successHandler(customSuccessHandler)
-                .failureHandler((request, response, exception) -> {
-                    System.out.println("OAuth 로그인 실패: " + exception.getMessage());
-                    response.sendRedirect("/login?error"); // 실패시 리다이렉트
+                  }
                 }));
 
-        //경로별 인가 작업
-        http
-            .authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/").permitAll()
-                .anyRequest().authenticated());
+    // csrf disable
+    http.csrf((auth) -> auth.disable());
 
-        //세션 설정
-        http
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+    // From 로그인 방식 disable
+    http.formLogin((auth) -> auth.disable());
 
-        return http.build();
+    // HTTP Basic 인증 방식 disable
+    http.httpBasic((auth) -> auth.disable());
 
-    }
+    // JWT Filter 추가
+    http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+
+    // oauth2
+    http.oauth2Login(
+        (oauth2) ->
+            oauth2
+                .userInfoEndpoint(
+                    (userInfoEndpointConfig) ->
+                        userInfoEndpointConfig.userService(customOAuth2UserService))
+                .successHandler(customSuccessHandler)
+                .failureHandler(
+                    (request, response, exception) -> {
+                      System.out.println("OAuth 로그인 실패: " + exception.getMessage());
+                      response.sendRedirect("/login?error"); // 실패시 리다이렉트
+                    }));
+
+    // 경로별 인가 작업
+    http.authorizeHttpRequests(
+        (auth) -> auth.requestMatchers("/").permitAll().anyRequest().authenticated());
+
+    // 세션 설정
+    http.sessionManagement(
+        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+    return http.build();
+  }
 }
