@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.5.9](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.8...v1.5.9) (2025-03-23)
+
+
+### Bug Fixes
+
+* **cd:** update deploy.yml ([4894577](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/48945772e10edd07cca7251b7fd8940aaf164fbf))
+* **cd:** update deploy.yml ([44473eb](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/44473eba0f6567927a1f3fe024ee33872153ab2d))
+
 ## [1.5.8](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.7...v1.5.8) (2025-03-23)
 
 
