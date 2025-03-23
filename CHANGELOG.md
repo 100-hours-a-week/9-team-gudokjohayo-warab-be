@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.5.3](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.2...v1.5.3) (2025-03-23)
+
+
+### Bug Fixes
+
+* **cd:** add CI/CD pipeline ([52f753b](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/52f753b6657d22aaffe2958143a14fd5f430e611))
+
 ## [1.5.2](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.1...v1.5.2) (2025-03-23)
 
 
