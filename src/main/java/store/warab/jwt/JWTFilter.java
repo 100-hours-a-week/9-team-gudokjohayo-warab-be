@@ -24,33 +24,34 @@ public class JWTFilter extends OncePerRequestFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
+
+    String requestUri = request.getRequestURI();
+    if (requestUri.matches("^/login(?:/.*)?$")) {
+      filterChain.doFilter(request, response);
+      return;
+    }
+    if (requestUri.matches("^/oauth2(?:/.*)?$")) {
+      filterChain.doFilter(request, response);
+      return;
+    }
+
     String token = null;
     Cookie[] cookies = request.getCookies();
     if (cookies != null) {
       for (Cookie cookie : cookies) {
-        if ("jwt".equals(cookie.getName())) { // JWT가 담긴 쿠키 이름을 "jwt"로 가정
+        if ("jwt".equals(cookie.getName())) { // JWT가 담긴 쿠키 이름
           token = cookie.getValue();
           break;
         }
       }
     }
 
-    String requestUri = request.getRequestURI();
-    if (requestUri.matches("^\\\\/login(?:\\\\/.*)?$")) {
-      filterChain.doFilter(request, response);
-      return;
-    }
-    if (requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
-      filterChain.doFilter(request, response);
-      return;
-    }
-
-    if (token != null && !jwtUtil.isExpired(token)) {
-      String username = jwtUtil.getUsername(token);
+    if (token != null && !jwtUtil.isTokenExpired(token)) {
+      Long userId = jwtUtil.getUserIdFromToken(token);
 
       // User 객체를 생성하여 CustomUserDetails에 전달
       User user = new User();
-      user.setNickname(username); // 필요한 정보 설정
+      user.setId(userId); // userId 설정
 
       CustomUserDetails customUserDetails = new CustomUserDetails(user, Collections.emptyMap());
 

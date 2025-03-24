@@ -10,14 +10,14 @@ import store.warab.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    @Query("SELECT u.nickname FROM User u WHERE u.nickname LIKE :pattern ORDER BY u.createdAt DESC")
-    List<String> findLatestUserNickname(@Param("pattern") String pattern);
+  @Query("SELECT u.nickname FROM User u WHERE u.nickname LIKE :pattern ORDER BY u.createdAt DESC")
+  List<String> findLatestUserNickname(@Param("pattern") String pattern);
 
-    Optional<User> findByKakaoId(String kakaoId);
+  Optional<User> findByKakaoId(String kakaoId);
 
-    boolean existsByDiscordLink(String discordLink);
+  boolean existsByDiscordLink(String discordLink);
 
-    boolean existsByNickname(String nickname);
+  boolean existsByNickname(String nickname);
 
-    Optional<User> findByNickname(String nickname);
+  Optional<User> findByNickname(String nickname);
 }
