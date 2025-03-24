@@ -1,6 +1,7 @@
 package store.warab.controller;
 
 import java.util.List;
+import java.util.Set;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import store.warab.dto.GameDetailResponseDto;
@@ -26,7 +27,7 @@ public class GameController {
   @GetMapping
   public List<GameSearchResponseDto> getFilteredGames(
       @RequestParam(required = false) String query,
-      @RequestParam(required = false) List<Long> category_ids,
+      @RequestParam(required = false) Set<Long> category_ids,
       @RequestParam(required = false) Integer rating_min,
       @RequestParam(required = false) Integer rating_max,
       @RequestParam(required = false) Integer price_min,

@@ -20,7 +20,6 @@ public class GameDetailResponseDto {
   private String developer;
   private String publisher;
   private Integer rating;
-  private Integer player_count;
   private Integer recent_player;
   private LocalDateTime updated_at;
   private List<String> categories;
@@ -33,7 +32,6 @@ public class GameDetailResponseDto {
     this.release_date = gameStatic.getRelease_date();
     this.developer = gameStatic.getDeveloper();
     this.publisher = gameStatic.getPublisher();
-    this.player_count = gameStatic.getPlay_mode();
     this.categories =
         gameStatic.getGame_categories().stream()
             .map(gc -> gc.getCategory().getCategoryName())
