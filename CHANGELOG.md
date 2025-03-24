@@ -1,5 +1,12 @@
 # Change Log
 
+# [1.7.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.6.2...v1.7.0) (2025-03-24)
+
+
+### Features
+
+* 카테고리 목록 조회 + 회원 정보 수정 기능 수정 + 게임 필터링 limit 중복 오류 해결 ([d2ab6e7](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/d2ab6e74b204c9f07fa71e65e620fede92ab3bc9))
+
 ## [1.6.2](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.6.1...v1.6.2) (2025-03-23)
 
 
