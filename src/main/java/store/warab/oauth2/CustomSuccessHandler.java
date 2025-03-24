@@ -5,6 +5,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -18,7 +20,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
   private final JWTUtil jwtUtil;
   private final UserRepository userRepository;
 
-  public CustomSuccessHandler(JWTUtil jwtUtil, UserRepository userRepository) {
+    @Value("${redirect.oauth2.after.login}")
+    private String oauthRedirect;
+
+    public CustomSuccessHandler(JWTUtil jwtUtil, UserRepository userRepository) {
 
     this.jwtUtil = jwtUtil;
     this.userRepository = userRepository;
@@ -47,8 +52,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     String token = jwtUtil.createJwt(userId, 60 * 60 * 60L);
 
     // 쿠키에 저장 후 리다이렉션
-    response.addCookie(createCookie("Authorization", token));
-    response.sendRedirect("${redirect.oauth2.after.login}");
+    response.addCookie(createCookie("jwt", token));
+    response.sendRedirect(oauthRedirect);
   }
 
   private Cookie createCookie(String key, String value) {

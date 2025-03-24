@@ -1,7 +1,11 @@
 package store.warab.config;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.Arrays;
 import java.util.Collections;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,6 +32,9 @@ public class SecurityConfig {
   private final CustomSuccessHandler customSuccessHandler;
   private final JWTUtil jwtUtil;
 
+  @Value("${cors.allowed-origin}")
+  private String corsAllowedOrigin;
+
   public SecurityConfig(
       CustomOAuth2UserService customOAuth2UserService,
       CustomSuccessHandler customSuccessHandler,
@@ -51,14 +58,19 @@ public class SecurityConfig {
                     CorsConfiguration configuration = new CorsConfiguration();
 
                     configuration.setAllowedOrigins(
-                        Collections.singletonList("http://localhost:3000"));
+                        Collections.singletonList(corsAllowedOrigin));
+                    // origin URL 추가할 때 쉼표로 구분
+//                    configuration.setAllowedOrigins(
+//                        Arrays.asList(corsAllowedOrigin.split(",")));
                     configuration.setAllowedMethods(Collections.singletonList("*"));
                     configuration.setAllowCredentials(true);
                     configuration.setAllowedHeaders(Collections.singletonList("*"));
                     configuration.setMaxAge(3600L);
+                    configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization"));
 
-                    configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
-                    configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+                    //configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
+                    //configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+
 
                     return configuration;
                   }
