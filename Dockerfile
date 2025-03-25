@@ -1,14 +1,14 @@
 # 1단계: 빌드
-FROM gradle:8.5-jdk17-alpine as builder
+FROM arm64v8/gradle:8.5-jdk17 AS builder
 
 WORKDIR /app
-COPY --chown=gradle:gradle . /app
+COPY --chown=gradle:gradle . .
 
 # 캐싱을 위해 dependencies 먼저 빌드
-RUN gradle build -x test --no-daemon
+RUN gradle build -x test -x setGitCommitTemplate -x copyGitHooks --no-daemon
 
 # 2단계: 실행 이미지
-FROM eclipse-temurin:17-jre-alpine
+FROM arm64v8/eclipse-temurin:17-jre
 
 WORKDIR /app
 

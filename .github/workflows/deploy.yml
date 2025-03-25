@@ -13,7 +13,6 @@ env:
 jobs:
     deploy:
         runs-on: ubuntu-latest
-
         permissions:
             contents: write
 
@@ -61,19 +60,19 @@ jobs:
               run: |
                   docker buildx build \
                     --platform linux/arm64 \
-                    -t ${{ secrets.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}-${{ steps.env.outputs.env }} \
+                    -t ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}-${{ steps.env.outputs.env }} \
                     --push .
 
             - name: Checkout warab-deploy
               uses: actions/checkout@v3
               with:
-                  repository: your-username/warab-deploy
+                  repository: kjr2020/warab-deploy
                   token: ${{ secrets.DEPLOY_REPO_PAT }}
                   path: deploy
 
             - name: Update patch-deployment.yaml
               run: |
-                  sed -i "s|image:.*|image: ${{ secrets.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}-${{ steps.env.outputs.env }}|" \
+                  sed -i "s|image:.*|image: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}-${{ steps.env.outputs.env }}|" \
                     deploy/k8s/overlays/${{ steps.env.outputs.env }}/patch-deployment.yaml
 
             - name: Commit & push to warab-deploy

@@ -1,5 +1,79 @@
 # Change Log
 
+# [1.7.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.6.2...v1.7.0) (2025-03-24)
+
+
+### Features
+
+* 카테고리 목록 조회 + 회원 정보 수정 기능 수정 + 게임 필터링 limit 중복 오류 해결 ([d2ab6e7](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/d2ab6e74b204c9f07fa71e65e620fede92ab3bc9))
+
+## [1.6.2](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.6.1...v1.6.2) (2025-03-23)
+
+
+### Bug Fixes
+
+* **api:** add kakao exception api ([29f6214](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/29f621490936ca68ad5ee35f06cd05dd53d4dcce))
+
+## [1.6.1](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.6.0...v1.6.1) (2025-03-23)
+
+
+### Bug Fixes
+
+* api 경로 통합 + cors origin 추가 ([1856af1](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/1856af1c24990d7679087faa09db4a9fd6114fdd))
+
+# [1.6.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.9...v1.6.0) (2025-03-23)
+
+
+### Features
+
+* **api:** create HealthController(alb health check) ([72d3395](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/72d33952d64623fb06f03c5c8622006d932effcc))
+
+## [1.5.9](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.8...v1.5.9) (2025-03-23)
+
+
+### Bug Fixes
+
+* **cd:** update deploy.yml ([4894577](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/48945772e10edd07cca7251b7fd8940aaf164fbf))
+* **cd:** update deploy.yml ([44473eb](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/44473eba0f6567927a1f3fe024ee33872153ab2d))
+
+## [1.5.8](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.7...v1.5.8) (2025-03-23)
+
+
+### Bug Fixes
+
+* **cd:** update deploy.yml ([69bdd5e](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/69bdd5e95f1e50706934e9669c6dd47a80f7bda2))
+
+## [1.5.7](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.6...v1.5.7) (2025-03-23)
+
+
+### Bug Fixes
+
+* **cd:** update Dockefile ([007da76](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/007da76b8400210714f30072f99d55e652b87708))
+* **cd:** update Dockerfile ([fb5f8d8](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/fb5f8d822ef172de7e2ab22470fe6d231068efb5))
+
+## [1.5.6](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.5...v1.5.6) (2025-03-23)
+
+
+### Bug Fixes
+
+* **cd:** deploy.yml ([dcc3156](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/dcc31568ff3bc7fd17df6029e88d16c91ba3b145))
+* **merge:** develop ([c407931](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/c407931da0079875e2a79b32d9c223c4a71e5924))
+
+## [1.5.5](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.4...v1.5.5) (2025-03-23)
+
+
+### Bug Fixes
+
+* **cd:** update dockerfile ([83c8733](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/83c8733c2b3c79270f8cf7879f6b73e65740a8b9))
+* **merge:** develop ([9aee49f](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/9aee49fc44cb8b957296277dc5f818415db3857a))
+
+## [1.5.4](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.3...v1.5.4) (2025-03-23)
+
+
+### Bug Fixes
+
+* **cd:** Dockerfile error update ([2bc8dde](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/2bc8dde025a049e5e2eecf5c677262030f29dbd2))
+
 ## [1.5.3](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.5.2...v1.5.3) (2025-03-23)
 
 

@@ -22,7 +22,6 @@ public class GameStatic {
   private String publisher;
   private String developer;
   private String thumbnail;
-  private Integer play_mode;
   private Integer price;
 
   // 🔹 FK를 갖는 쪽(GameDynamic)에서 관계를 설정하므로 mappedBy 사용

@@ -1,6 +1,7 @@
 package store.warab.service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,7 @@ public class GameService {
 
   public List<GameSearchResponseDto> filterGames(
       String query,
-      List<Long> categoryIds,
+      Set<Long> categoryIds,
       Integer ratingMin,
       Integer ratingMax,
       Integer priceMin,
@@ -59,13 +60,12 @@ public class GameService {
       Integer limit) {
     // ✅ 카테고리 검증: 존재하지 않는 ID가 포함된 경우 400 오류 반환
     if (categoryIds != null && !categoryIds.isEmpty()) {
-      List<Long> validCategoryIds = categoryRepository.findValidCategoryIds(categoryIds);
+      Set<Long> validCategoryIds = categoryRepository.findValidCategoryIds(categoryIds);
       if (validCategoryIds.size() != categoryIds.size()) {
         throw new IllegalArgumentException("Invalid category ID provided.");
       }
     }
     limit = (limit == null) ? 10 : limit;
-
     List<GameStatic> games =
         gameStaticRepository.findFilteredGames(
             categoryIds,
@@ -77,43 +77,11 @@ public class GameService {
             onlinePlayersMin,
             onlinePlayersMax,
             sort,
+            mode,
             limit);
 
     return games.stream()
-        // ✅ 1️⃣ 카테고리 필터 먼저 적용
-        .filter(
-            game -> {
-              if (categoryIds == null || categoryIds.isEmpty()) return true; // 필터 없으면 통과
-
-              List<Long> gameCategoryIds =
-                  game.getGame_categories().stream()
-                      .map(gc -> gc.getCategory().getId()) // ✅ Category ID 가져오기
-                      .collect(Collectors.toList());
-
-              return gameCategoryIds.stream().anyMatch(categoryIds::contains); // 하나라도 포함되면 통과
-            })
-        // ✅ 2️⃣ query 필터 (제목 검색)
-        .filter(
-            game -> query == null || game.getTitle().toLowerCase().contains(query.toLowerCase()))
-        // ✅ 3️⃣ price 필터 (최소, 최대 가격)
-        .filter(
-            game ->
-                (priceMin == null || game.getPrice() >= priceMin)
-                    && (priceMax == null || game.getPrice() <= priceMax))
-        // ✅ 5️⃣ game_dynamic에서 rating 필터 적용
-        .map(
-            game -> {
-              GameDynamic gameDynamic = gameDynamicRepository.findById(game.getId()).orElse(null);
-              if (gameDynamic == null
-                  || (ratingMin == null || gameDynamic.getRating() >= ratingMin)
-                      && (ratingMax == null || gameDynamic.getRating() <= ratingMax)) {
-                return new GameSearchResponseDto(game, gameDynamic);
-              }
-              return null;
-            })
-        // ✅ null 값 제거
-        .filter(dto -> dto != null)
-        // ✅ 6️⃣ 최대 개수 제한
+        .map(game -> new GameSearchResponseDto(game, game.getGame_dynamic()))
         .collect(Collectors.toList());
   }
 }

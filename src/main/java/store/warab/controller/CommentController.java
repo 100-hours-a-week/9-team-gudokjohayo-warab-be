@@ -6,7 +6,7 @@ import store.warab.entity.Comment;
 import store.warab.service.CommentService;
 
 @RestController
-@RequestMapping("/api/comment") // URL
+@RequestMapping("/api/v1/comment") // URL
 @CrossOrigin(origins = "http://localhost:3000") // 프론트 3000번 포트 허용
 public class CommentController {
 

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import store.warab.common.util.ApiResponse;
 import store.warab.dto.UserDto;
+import store.warab.dto.UserUpdateResponseDto;
 import store.warab.service.UserService;
 
 @RestController
@@ -51,8 +52,8 @@ public class UserController {
 
   // 회원 정보 수정
   @PatchMapping("/profile")
-  public ResponseEntity<ApiResponse> updateProfile(@RequestBody UserDto userDto) {
-    UserDto updatedUserDto = userService.updateUserInfo(userDto);
-    return ResponseEntity.ok(new ApiResponse("user_profile_update_success", userDto));
+  public ResponseEntity<ApiResponse> updateProfile(@RequestBody UserUpdateResponseDto dto) {
+    userService.updateUserInfo(dto);
+    return ResponseEntity.ok(new ApiResponse("update_user_data_success", null));
   }
 }

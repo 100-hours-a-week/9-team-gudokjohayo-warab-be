@@ -17,8 +17,10 @@ public class GameDynamic {
   private Integer active_players;
   private String lowest_platform;
   private Integer lowest_price;
-  private Integer history_lowestPrice;
+  private Integer history_lowest_Price;
   private LocalDateTime updated_at;
+  private Long total_reviews;
+  private Boolean on_sale;
 
   // 🔹 game_static.id를 참조하는 FK 설정
   @OneToOne
