@@ -36,6 +36,13 @@ jobs:
             - name: Generate application-secrets.properties
               run: |
                   mkdir -p src/main/resources
+
+                  if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+                    CORS_ORIGIN="https://warab.store"
+                  else
+                    CORS_ORIGIN="https://dev.warab.store"
+                  fi
+
                   cat <<EOF > src/main/resources/application-secrets.properties
                   spring.datasource.url=${{ secrets.DATABASE_URL }}
                   spring.datasource.username=${{ secrets.DATABASE_USER }}
@@ -45,6 +52,8 @@ jobs:
                   spring.jwt.secret=${{ secrets.JWT_SECRET_KEY }}
                   sentry.auth.token=${{ secrets.SENTRY_TOKEN }}
                   sentry.dsn=${{ secrets.SENTRY_DSN }}
+                  redirect.oauth2.after.login=${CORS_ORIGIN}/main
+                  cors.allowed-origin=${CORS_ORIGIN}
                   EOF
 
             - name: Determine environment

@@ -16,8 +16,5 @@ public class CorsMvcConfig implements WebMvcConfigurer {
       .addMapping("/**")
       .exposedHeaders("Set-Cookie")
       .allowedOrigins(corsAllowedOrigin);
-
-        //.allowedOrigins("http://localhost:3000", "https://warab.store", "https://dev.warab.store");
-
   }
 }
