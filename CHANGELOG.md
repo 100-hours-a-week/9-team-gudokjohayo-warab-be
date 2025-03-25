@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.7.4](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.7.3...v1.7.4) (2025-03-25)
+
+
+### Bug Fixes
+
+* **cd:** cache delete ([780cbc1](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/780cbc1a959585e3ea649de38301e9cb3d5f364e))
+
 ## [1.7.3](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.7.2...v1.7.3) (2025-03-25)
 
 
