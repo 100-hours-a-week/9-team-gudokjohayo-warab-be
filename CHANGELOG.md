@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.7.3](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.7.2...v1.7.3) (2025-03-25)
+
+
+### Bug Fixes
+
+* **cd:** arm 관련 오류 수정 ([064c98f](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/064c98fde0092da847c19ac870709bfd3be7f47b))
+
 ## [1.7.2](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.7.1...v1.7.2) (2025-03-25)
 
 
