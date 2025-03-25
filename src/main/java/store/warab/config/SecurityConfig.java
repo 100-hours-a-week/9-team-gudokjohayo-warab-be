@@ -1,7 +1,9 @@
 package store.warab.config;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Collections;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,6 +30,9 @@ public class SecurityConfig {
   private final CustomSuccessHandler customSuccessHandler;
   private final JWTUtil jwtUtil;
 
+  @Value("${cors.allowed-origin}")
+  private String corsAllowedOrigin;
+
   public SecurityConfig(
       CustomOAuth2UserService customOAuth2UserService,
       CustomSuccessHandler customSuccessHandler,
@@ -50,15 +55,18 @@ public class SecurityConfig {
 
                     CorsConfiguration configuration = new CorsConfiguration();
 
-                    configuration.setAllowedOrigins(
-                        Collections.singletonList("http://localhost:3000"));
+                    configuration.setAllowedOrigins(Collections.singletonList(corsAllowedOrigin));
+                    // origin URL 추가할 때 쉼표로 구분
+                    //                    configuration.setAllowedOrigins(
+                    //                        Arrays.asList(corsAllowedOrigin.split(",")));
                     configuration.setAllowedMethods(Collections.singletonList("*"));
                     configuration.setAllowCredentials(true);
                     configuration.setAllowedHeaders(Collections.singletonList("*"));
                     configuration.setMaxAge(3600L);
+                    configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization"));
 
-                    configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
-                    configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+                    // configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
+                    // configuration.setExposedHeaders(Collections.singletonList("Authorization"));
 
                     return configuration;
                   }
@@ -72,9 +80,6 @@ public class SecurityConfig {
 
     // HTTP Basic 인증 방식 disable
     http.httpBasic((auth) -> auth.disable());
-
-    // JWT Filter 추가
-    http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
     // oauth2
     http.oauth2Login(
@@ -90,10 +95,18 @@ public class SecurityConfig {
                       response.sendRedirect("/login?error"); // 실패시 리다이렉트
                     }));
 
+    // JWT Filter 추가
+    http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+
     // 경로별 인가 작업
     http.authorizeHttpRequests(
         (auth) ->
             auth.requestMatchers("/", "/api/health").permitAll().anyRequest().authenticated());
+
+    // 경로별 인가 작업
+    //      http.authorizeHttpRequests(
+    //          (auth) -> auth.
+    //              anyRequest().permitAll()); // 모든 요청 허용
 
     // 세션 설정
     http.sessionManagement(

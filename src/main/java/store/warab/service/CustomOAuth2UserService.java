@@ -1,5 +1,6 @@
 package store.warab.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,11 +63,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
   // 닉네임 자동 생성 메서드
   private String generateUniqueNickname() {
     String prefix = "user";
-    Optional<String> latestNickname = userRepository.findLatestUserNickname(prefix + "%");
+    List<String> nicknames = userRepository.findLatestUserNickname(prefix + "%");
 
-    if (latestNickname.isPresent()) {
+    if (!nicknames.isEmpty()) {
       Pattern pattern = Pattern.compile(prefix + "(\\d+)");
-      Matcher matcher = pattern.matcher(latestNickname.get());
+      Matcher matcher = pattern.matcher(nicknames.get(0));
 
       if (matcher.find()) {
         int number = Integer.parseInt(matcher.group(1));

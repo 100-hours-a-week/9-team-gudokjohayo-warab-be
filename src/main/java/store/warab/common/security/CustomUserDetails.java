@@ -31,7 +31,7 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
   @Override
   public String getUsername() {
-    return user.getKakaoId();
+    return String.valueOf(user.getKakaoId());
   }
 
   @Override

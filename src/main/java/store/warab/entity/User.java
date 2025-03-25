@@ -21,13 +21,13 @@ public class User {
   @Column(name = "id")
   private Long id;
 
-  @Column(name = "kakao_id", length = 255)
+  @Column(name = "kakao_id", length = 255, unique = true)
   private String kakaoId;
 
   @Column(nullable = false, unique = true, length = 12)
   private String nickname;
 
-  @Column(name = "discord_link", length = 255, nullable = false)
+  @Column(name = "discord_link", length = 255)
   private String discordLink;
 
   @ManyToMany
@@ -35,6 +35,7 @@ public class User {
       name = "user_category",
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "category_id"))
+  @Builder.Default
   private Set<Category> categories = new HashSet<>();
 
   @CreatedDate
