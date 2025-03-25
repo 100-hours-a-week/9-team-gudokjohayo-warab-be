@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.7.5](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.7.4...v1.7.5) (2025-03-25)
+
+
+### Bug Fixes
+
+* game 관련 응답 정형화 ([4ab38b1](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/4ab38b12c80fe3ac00edccb22e43c8120a30ffb1))
+
 ## [1.7.4](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.7.3...v1.7.4) (2025-03-25)
 
 
