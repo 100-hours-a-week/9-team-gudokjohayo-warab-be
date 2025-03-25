@@ -1,9 +1,12 @@
 package store.warab.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import store.warab.common.util.ApiResponse;
 import store.warab.dto.GameDetailResponseDto;
 import store.warab.dto.GameSearchResponseDto;
 import store.warab.service.GameService;
@@ -18,14 +21,16 @@ public class GameController {
     this.gameService = gameService;
   }
 
+  ///api/v1/games/{id}
   @GetMapping("/{id}")
-  public ResponseEntity<GameDetailResponseDto> getGameDetail(@PathVariable Long id) {
-    GameDetailResponseDto gameDetail = gameService.getGameDetail(id);
-    return ResponseEntity.ok(gameDetail);
+  public ResponseEntity<ApiResponse> getGameDetail(@PathVariable Long id) {
+    GameDetailResponseDto data = gameService.getGameDetail(id);
+    return ResponseEntity.ok(new ApiResponse("game_detail_info_inquiry_success", data));
   }
 
+///api/v1/games
   @GetMapping
-  public List<GameSearchResponseDto> getFilteredGames(
+  public ResponseEntity<ApiResponse> getFilteredGames(
       @RequestParam(required = false) String query,
       @RequestParam(required = false) Set<Long> category_ids,
       @RequestParam(required = false) Integer rating_min,
@@ -39,19 +44,22 @@ public class GameController {
       @RequestParam(required = false) String mode,
       @RequestParam(required = false) String sort,
       @RequestParam(required = false) Integer limit) {
-    return gameService.filterGames(
-        query,
-        category_ids,
-        rating_min,
-        rating_max,
-        price_min,
-        price_max,
-        players_min,
-        players_max,
-        online_players_min,
-        online_players_max,
-        mode,
-        sort,
-        limit);
+      List<GameSearchResponseDto> games = gameService.filterGames(
+          query,
+          category_ids,
+          rating_min,
+          rating_max,
+          price_min,
+          price_max,
+          players_min,
+          players_max,
+          online_players_min,
+          online_players_max,
+          mode,
+          sort,
+          limit);
+        Map<String, Object> data = new HashMap<>();
+        data.put("games", games);
+      return ResponseEntity.ok(new ApiResponse("game_list_inquiry_success", data));
   }
 }
