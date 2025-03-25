@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.7.2](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.7.1...v1.7.2) (2025-03-25)
+
+
+### Bug Fixes
+
+* **cd:** set cors URL ([8efb078](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/8efb07826826e1a1d8d74124218ffd0df285caea))
+
 ## [1.7.1](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.7.0...v1.7.1) (2025-03-25)
 
 
