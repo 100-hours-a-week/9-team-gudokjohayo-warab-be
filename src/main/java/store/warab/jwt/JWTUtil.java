@@ -31,17 +31,6 @@ public class JWTUtil {
         .get("username", String.class);
   }
 
-  public Boolean isExpired(String token) {
-
-    return Jwts.parser()
-        .verifyWith(secretKey)
-        .build()
-        .parseSignedClaims(token)
-        .getPayload()
-        .getExpiration()
-        .before(new Date());
-  }
-
   // JWT 토큰 생성
   public String createJwt(Long userId, Long expiredMs) {
 
