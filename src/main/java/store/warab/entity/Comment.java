@@ -13,7 +13,8 @@ public class Comment {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+  @Column(name = "id", nullable = false)
+  private Integer commentId;
 
   /** TODO: user_id -> 실제 User 엔티티와의 @ManyToOne 관계 설정 예정 */
   @Column(name = "user_id", nullable = false)

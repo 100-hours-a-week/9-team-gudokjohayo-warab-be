@@ -1,10 +1,13 @@
 package store.warab.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import store.warab.common.util.ApiResponse;
 import store.warab.entity.Comment;
 import store.warab.jwt.JWTUtil;
 import store.warab.service.AuthService;
@@ -26,42 +29,42 @@ public class CommentController {
 
   /** [POST] /api/v1/comment 새 댓글 생성 */
   @PostMapping
-  public Comment createComment(@RequestBody CommentRequest request) {
-    return commentService.createComment(
-        request.getUserId(), request.getGameId(), request.getContent());
+  public ResponseEntity<ApiResponse> createComment(@RequestBody CommentRequest request) {
+      commentService.createComment(
+          request.getUserId(), request.getGameId(), request.getContent());
+      Map<String, Object> data = null;
+      return ResponseEntity
+          .status(HttpStatus.CREATED)
+          .body(new ApiResponse("comment_create_success", data));
   }
 
   /** [GET] /api/v1/comment/game/{gameId} 특정 게임에 달린 댓글 목록 */
   @GetMapping("/game/{gameId}")
-  public List<Comment> getCommentsByGame(
+  public ResponseEntity<ApiResponse> getCommentsByGame(
       @PathVariable Integer gameId) {
-    return commentService.getCommentsByGameId(gameId);
+      List<Comment> comments = commentService.getCommentsByGameId(gameId);
+    Map<String, Object> data = new HashMap<>();
+      data.put("comments", comments);
+      return ResponseEntity.ok(new ApiResponse("comment_list inquiry_success", data));
   }
 
   /** [PUT] /api/comment/{commentId} 댓글 수정 */
   @PutMapping("/{commentId}")
-  public Comment updateComment(
-      @PathVariable Integer commentId,
-      @RequestBody CommentRequest request,
-      @RequestHeader("Authorization") String token) {
-
-      Long tokenUserId = authService.extractUserId(token);
-      authService.verifyUser(tokenUserId, request.getUserId().longValue());
-
-      return commentService.updateComment(commentId, request.getContent());
+  public ResponseEntity<ApiResponse> updateComment(
+      @PathVariable Integer commentId, @RequestBody CommentRequest request) {
+      commentService.updateComment(commentId, request.getContent());
+      Map<String, Object> data = null;
+      return ResponseEntity.ok(new ApiResponse("update_comment_success", data));
   }
 
   /** [DELETE] /api/comment/{commentId} 댓글 삭제(softDelete 여부에 따라 분기) */
   @DeleteMapping("/{commentId}")
-  public void deleteComment(
-      @PathVariable Integer commentId,
-      @RequestParam(defaultValue = "false") boolean softDelete,
-      @RequestHeader("Authorization") String token) {
-
-      Long tokenUserId = authService.extractUserId(token);
-      commentService.deleteComment(commentId, tokenUserId, softDelete);
-
-}
+  public ResponseEntity<ApiResponse> deleteComment(
+      @PathVariable Integer commentId, @RequestParam(defaultValue = "false") boolean softDelete) {
+    commentService.deleteComment(commentId, softDelete);
+      Map<String, Object> data = null;
+      return ResponseEntity.ok(new ApiResponse("delete_comment_success", data));
+  }
 
   /** 댓글 생성/수정 시 받을 DTO */
   public static class CommentRequest {

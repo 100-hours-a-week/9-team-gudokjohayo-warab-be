@@ -1,5 +1,6 @@
 package store.warab.controller;
 
+import java.util.HashMap;
 //import java.lang.classfile.constantpool.StringEntry;
 import java.util.Map;
 
@@ -30,8 +31,8 @@ public class UserController {
   // 로그인 구현 되면 다른 사람이 못들어오게 해야함
   @GetMapping("/profile/{userId}")
   public ResponseEntity<ApiResponse> getProfile(@PathVariable long userId) {
-    UserDto userDto = userService.getUserById(userId);
-    return ResponseEntity.ok(new ApiResponse("user_profile_inquiry_success", userDto));
+      UserDto userDto = userService.getUserById(userId);
+      return ResponseEntity.ok(new ApiResponse("user_profile_inquiry_success", userDto));
   }
 
   // 닉네임 중복 확인
