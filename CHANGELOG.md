@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.7.1](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.7.0...v1.7.1) (2025-03-25)
+
+
+### Bug Fixes
+
+* JWT 토큰 생성 로직 변경 ([d21e796](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/d21e796a932ee45dbc94b35c5617057fa4ca3370))
+* kakaoId 타입 불일치 문제 ([7de263d](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/7de263d1393ad2d7625e1a2bcbd2a2d9cc5f5ff4))
+
 # [1.7.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.6.2...v1.7.0) (2025-03-24)
 
 
