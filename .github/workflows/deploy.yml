@@ -1,0 +1,104 @@
+name: Deploy Spring Boot App
+
+on:
+    push:
+        branches:
+            - main
+            - develop
+
+env:
+    IMAGE_NAME: warab-be
+    AWS_REGION: ap-northeast-2
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+
+        steps:
+            - name: Checkout warab-be
+              uses: actions/checkout@v3
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+              with:
+                  driver-opts: |
+                      image=moby/buildkit:v0.11.0
+                      memory=4096m
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v2
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ env.AWS_REGION }}
+
+            - name: Log in to Amazon ECR
+              uses: aws-actions/amazon-ecr-login@v2
+              id: ecr-login
+
+            - name: Determine environment
+              id: env
+              run: |
+                  if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+                    echo "env=prod" >> $GITHUB_OUTPUT
+                    echo "CORS_ORIGIN=https://warab.store" >> $GITHUB_OUTPUT
+                  else
+                    echo "env=dev" >> $GITHUB_OUTPUT
+                    echo "CORS_ORIGIN=https://dev.warab.store" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Generate application-secrets.properties
+              run: |
+                  mkdir -p src/main/resources
+                  cat <<EOF > src/main/resources/application-secrets.properties
+                  spring.datasource.url=${{ secrets.DATABASE_URL }}
+                  spring.datasource.username=${{ secrets.DATABASE_USER }}
+                  spring.datasource.password=${{ secrets.DATABASE_PASSWD }}
+                  spring.security.oauth2.client.registration.kakao.client-id=${{ secrets.KAKAO_CLIENT_ID }}
+                  spring.security.oauth2.client.registration.kakao.client-secret=${{ secrets.KAKAO_CLIENT_SECRET }}
+                  spring.jwt.secret=${{ secrets.JWT_SECRET_KEY }}
+                  sentry.auth.token=${{ secrets.SENTRY_TOKEN }}
+                  sentry.dsn=${{ secrets.SENTRY_DSN }}
+                  redirect.oauth2.after.login=${{ steps.env.outputs.CORS_ORIGIN }}/main
+                  cors.allowed-origin=${{ steps.env.outputs.CORS_ORIGIN }}
+                  EOF
+
+            - name: Build and push Docker image
+              uses: docker/build-push-action@v5
+              with:
+                context: .
+                platforms: linux/arm64
+                push: true
+                tags: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}-${{ steps.env.outputs.env }}
+                cache-from: type=local,src=/tmp/.buildx-cache
+                cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+                build-args: |
+                  GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m"
+
+            - name: Move cache
+              run: |
+                rm -rf /tmp/.buildx-cache
+                mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+            - name: Checkout warab-deploy
+              uses: actions/checkout@v3
+              with:
+                  repository: kjr2020/warab-deploy
+                  token: ${{ secrets.DEPLOY_REPO_PAT }}
+                  path: deploy
+
+            - name: Update patch-deployment.yaml
+              run: |
+                  sed -i "s|image:.*|image: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}-${{ steps.env.outputs.env }}|" \
+                    deploy/k8s/overlays/${{ steps.env.outputs.env }}/patch-deployment.yaml
+
+            - name: Commit & push to warab-deploy
+              run: |
+                  cd deploy
+                  git config user.name "github-actions"
+                  git config user.email "actions@github.com"
+                  git add k8s/overlays/${{ steps.env.outputs.env }}/patch-deployment.yaml
+                  git commit -m "chore: update image tag for ${{ steps.env.outputs.env }} - ${{ github.sha }}"
+                  git push

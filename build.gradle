@@ -18,6 +18,14 @@ spotless {
     }
 }
 
+jar{
+    enabled = false
+}
+
+bootJar {
+    archiveFileName = 'app.jar'
+}
+
 tasks.withType(Checkstyle).configureEach {
     reports {
         xml.required = true
@@ -70,7 +78,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-    // Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
@@ -101,6 +108,14 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+    testImplementation 'com.h2database:h2'
+
 }
 
 // JUnit 설정
