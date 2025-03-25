@@ -1,5 +1,6 @@
 package store.warab.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -7,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import store.warab.dto.GameDetailResponseDto;
+import store.warab.dto.GameInfoDto;
 import store.warab.dto.GameSearchResponseDto;
+import store.warab.dto.MainPageResponseDto;
 import store.warab.entity.GameDynamic;
 import store.warab.entity.GameStatic;
 import store.warab.repository.CategoryRepository;
@@ -84,4 +87,24 @@ public class GameService {
         .map(game -> new GameSearchResponseDto(game, game.getGame_dynamic()))
         .collect(Collectors.toList());
   }
+
+    public List<MainPageResponseDto> getGamesForMainPage()
+    {
+        List<GameStatic> discountedGames = gameStaticRepository.findTopDiscountedGames();
+        List<GameInfoDto> discountedGamesList = discountedGames.stream()
+            .map(discountedGame -> new GameInfoDto(discountedGame, discountedGame.getGame_dynamic()))
+            .collect(Collectors.toList());
+
+        List<GameStatic> popularGames = gameStaticRepository.findTopPopularGames();
+        List<GameInfoDto> popularGamesList = popularGames.stream()
+            .map(popularGame -> new GameInfoDto(popularGame, popularGame.getGame_dynamic()))
+            .collect(Collectors.toList());
+
+        // 3. 결과 리스트로 포장
+        List<MainPageResponseDto> result = new ArrayList<>();
+        result.add(new MainPageResponseDto("🔥 현재 할인 중인 게임이에요", discountedGamesList));
+        result.add(new MainPageResponseDto("🏆 지금 인기 많은 게임이에요", popularGamesList));
+
+        return result;
+    }
 }
