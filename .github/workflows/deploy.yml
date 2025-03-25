@@ -22,6 +22,10 @@ jobs:
 
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
+              with:
+                  driver-opts: |
+                      image=moby/buildkit:v0.11.0
+                      memory=4096m
 
             - name: Configure AWS credentials
               uses: aws-actions/configure-aws-credentials@v2
@@ -32,17 +36,22 @@ jobs:
 
             - name: Log in to Amazon ECR
               uses: aws-actions/amazon-ecr-login@v2
+              id: ecr-login
+
+            - name: Determine environment
+              id: env
+              run: |
+                  if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+                    echo "env=prod" >> $GITHUB_OUTPUT
+                    echo "CORS_ORIGIN=https://warab.store" >> $GITHUB_OUTPUT
+                  else
+                    echo "env=dev" >> $GITHUB_OUTPUT
+                    echo "CORS_ORIGIN=https://dev.warab.store" >> $GITHUB_OUTPUT
+                  fi
 
             - name: Generate application-secrets.properties
               run: |
                   mkdir -p src/main/resources
-
-                  if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-                    CORS_ORIGIN="https://warab.store"
-                  else
-                    CORS_ORIGIN="https://dev.warab.store"
-                  fi
-
                   cat <<EOF > src/main/resources/application-secrets.properties
                   spring.datasource.url=${{ secrets.DATABASE_URL }}
                   spring.datasource.username=${{ secrets.DATABASE_USER }}
@@ -52,25 +61,21 @@ jobs:
                   spring.jwt.secret=${{ secrets.JWT_SECRET_KEY }}
                   sentry.auth.token=${{ secrets.SENTRY_TOKEN }}
                   sentry.dsn=${{ secrets.SENTRY_DSN }}
-                  redirect.oauth2.after.login=${CORS_ORIGIN}/main
-                  cors.allowed-origin=${CORS_ORIGIN}
+                  redirect.oauth2.after.login=${{ steps.env.outputs.CORS_ORIGIN }}/main
+                  cors.allowed-origin=${{ steps.env.outputs.CORS_ORIGIN }}
                   EOF
 
-            - name: Determine environment
-              id: env
-              run: |
-                  if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-                    echo "env=prod" >> $GITHUB_OUTPUT
-                  else
-                    echo "env=dev" >> $GITHUB_OUTPUT
-                  fi
-
-            - name: Build and push Docker image (ARM64)
-              run: |
-                  docker buildx build \
-                    --platform linux/arm64 \
-                    -t ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}-${{ steps.env.outputs.env }} \
-                    --push .
+            - name: Build and push Docker image
+              uses: docker/build-push-action@v5
+              with:
+                  context: .
+                  platforms: linux/arm64
+                  push: true
+                  tags: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}-${{ steps.env.outputs.env }}
+                  cache-from: type=registry,ref=${{ secrets.ECR_REGISTRY }}:cache-${{ steps.env.outputs.env }}
+                  cache-to: type=registry,ref=${{ secrets.ECR_REGISTRY }}:cache-${{ steps.env.outputs.env }},mode=max
+                  build-args: |
+                      GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m"
 
             - name: Checkout warab-deploy
               uses: actions/checkout@v3
