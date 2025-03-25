@@ -68,14 +68,19 @@ jobs:
             - name: Build and push Docker image
               uses: docker/build-push-action@v5
               with:
-                  context: .
-                  platforms: linux/arm64
-                  push: true
-                  tags: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}-${{ steps.env.outputs.env }}
-                  cache-from: type=registry,ref=${{ secrets.ECR_REGISTRY }}:cache-${{ steps.env.outputs.env }}
-                  cache-to: type=registry,ref=${{ secrets.ECR_REGISTRY }}:cache-${{ steps.env.outputs.env }},mode=max
-                  build-args: |
-                      GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m"
+                context: .
+                platforms: linux/arm64
+                push: true
+                tags: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}-${{ steps.env.outputs.env }}
+                cache-from: type=local,src=/tmp/.buildx-cache
+                cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+                build-args: |
+                  GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m"
+
+            - name: Move cache
+              run: |
+                rm -rf /tmp/.buildx-cache
+                mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
             - name: Checkout warab-deploy
               uses: actions/checkout@v3
