@@ -49,11 +49,18 @@ public class CommentService {
   }
 
   // 댓글 삭제
-  public void deleteComment(Integer commentId, boolean softDelete) {
+  public void deleteComment(Integer commentId, Long tokenUserId , boolean softDelete) {
     Comment comment = getComment(commentId);
+
+    // 댓글 작성자가 요청한 사용자와 일치하는지 확인
+    if (!comment.getUserId().equals(tokenUserId)) {
+      throw new IllegalArgumentException("해당 댓글을 삭제할 권한이 없습니다.");
+    }
+
     if (softDelete) {
       // 논리적 삭제: deleted_at 컬럼에 현재 시간 세팅
       comment.setDeletedAt(java.time.LocalDateTime.now());
+      commentRepository.save(comment);
     } else {
       // 물리 삭제
       commentRepository.deleteById(commentId);

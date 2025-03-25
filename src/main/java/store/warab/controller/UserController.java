@@ -1,21 +1,30 @@
 package store.warab.controller;
 
 import java.util.HashMap;
+//import java.lang.classfile.constantpool.StringEntry;
 import java.util.Map;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import store.warab.common.util.ApiResponse;
 import store.warab.dto.UserDto;
 import store.warab.dto.UserUpdateResponseDto;
+import store.warab.jwt.JWTUtil;
+import store.warab.service.AuthService;
 import store.warab.service.UserService;
 
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
   private final UserService userService;
+  private final AuthService authService;
 
-  public UserController(UserService userService) {
+  public UserController(UserService userService, AuthService authService) {
+
     this.userService = userService;
+    this.authService = authService;
   }
 
   // 유저 프로필 조회
@@ -53,7 +62,13 @@ public class UserController {
 
   // 회원 정보 수정
   @PatchMapping("/profile")
-  public ResponseEntity<ApiResponse> updateProfile(@RequestBody UserUpdateResponseDto dto) {
+  public ResponseEntity<ApiResponse> updateProfile(
+          @RequestBody UserUpdateResponseDto dto,
+          @RequestHeader("Authorization") String token) {
+
+    Long tokenUserId = authService.extractUserId(token);
+    authService.verifyUser(tokenUserId, dto.getId());
+
     userService.updateUserInfo(dto);
     return ResponseEntity.ok(new ApiResponse("update_user_data_success", null));
   }
