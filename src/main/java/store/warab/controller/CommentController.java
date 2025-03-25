@@ -16,17 +16,17 @@ public class CommentController {
     this.commentService = commentService;
   }
 
-  /** [POST] /api/comment 새 댓글 생성 */
+  /** [POST] /api/v1/comment 새 댓글 생성 */
   @PostMapping
   public Comment createComment(@RequestBody CommentRequest request) {
     return commentService.createComment(
         request.getUserId(), request.getGameId(), request.getContent());
   }
 
-  /** [GET] /api/comments/game/{gameId} 특정 게임에 달린 댓글 목록 */
-  @GetMapping("/{game}/{gameId}")
+  /** [GET] /api/v1/comment/game/{gameId} 특정 게임에 달린 댓글 목록 */
+  @GetMapping("/game/{gameId}")
   public List<Comment> getCommentsByGame(
-      @PathVariable Integer gameId, @PathVariable String nickname) {
+      @PathVariable Integer gameId) {
     return commentService.getCommentsByGameId(gameId);
   }
 

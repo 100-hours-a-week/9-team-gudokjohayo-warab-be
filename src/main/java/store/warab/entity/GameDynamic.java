@@ -15,7 +15,7 @@ public class GameDynamic {
 
   private Integer rating;
   private Integer active_players;
-  private String lowest_platform;
+  private Integer lowest_platform;
   private Integer lowest_price;
   private Integer history_lowest_Price;
   private LocalDateTime updated_at;
