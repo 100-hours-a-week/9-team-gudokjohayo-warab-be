@@ -3,6 +3,18 @@
 # [1.8.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.7.5...v1.8.0) (2025-03-25)
 
 
+### Bug Fixes
+
+* api 응답 형식을 명세서에 맞게 수정 ([2a240aa](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/2a240aa6bdb6fba8c1779f0498f8faf4d0e5bb44))
+
+
+### Features
+
+* 권한 확인 로직 추가 ([9902d65](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/9902d65359900e1eb12039ce4d2f125f75d06d29))
+
+# [1.8.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.7.5...v1.8.0) (2025-03-25)
+
+
 ### Features
 
 * 권한 확인 로직 추가 ([9902d65](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/9902d65359900e1eb12039ce4d2f125f75d06d29))
