@@ -1,5 +1,12 @@
 # Change Log
 
+# [1.8.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.7.5...v1.8.0) (2025-03-25)
+
+
+### Features
+
+* 권한 확인 로직 추가 ([9902d65](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/9902d65359900e1eb12039ce4d2f125f75d06d29))
+
 ## [1.7.5](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.7.4...v1.7.5) (2025-03-25)
 
 
