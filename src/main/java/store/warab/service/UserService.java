@@ -21,6 +21,7 @@ public class UserService {
 
   private final UserRepository userRepository;
   private final CategoryRepository categoryRepository;
+  private final DiscordService discordService;
 
   public UserDto getUserById(long userId) {
     User user =
@@ -64,6 +65,23 @@ public class UserService {
                 () ->
                     new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다: " + userUpdateResponseDto.getId()));
+
+    // DiscordService 기능 호출
+    if (userUpdateResponseDto.getDiscordLink() != null
+        && !userUpdateResponseDto.getDiscordLink().isEmpty()) {
+      boolean isDuplicate =
+          !userUpdateResponseDto.getDiscordLink().equals(user.getDiscordLink())
+              && isDiscordLinkDuplicated(userUpdateResponseDto.getDiscordLink());
+
+      discordService.validateDiscordLink(userUpdateResponseDto.getDiscordLink(), isDuplicate);
+    }
+
+    // 닉네임 중복 체크 (현재 사용자의 닉네임이 아닌 경우에만)
+    if (!userUpdateResponseDto.getNickname().equals(user.getNickname())
+        && isNicknameDuplicated(userUpdateResponseDto.getNickname())) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 사용 중인 닉네임입니다.");
+    }
+
     // 닉네임, 디스코드 업데이트
     user.setNickname(userUpdateResponseDto.getNickname());
     user.setDiscordLink(userUpdateResponseDto.getDiscordLink());
