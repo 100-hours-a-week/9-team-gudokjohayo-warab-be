@@ -8,6 +8,26 @@
 * api 응답 형식을 명세서에 맞게 수정 ([2a240aa](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/2a240aa6bdb6fba8c1779f0498f8faf4d0e5bb44))
 * build error 수정 ([e8feb19](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/e8feb1941ff824daad12067c34b9b2ff8c8e60d8))
 * **cd:** add secrets: discord token ([a69c656](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/a69c6569f6e576af73d76f31f578323f4e909417))
+* **cd:** update deploy.yaml ([5db9b68](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/5db9b6801804b1a8a705784c6cae013ac5ee0617))
+* jwt를 쿠키로 받도록 수정 ([d2dd723](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/d2dd7236b8deab8a41b93ca306d9d517a43421cb))
+* 디스코드 링크 중복 확인 로직 수정 ([c344245](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/c34424580fea9929c1d4ad6496ecc5d11fa26a11))
+* 선호 카테고리 관련 : 회원정보 수정, 메인 페이지 ([809447a](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/809447aa3a4c836193714f42f9b535c9b8f4115c))
+
+
+### Features
+
+* 권한 확인 로직 추가 ([9902d65](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/9902d65359900e1eb12039ce4d2f125f75d06d29))
+* 디스코드 유효성 검사 로직 추가 ([14fcb9c](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/14fcb9c143683c8bbbba74ab89942e4dea9aa2c1))
+* 인기게임, 할인게임 for mainPage ([fc79eaf](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/fc79eaf9a8b77a955220173ee59c8744564c5c74))
+
+# [1.8.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.7.5...v1.8.0) (2025-03-26)
+
+
+### Bug Fixes
+
+* api 응답 형식을 명세서에 맞게 수정 ([2a240aa](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/2a240aa6bdb6fba8c1779f0498f8faf4d0e5bb44))
+* build error 수정 ([e8feb19](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/e8feb1941ff824daad12067c34b9b2ff8c8e60d8))
+* **cd:** add secrets: discord token ([a69c656](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/a69c6569f6e576af73d76f31f578323f4e909417))
 * jwt를 쿠키로 받도록 수정 ([d2dd723](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/d2dd7236b8deab8a41b93ca306d9d517a43421cb))
 * 디스코드 링크 중복 확인 로직 수정 ([c344245](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/c34424580fea9929c1d4ad6496ecc5d11fa26a11))
 * 선호 카테고리 관련 : 회원정보 수정, 메인 페이지 ([809447a](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/809447aa3a4c836193714f42f9b535c9b8f4115c))
