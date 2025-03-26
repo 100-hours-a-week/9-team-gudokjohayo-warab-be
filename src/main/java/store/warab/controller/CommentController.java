@@ -48,7 +48,7 @@ public class CommentController {
   public ResponseEntity<ApiResponse> updateComment(
       @PathVariable Integer commentId,
       @RequestBody CommentRequest request,
-      @RequestHeader("Authorization") String token) {
+      @CookieValue("jwt") String token) {
     Long tokenUserId = authService.extractUserId(token);
     authService.verifyUser(tokenUserId, request.getUserId().longValue());
     commentService.updateComment(commentId, request.getContent());
@@ -61,7 +61,7 @@ public class CommentController {
   public ResponseEntity<ApiResponse> deleteComment(
       @PathVariable Integer commentId,
       @RequestParam(defaultValue = "false") boolean softDelete,
-      @RequestHeader("Authorization") String token) {
+      @CookieValue("jwt") String token) {
 
     Long tokenUserId = authService.extractUserId(token);
     commentService.deleteComment(commentId, tokenUserId, softDelete);

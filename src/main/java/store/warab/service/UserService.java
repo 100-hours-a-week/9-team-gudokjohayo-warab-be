@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import store.warab.dto.UserDto;
-import store.warab.dto.UserUpdateResponseDto;
+import store.warab.dto.UserProfileUpdateRequest;
 import store.warab.entity.Category;
 import store.warab.entity.User;
 import store.warab.repository.CategoryRepository;
@@ -56,38 +56,25 @@ public class UserService {
   }
 
   @Transactional
-  public void updateUserInfo(UserUpdateResponseDto userUpdateResponseDto) {
+  public void updateUserInfo(UserProfileUpdateRequest request) {
     User user =
         userRepository
-            .findById(userUpdateResponseDto.getId())
+            .findById(request.getId())
             .orElseThrow(
                 () ->
                     new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다: " + userUpdateResponseDto.getId()));
+                        HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다: " + request.getId()));
     // 닉네임, 디스코드 업데이트
-    user.setNickname(userUpdateResponseDto.getNickname());
-    user.setDiscordLink(userUpdateResponseDto.getDiscordLink());
+    user.setNickname(request.getNickname());
+    user.setDiscordLink(request.getDiscordLink());
 
     // 카테고리 ID 검증 및 설정
-    Set<Long> validCategoryIds =
-        categoryRepository.findValidCategoryIds(userUpdateResponseDto.getCategoriesSet());
-    Set<Category> categorySet = new HashSet<>(categoryRepository.findAllById(validCategoryIds));
-    user.setCategories(categorySet);
-    //    User user =
-    //        User.builder()
-    //            .nickname(
-    //                userUpdateResponseDto.getNickname() != null ?
-    // userUpdateResponseDto.getNickname() : userEntity.getNickname())
-    //            .discordLink(
-    //                userUpdateResponseDto.getDiscordLink() != null
-    //                    ? userUpdateResponseDto.getDiscordLink()
-    //                    : userEntity.getDiscordLink())
-    //            .categories(
-    //                userUpdateResponseDto.getCategoriesSet() != null
-    //                    ? userUpdateResponseDto.getCategoriesSet()
-    //                    : userEntity.getCategories())
-    //            .build();
-    //    User updatedUserEntity = userRepository.save(user);
-    //    return UserDto.fromEntity(updatedUserEntity);
+    if (request.getCategoryIds() != null && !request.getCategoryIds().isEmpty()) {
+      Set<Long> validCategoryIds =
+          categoryRepository.findValidCategoryIds(request.getCategoryIds());
+      Set<Category> preferredCategories =
+          new HashSet<>(categoryRepository.findAllById(validCategoryIds));
+      user.setCategories(preferredCategories);
+    }
   }
 }
