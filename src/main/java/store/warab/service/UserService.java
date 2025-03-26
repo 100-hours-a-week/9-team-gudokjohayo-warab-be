@@ -21,6 +21,7 @@ public class UserService {
 
   private final UserRepository userRepository;
   private final CategoryRepository categoryRepository;
+  private final DiscordService discordService;
 
   public UserDto getUserById(long userId) {
     User user =
@@ -63,7 +64,9 @@ public class UserService {
             .orElseThrow(
                 () ->
                     new ResponseStatusException(
+
                         HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다: " + request.getId()));
+
     // 닉네임, 디스코드 업데이트
     user.setNickname(request.getNickname());
     user.setDiscordLink(request.getDiscordLink());
