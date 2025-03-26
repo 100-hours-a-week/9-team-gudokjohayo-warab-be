@@ -1,17 +1,12 @@
 package store.warab.controller;
 
-import java.util.HashMap;
-//import java.lang.classfile.constantpool.StringEntry;
+// import java.lang.classfile.constantpool.StringEntry;
 import java.util.Map;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import store.warab.common.util.ApiResponse;
 import store.warab.dto.UserDto;
 import store.warab.dto.UserUpdateResponseDto;
-import store.warab.jwt.JWTUtil;
 import store.warab.service.AuthService;
 import store.warab.service.UserService;
 
@@ -63,8 +58,7 @@ public class UserController {
   // 회원 정보 수정
   @PatchMapping("/profile")
   public ResponseEntity<ApiResponse> updateProfile(
-          @RequestBody UserUpdateResponseDto dto,
-          @RequestHeader("Authorization") String token) {
+      @RequestBody UserUpdateResponseDto dto, @RequestHeader("Authorization") String token) {
 
     Long tokenUserId = authService.extractUserId(token);
     authService.verifyUser(tokenUserId, dto.getId());

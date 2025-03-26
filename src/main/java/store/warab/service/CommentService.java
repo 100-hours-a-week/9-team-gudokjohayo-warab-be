@@ -49,7 +49,7 @@ public class CommentService {
   }
 
   // 댓글 삭제
-  public void deleteComment(Integer commentId, Long tokenUserId , boolean softDelete) {
+  public void deleteComment(Integer commentId, Long tokenUserId, boolean softDelete) {
     Comment comment = getComment(commentId);
 
     // 댓글 작성자가 요청한 사용자와 일치하는지 확인

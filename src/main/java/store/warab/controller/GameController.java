@@ -65,13 +65,12 @@ public class GameController {
     return ResponseEntity.ok(new ApiResponse("game_list_inquiry_success", data));
   }
 
-//  api/v1/games/main
-    @GetMapping("/main")
-  public ResponseEntity<ApiResponse> getMainPage()
-  {
-      List<MainPageResponseDto> games = gameService.getGamesForMainPage();
-      Map<String, Object> data = new HashMap<>();
-      data.put("games", games);
-      return ResponseEntity.ok(new ApiResponse("main_page_inquiry_success", data));
+  //  api/v1/games/main
+  @GetMapping("/main")
+  public ResponseEntity<ApiResponse> getMainPage() {
+    List<MainPageResponseDto> games = gameService.getGamesForMainPage();
+    Map<String, Object> data = new HashMap<>();
+    data.put("games", games);
+    return ResponseEntity.ok(new ApiResponse("main_page_inquiry_success", data));
   }
 }

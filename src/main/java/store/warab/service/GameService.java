@@ -88,23 +88,25 @@ public class GameService {
         .collect(Collectors.toList());
   }
 
-    public List<MainPageResponseDto> getGamesForMainPage()
-    {
-        List<GameStatic> discountedGames = gameStaticRepository.findTopDiscountedGames();
-        List<GameInfoDto> discountedGamesList = discountedGames.stream()
-            .map(discountedGame -> new GameInfoDto(discountedGame, discountedGame.getGame_dynamic()))
+  public List<MainPageResponseDto> getGamesForMainPage() {
+    List<GameStatic> discountedGames = gameStaticRepository.findTopDiscountedGames();
+    List<GameInfoDto> discountedGamesList =
+        discountedGames.stream()
+            .map(
+                discountedGame -> new GameInfoDto(discountedGame, discountedGame.getGame_dynamic()))
             .collect(Collectors.toList());
 
-        List<GameStatic> popularGames = gameStaticRepository.findTopPopularGames();
-        List<GameInfoDto> popularGamesList = popularGames.stream()
+    List<GameStatic> popularGames = gameStaticRepository.findTopPopularGames();
+    List<GameInfoDto> popularGamesList =
+        popularGames.stream()
             .map(popularGame -> new GameInfoDto(popularGame, popularGame.getGame_dynamic()))
             .collect(Collectors.toList());
 
-        // 3. 결과 리스트로 포장
-        List<MainPageResponseDto> result = new ArrayList<>();
-        result.add(new MainPageResponseDto("🔥 현재 할인 중인 게임이에요", discountedGamesList));
-        result.add(new MainPageResponseDto("🏆 지금 인기 많은 게임이에요", popularGamesList));
+    // 3. 결과 리스트로 포장
+    List<MainPageResponseDto> result = new ArrayList<>();
+    result.add(new MainPageResponseDto("🔥 현재 할인 중인 게임이에요", discountedGamesList));
+    result.add(new MainPageResponseDto("🏆 지금 인기 많은 게임이에요", popularGamesList));
 
-        return result;
-    }
+    return result;
+  }
 }
