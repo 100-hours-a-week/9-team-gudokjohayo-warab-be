@@ -78,11 +78,6 @@ jobs:
                   build-args: |
                       GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g -Dorg.gradle.parallel=true"
 
-            - name: Move cache
-              run: |
-                rm -rf /tmp/.buildx-cache
-                mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-
             - name: Checkout warab-deploy
               uses: actions/checkout@v3
               with:
