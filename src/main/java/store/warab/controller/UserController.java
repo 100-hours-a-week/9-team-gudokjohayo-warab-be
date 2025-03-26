@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import store.warab.common.util.ApiResponse;
 import store.warab.dto.UserDto;
-import store.warab.dto.UserUpdateResponseDto;
+import store.warab.dto.UserProfileUpdateRequest;
 import store.warab.service.AuthService;
 import store.warab.service.UserService;
 
@@ -56,9 +56,10 @@ public class UserController {
   }
 
   // 회원 정보 수정
+//    /api/v1/users/profile
   @PatchMapping("/profile")
   public ResponseEntity<ApiResponse> updateProfile(
-      @RequestBody UserUpdateResponseDto dto, @RequestHeader("Authorization") String token) {
+      @RequestBody UserProfileUpdateRequest dto, @RequestHeader("Authorization") String token) {
 
     Long tokenUserId = authService.extractUserId(token);
     authService.verifyUser(tokenUserId, dto.getId());

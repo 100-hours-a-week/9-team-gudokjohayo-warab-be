@@ -12,4 +12,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
   // ✅ 존재하는 카테고리 ID만 조회하는 쿼리 추가
   @Query("SELECT c.id FROM Category c WHERE c.id IN :category_ids")
   Set<Long> findValidCategoryIds(@Param("category_ids") Set<Long> category_ids);
+
+    Set<Category> findAllByIdIn(Set<Long> ids);
 }

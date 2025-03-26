@@ -10,16 +10,19 @@ import store.warab.common.util.ApiResponse;
 import store.warab.dto.GameDetailResponseDto;
 import store.warab.dto.GameSearchResponseDto;
 import store.warab.dto.MainPageResponseDto;
+import store.warab.service.AuthService;
 import store.warab.service.GameService;
 
 @RestController
 @RequestMapping("/api/v1/games")
 public class GameController {
   private final GameService gameService;
+private final AuthService authService;
 
-  public GameController(GameService gameService) {
+  public GameController(GameService gameService, AuthService authService) {
     System.out.println("create GameController");
     this.gameService = gameService;
+      this.authService = authService;
   }
 
   /// api/v1/games/{id}
@@ -67,8 +70,11 @@ public class GameController {
 
   //  api/v1/games/main
   @GetMapping("/main")
-  public ResponseEntity<ApiResponse> getMainPage() {
-    List<MainPageResponseDto> games = gameService.getGamesForMainPage();
+  public ResponseEntity<ApiResponse> getMainPage(@RequestHeader("Authorization") String token) {
+      Long tokenUserId = authService.extractUserId(token);
+      // userId 까서 선호 카테고리 가져오기
+
+    List<MainPageResponseDto> games = gameService.getGamesForMainPage(tokenUserId);
     Map<String, Object> data = new HashMap<>();
     data.put("games", games);
     return ResponseEntity.ok(new ApiResponse("main_page_inquiry_success", data));
