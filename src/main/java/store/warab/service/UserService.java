@@ -57,14 +57,14 @@ public class UserService {
   }
 
   @Transactional
-  public void updateUserInfo(UserProfileUpdateRequest request) {
+  public void updateUserInfo(UserProfileUpdateRequest request, Long userId) {
     User user =
         userRepository
-            .findById(request.getId())
+            .findById(userId)
             .orElseThrow(
                 () ->
                     new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다: " + request.getId()));
+                        HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다: " + userId));
 
     // 닉네임, 디스코드 업데이트
     user.setNickname(request.getNickname());
