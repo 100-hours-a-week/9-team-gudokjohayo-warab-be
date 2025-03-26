@@ -17,7 +17,7 @@ public class CommentService {
   }
 
   // 댓글 작성
-  public Comment createComment(Integer userId, Integer gameId, String content) {
+  public Comment createComment(Long userId, Long gameId, String content) {
     // userId, gameId 검증(존재 여부 등)은 추후 실제 User, Game 매핑 후에 처리
     Comment comment = new Comment();
     comment.setUserId(userId);
@@ -65,5 +65,14 @@ public class CommentService {
       // 물리 삭제
       commentRepository.deleteById(commentId);
     }
+  }
+
+  public boolean isOwnerOfComment(Long tokenUserId, Integer commentId) {
+    Comment comment =
+        commentRepository
+            .findById(commentId)
+            .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+
+    return comment.getUserId().equals(tokenUserId);
   }
 }

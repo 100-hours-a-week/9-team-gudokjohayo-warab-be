@@ -65,7 +65,7 @@ public class UserController {
 
   // 회원 정보 수정
   //    /api/v1/users/profile
-  @PatchMapping("/profile")
+  @PutMapping("/profile")
   public ResponseEntity<ApiResponse> updateProfile(
       @RequestBody UserProfileUpdateRequest dto, @CookieValue("jwt") String token) {
 
