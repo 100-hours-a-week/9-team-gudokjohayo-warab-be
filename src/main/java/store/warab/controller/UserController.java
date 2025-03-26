@@ -18,7 +18,8 @@ public class UserController {
   private final AuthService authService;
   private final DiscordService discordService;
 
-  public UserController(UserService userService, AuthService authService, DiscordService discordService) {
+  public UserController(
+      UserService userService, AuthService authService, DiscordService discordService) {
 
     this.userService = userService;
     this.authService = authService;
@@ -50,7 +51,9 @@ public class UserController {
   // 디스코드 링크 유효성 확인
   @GetMapping("/check_discord_link")
   public ResponseEntity<?> checkDiscordLink(@RequestParam(required = true) String discordLink) {
-    boolean isDuplicated = discordService.validateDiscordLink(discordLink, userService.isDiscordLinkDuplicated(discordLink));
+    boolean isDuplicated =
+        discordService.validateDiscordLink(
+            discordLink, userService.isDiscordLinkDuplicated(discordLink));
     if (isDuplicated) {
       return ResponseEntity.ok(
           Map.of("message", "already_exist_discord_link", "duplication", isDuplicated));
@@ -62,7 +65,7 @@ public class UserController {
 
   // 회원 정보 수정
   //    /api/v1/users/profile
-  @PatchMapping("/profile")
+  @PutMapping("/profile")
   public ResponseEntity<ApiResponse> updateProfile(
       @RequestBody UserProfileUpdateRequest dto, @CookieValue("jwt") String token) {
 

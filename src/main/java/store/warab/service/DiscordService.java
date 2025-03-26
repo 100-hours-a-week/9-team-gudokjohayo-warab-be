@@ -55,6 +55,6 @@ public class DiscordService {
     if (isDuplicate) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 사용 중인 디스코드 링크입니다.");
     }
-      return isDuplicate;
+    return isDuplicate;
   }
 }

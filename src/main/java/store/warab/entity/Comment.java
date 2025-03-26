@@ -14,15 +14,15 @@ public class Comment {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", nullable = false)
-  private Integer commentId;
+  private Long commentId;
 
   /** TODO: user_id -> 실제 User 엔티티와의 @ManyToOne 관계 설정 예정 */
   @Column(name = "user_id", nullable = false)
-  private Integer userId;
+  private Long userId;
 
   /** TODO: game_id -> 실제 Game 엔티티와의 @ManyToOne 관계 설정 예정 */
   @Column(name = "game_id", nullable = false)
-  private Integer gameId;
+  private Long gameId;
 
   @Column(length = 100, nullable = false)
   private String content; // varchar(100)
