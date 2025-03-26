@@ -25,10 +25,9 @@ public class GameService {
   private final GameStaticRepository gameStaticRepository;
   private final GameDynamicRepository gameDynamicRepository;
   private final CategoryRepository categoryRepository;
-private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-
-    public GameService(
+  public GameService(
       GameStaticRepository gameStaticRepository,
       GameDynamicRepository gameDynamicRepository,
       CategoryRepository categoryRepository,
@@ -96,41 +95,46 @@ private final UserRepository userRepository;
   }
 
   public List<MainPageResponseDto> getGamesForMainPage(Long userId) {
-      User user = userRepository.findById(userId)
-          .orElseThrow(() -> new RuntimeException("User not found"));
+    User user =
+        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
-      List<MainPageResponseDto> result = new ArrayList<>();
+    List<MainPageResponseDto> result = new ArrayList<>();
 
-      // 1. 할인 게임
-      List<GameStatic> discountedGames = gameStaticRepository.findTopDiscountedGames();
+    // 1. 할인 게임
+    List<GameStatic> discountedGames = gameStaticRepository.findTopDiscountedGames();
     List<GameInfoDto> discountedGamesList =
         discountedGames.stream()
             .map(
                 discountedGame -> new GameInfoDto(discountedGame, discountedGame.getGame_dynamic()))
             .collect(Collectors.toList());
-  result.add(new MainPageResponseDto("🔥 현재 할인 중인 게임이에요", discountedGamesList));
+    result.add(new MainPageResponseDto("🔥 현재 할인 중인 게임이에요", discountedGamesList));
 
-  // 2. 인기 게임
+    // 2. 인기 게임
     List<GameStatic> popularGames = gameStaticRepository.findTopPopularGames();
     List<GameInfoDto> popularGamesList =
         popularGames.stream()
             .map(popularGame -> new GameInfoDto(popularGame, popularGame.getGame_dynamic()))
             .collect(Collectors.toList());
-  result.add(new MainPageResponseDto("🏆 지금 인기 많은 게임이에요", popularGamesList));
+    result.add(new MainPageResponseDto("🏆 지금 인기 많은 게임이에요", popularGamesList));
 
     // 3. 카테고리별 추천 게임
-  Set<Category> preferredCategories = user.getCategories();
-      if (!preferredCategories.isEmpty()) {
-          preferredCategories.stream()
-              .limit(5)
-              .forEach(category -> {
-                  List<GameStatic> games = gameStaticRepository.findTop10ByCategoryId(category.getId());
-                  List<GameInfoDto> gameList = games.stream()
-                      .map(game -> new GameInfoDto(game, game.getGame_dynamic()))
-                      .collect(Collectors.toList());
-                  result.add(new MainPageResponseDto("🎮 " + category.getCategoryName() + " 게임이에요", gameList));
+    Set<Category> preferredCategories = user.getCategories();
+    if (!preferredCategories.isEmpty()) {
+      preferredCategories.stream()
+          .limit(5)
+          .forEach(
+              category -> {
+                List<GameStatic> games =
+                    gameStaticRepository.findTop10ByCategoryId(category.getId());
+                List<GameInfoDto> gameList =
+                    games.stream()
+                        .map(game -> new GameInfoDto(game, game.getGame_dynamic()))
+                        .collect(Collectors.toList());
+                result.add(
+                    new MainPageResponseDto(
+                        "🎮 " + category.getCategoryName() + " 게임이에요", gameList));
               });
-      }
+    }
     return result;
   }
 }

@@ -87,8 +87,9 @@ public interface GameStaticRepository extends JpaRepository<GameStatic, Long> {
       nativeQuery = true)
   List<GameStatic> findTopPopularGames();
 
-    @Query(
-        value = """
+  @Query(
+      value =
+          """
         SELECT DISTINCT ON (gs.id) gs.*
         FROM game_static gs
         LEFT JOIN game_dynamic gd ON gs.id = gd.game_id
@@ -97,6 +98,6 @@ public interface GameStaticRepository extends JpaRepository<GameStatic, Long> {
         ORDER BY gs.id, gd.total_reviews DESC
         LIMIT 10
         """,
-        nativeQuery = true)
-    List<GameStatic> findTop10ByCategoryId(@Param("categoryId") Long categoryId);
+      nativeQuery = true)
+  List<GameStatic> findTop10ByCategoryId(@Param("categoryId") Long categoryId);
 }

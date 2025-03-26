@@ -24,9 +24,11 @@ public class UserController {
 
   // 유저 프로필 조회
   // 로그인 구현 되면 다른 사람이 못들어오게 해야함
-  @GetMapping("/profile/{userId}")
-  public ResponseEntity<ApiResponse> getProfile(@PathVariable long userId) {
-    UserDto userDto = userService.getUserById(userId);
+  // /api/v1/users/profile
+  @GetMapping("/profile")
+  public ResponseEntity<ApiResponse> getProfile(@CookieValue("jwt") String token) {
+    Long tokenUserId = authService.extractUserId(token);
+    UserDto userDto = userService.getUserById(tokenUserId);
     return ResponseEntity.ok(new ApiResponse("user_profile_inquiry_success", userDto));
   }
 
@@ -56,10 +58,10 @@ public class UserController {
   }
 
   // 회원 정보 수정
-//    /api/v1/users/profile
+  //    /api/v1/users/profile
   @PatchMapping("/profile")
   public ResponseEntity<ApiResponse> updateProfile(
-      @RequestBody UserProfileUpdateRequest dto, @RequestHeader("Authorization") String token) {
+      @RequestBody UserProfileUpdateRequest dto, @CookieValue("jwt") String token) {
 
     Long tokenUserId = authService.extractUserId(token);
     authService.verifyUser(tokenUserId, dto.getId());

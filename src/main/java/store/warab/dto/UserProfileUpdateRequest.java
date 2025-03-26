@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import store.warab.entity.User;
 
 @NoArgsConstructor
 @AllArgsConstructor

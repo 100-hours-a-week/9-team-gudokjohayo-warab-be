@@ -17,12 +17,12 @@ import store.warab.service.GameService;
 @RequestMapping("/api/v1/games")
 public class GameController {
   private final GameService gameService;
-private final AuthService authService;
+  private final AuthService authService;
 
   public GameController(GameService gameService, AuthService authService) {
     System.out.println("create GameController");
     this.gameService = gameService;
-      this.authService = authService;
+    this.authService = authService;
   }
 
   /// api/v1/games/{id}
@@ -70,10 +70,8 @@ private final AuthService authService;
 
   //  api/v1/games/main
   @GetMapping("/main")
-  public ResponseEntity<ApiResponse> getMainPage(@RequestHeader("Authorization") String token) {
-      Long tokenUserId = authService.extractUserId(token);
-      // userId 까서 선호 카테고리 가져오기
-
+  public ResponseEntity<ApiResponse> getMainPage(@CookieValue("jwt") String token) {
+    Long tokenUserId = authService.extractUserId(token);
     List<MainPageResponseDto> games = gameService.getGamesForMainPage(tokenUserId);
     Map<String, Object> data = new HashMap<>();
     data.put("games", games);

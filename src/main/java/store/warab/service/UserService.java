@@ -69,11 +69,12 @@ public class UserService {
     user.setDiscordLink(request.getDiscordLink());
 
     // 카테고리 ID 검증 및 설정
-      if (request.getCategoryIds() != null && !request.getCategoryIds().isEmpty()) {
-          Set<Long> validCategoryIds =
-              categoryRepository.findValidCategoryIds(request.getCategoryIds());
-          Set<Category> preferredCategories = new HashSet<>(categoryRepository.findAllById(validCategoryIds));
-          user.setCategories(preferredCategories);
-      }
+    if (request.getCategoryIds() != null && !request.getCategoryIds().isEmpty()) {
+      Set<Long> validCategoryIds =
+          categoryRepository.findValidCategoryIds(request.getCategoryIds());
+      Set<Category> preferredCategories =
+          new HashSet<>(categoryRepository.findAllById(validCategoryIds));
+      user.setCategories(preferredCategories);
+    }
   }
 }

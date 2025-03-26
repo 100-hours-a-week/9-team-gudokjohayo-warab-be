@@ -13,5 +13,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
   @Query("SELECT c.id FROM Category c WHERE c.id IN :category_ids")
   Set<Long> findValidCategoryIds(@Param("category_ids") Set<Long> category_ids);
 
-    Set<Category> findAllByIdIn(Set<Long> ids);
+  Set<Category> findAllByIdIn(Set<Long> ids);
 }
