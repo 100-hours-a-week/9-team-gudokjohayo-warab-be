@@ -23,9 +23,21 @@ jobs:
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
               with:
-                  driver-opts: |
-                      image=moby/buildkit:v0.11.0
-                      memory=4096m
+                driver-opts: |
+                  image=moby/buildkit:v0.12.1
+                  network=host
+                  memory=8g
+
+            - name: Build and push Docker image
+              uses: docker/build-push-action@v5
+              with:
+                context: .
+                platforms: linux/arm64
+                push: true
+                tags: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}-${{ steps.env.outputs.env }}
+                    # 캐시 옵션 제거
+                build-args: |
+                  GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g -Dorg.gradle.parallel=true"
 
             - name: Configure AWS credentials
               uses: aws-actions/configure-aws-credentials@v2
@@ -63,6 +75,7 @@ jobs:
                   sentry.dsn=${{ secrets.SENTRY_DSN }}
                   redirect.oauth2.after.login=${{ steps.env.outputs.CORS_ORIGIN }}/main
                   cors.allowed-origin=${{ steps.env.outputs.CORS_ORIGIN }}
+                  discord.bot.token=${{ secrets.DISCORD_BOT_TOKEN }}
                   EOF
 
             - name: Build and push Docker image
