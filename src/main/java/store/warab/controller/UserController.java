@@ -8,6 +8,7 @@ import store.warab.common.util.ApiResponse;
 import store.warab.dto.UserDto;
 import store.warab.dto.UserUpdateResponseDto;
 import store.warab.service.AuthService;
+import store.warab.service.DiscordService;
 import store.warab.service.UserService;
 
 @RestController
@@ -15,15 +16,16 @@ import store.warab.service.UserService;
 public class UserController {
   private final UserService userService;
   private final AuthService authService;
+  private final DiscordService discordService;
 
-  public UserController(UserService userService, AuthService authService) {
+  public UserController(UserService userService, AuthService authService, DiscordService discordService) {
 
     this.userService = userService;
     this.authService = authService;
+    this.discordService = discordService;
   }
 
   // 유저 프로필 조회
-  // 로그인 구현 되면 다른 사람이 못들어오게 해야함
   @GetMapping("/profile/{userId}")
   public ResponseEntity<ApiResponse> getProfile(@PathVariable long userId) {
     UserDto userDto = userService.getUserById(userId);
@@ -42,10 +44,10 @@ public class UserController {
     return ResponseEntity.ok(Map.of("message", "available_nickname", "duplication", isDuplicated));
   }
 
-  // 디스코드 링크 중복 확인
+  // 디스코드 링크 유효성 확인
   @GetMapping("/check_discord_link")
   public ResponseEntity<?> checkDiscordLink(@RequestParam(required = true) String discordLink) {
-    boolean isDuplicated = userService.isDiscordLinkDuplicated(discordLink);
+    boolean isDuplicated = discordService.validateDiscordLink(discordLink, userService.isDiscordLinkDuplicated(discordLink));
     if (isDuplicated) {
       return ResponseEntity.ok(
           Map.of("message", "already_exist_discord_link", "duplication", isDuplicated));

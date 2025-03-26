@@ -45,7 +45,7 @@ public class DiscordService {
   }
 
   // 디스코드 링크 검증 및 중복 검사
-  public void validateDiscordLink(String discordLink, boolean isDuplicate) {
+  public boolean validateDiscordLink(String discordLink, boolean isDuplicate) {
     String inviteCode = extractInviteCode(discordLink);
 
     if (inviteCode == null || !isValidInviteLink(inviteCode)) {
@@ -55,5 +55,6 @@ public class DiscordService {
     if (isDuplicate) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 사용 중인 디스코드 링크입니다.");
     }
+      return isDuplicate;
   }
 }
