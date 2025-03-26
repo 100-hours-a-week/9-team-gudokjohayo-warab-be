@@ -46,6 +46,7 @@ public interface GameStaticRepository extends JpaRepository<GameStatic, Long> {
               + "WHERE (COALESCE(:query, '') = '' OR LOWER(gs.title) LIKE LOWER(CONCAT('%', :query, '%'))) "
               + "AND (:price_min IS NULL OR gs.price >= :price_min) "
               + "AND (:mode IS NULL OR "
+              + ":mode = 'default' OR"
               + "(:mode = 'discounted' AND gd.on_sale = true)) "
               + "ORDER BY gs.id, gd.total_reviews DESC "
               + "LIMIT :limit",
@@ -85,4 +86,18 @@ public interface GameStaticRepository extends JpaRepository<GameStatic, Long> {
               + "LIMIT 10",
       nativeQuery = true)
   List<GameStatic> findTopPopularGames();
+
+  @Query(
+      value =
+          """
+        SELECT DISTINCT ON (gs.id) gs.*
+        FROM game_static gs
+        LEFT JOIN game_dynamic gd ON gs.id = gd.game_id
+        LEFT JOIN game_category gc ON gs.id = gc.game_id
+        WHERE gc.category_id = :categoryId
+        ORDER BY gs.id, gd.total_reviews DESC
+        LIMIT 10
+        """,
+      nativeQuery = true)
+  List<GameStatic> findTop10ByCategoryId(@Param("categoryId") Long categoryId);
 }

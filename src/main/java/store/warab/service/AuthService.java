@@ -21,10 +21,10 @@ public class AuthService {
    * @return 추출된 사용자 ID
    */
   public Long extractUserId(String token) {
-    if (token == null || !token.startsWith("Bearer ")) {
+    if (token == null) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다.");
     }
-    return jwtUtil.getUserIdFromToken(token.substring(7));
+    return jwtUtil.getUserIdFromToken(token);
   }
 
   /**
