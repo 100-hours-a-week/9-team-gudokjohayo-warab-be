@@ -68,11 +68,9 @@ public class UserController {
   @PutMapping("/profile")
   public ResponseEntity<ApiResponse> updateProfile(
       @RequestBody UserProfileUpdateRequest dto, @CookieValue("jwt") String token) {
-
     Long tokenUserId = authService.extractUserId(token);
-    authService.verifyUser(tokenUserId, dto.getId());
 
-    userService.updateUserInfo(dto);
+    userService.updateUserInfo(dto,tokenUserId);
     return ResponseEntity.ok(new ApiResponse("update_user_data_success", null));
   }
 }

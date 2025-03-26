@@ -1,6 +1,8 @@
 package store.warab.dto;
 
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +13,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserProfileUpdateRequest {
-  private Long id;
   private String nickname;
+
+  @JsonProperty("discord")
   private String discordLink;
+
+  @JsonProperty("discord")
   private Set<Long> categoryIds;
 }
