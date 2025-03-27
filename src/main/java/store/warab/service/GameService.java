@@ -58,13 +58,14 @@ public class GameService {
       Integer ratingMax,
       Integer priceMin,
       Integer priceMax,
-      Integer playersMin,
-      Integer playersMax,
+      Boolean singleplay,
+      Boolean multiplay,
       Integer onlinePlayersMin,
       Integer onlinePlayersMax,
       String mode,
       String sort,
-      Integer limit) {
+      Integer limit,
+      Integer offset) {
     // ✅ 카테고리 검증: 존재하지 않는 ID가 포함된 경우 400 오류 반환
     if (categoryIds != null && !categoryIds.isEmpty()) {
       Set<Long> validCategoryIds = categoryRepository.findValidCategoryIds(categoryIds);
@@ -72,20 +73,22 @@ public class GameService {
         throw new IllegalArgumentException("Invalid category ID provided.");
       }
     }
-    limit = (limit == null) ? 10 : limit;
     List<GameStatic> games =
         gameStaticRepository.findFilteredGames(
-            categoryIds,
             query,
+            categoryIds,
+            ratingMin,
+            ratingMax,
             priceMin,
             priceMax,
-            playersMin,
-            playersMax,
+            singleplay,
+            multiplay,
             onlinePlayersMin,
             onlinePlayersMax,
-            sort,
             mode,
-            limit);
+            sort,
+            limit,
+            offset);
 
     return games.stream()
         .map(game -> new GameSearchResponseDto(game, game.getGame_dynamic()))
