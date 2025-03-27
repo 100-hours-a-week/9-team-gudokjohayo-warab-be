@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import store.warab.dto.UserDto;
+import store.warab.dto.UserProfileResponseDto;
 import store.warab.dto.UserProfileUpdateRequest;
 import store.warab.entity.Category;
 import store.warab.entity.User;
@@ -23,7 +23,7 @@ public class UserService {
   private final CategoryRepository categoryRepository;
   private final DiscordService discordService;
 
-  public UserDto getUserById(long userId) {
+  public UserProfileResponseDto getUserById(long userId) {
     User user =
         userRepository
             .findById(userId)
@@ -31,7 +31,7 @@ public class UserService {
                 () ->
                     new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다" + userId) {});
-    return UserDto.fromEntity(user);
+    return UserProfileResponseDto.fromEntity(user);
   }
 
   public boolean isNicknameDuplicated(String nickname) {
