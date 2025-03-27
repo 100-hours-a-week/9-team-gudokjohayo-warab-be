@@ -104,14 +104,13 @@ public interface GameStaticRepository extends JpaRepository<GameStatic, Long> {
   List<GameStatic> findTopPopularGames();
 
   @Query(
-      value =
-          """
-        SELECT DISTINCT ON (gs.id) gs.*
+      value = """
+        SELECT gs.*
         FROM game_static gs
         LEFT JOIN game_dynamic gd ON gs.id = gd.game_id
         LEFT JOIN game_category gc ON gs.id = gc.game_id
         WHERE gc.category_id = :categoryId
-        ORDER BY gs.id, gd.total_reviews DESC
+        ORDER BY gd.total_reviews DESC
         LIMIT 10
         """,
       nativeQuery = true)
