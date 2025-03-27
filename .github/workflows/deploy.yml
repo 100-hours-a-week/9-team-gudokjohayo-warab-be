@@ -37,11 +37,9 @@ jobs:
                   if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
                     echo "env=prod" >> $GITHUB_OUTPUT
                     echo "CORS_ORIGIN=https://warab.store" >> $GITHUB_OUTPUT
-#                    echo "KAKAO_REDIRECT_URI=https://api.wrab.store/login/oauth2/code/kakao" >> $GITHUB_OUTPUT
                   else
                     echo "env=dev" >> $GITHUB_OUTPUT
                     echo "CORS_ORIGIN=https://dev.warab.store" >> $GITHUB_OUTPUT
-#                    echo "KAKAO_REDIRECT_URI=https://dev.api.wrab.store/login/oauth2/code/kakao" >> $GITHUB_OUTPUT
                   fi
 
             - name: Generate application-secrets.properties
