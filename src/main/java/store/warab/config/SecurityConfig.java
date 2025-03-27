@@ -104,9 +104,9 @@ public class SecurityConfig {
             auth.requestMatchers("/", "/api/health").permitAll().anyRequest().authenticated());
 
     // 경로별 인가 작업
-    //      http.authorizeHttpRequests(
-    //          (auth) -> auth.
-    //              anyRequest().permitAll()); // 모든 요청 허용
+//          http.authorizeHttpRequests(
+//              (auth) -> auth.
+//                  anyRequest().permitAll()); // 모든 요청 허용
 
     // 세션 설정
     http.sessionManagement(
