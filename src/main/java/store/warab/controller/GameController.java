@@ -1,9 +1,6 @@
 package store.warab.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import store.warab.common.util.ApiResponse;
@@ -37,7 +34,7 @@ public class GameController {
   @GetMapping
   public ResponseEntity<ApiResponse> getFilteredGames(
       @RequestParam(required = false) String query,
-      @RequestParam(required = false) Set<Long> category_ids,
+      @RequestParam(required = false) List<Long> category_ids,
       @RequestParam(required = false) Integer rating_min,
       @RequestParam(required = false) Integer rating_max,
       @RequestParam(required = false) Integer price_min,
@@ -54,11 +51,6 @@ public class GameController {
 
     // page를 offset으로 변환
     Integer offset = page * limit;
-
-    // category_ids 빈 리스트 처리
-    if (category_ids != null && category_ids.isEmpty()) {
-      category_ids = null;
-    }
 
     List<GameSearchResponseDto> games =
         gameService.filterGames(

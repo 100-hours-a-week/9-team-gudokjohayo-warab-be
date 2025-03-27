@@ -53,7 +53,7 @@ public class GameService {
 
   public List<GameSearchResponseDto> filterGames(
       String query,
-      Set<Long> categoryIds,
+      List<Long> categoryIds,
       Integer ratingMin,
       Integer ratingMax,
       Integer priceMin,
@@ -66,29 +66,43 @@ public class GameService {
       String sort,
       Integer limit,
       Integer offset) {
-    // ✅ 카테고리 검증: 존재하지 않는 ID가 포함된 경우 400 오류 반환
-    if (categoryIds != null && !categoryIds.isEmpty()) {
-      Set<Long> validCategoryIds = categoryRepository.findValidCategoryIds(categoryIds);
-      if (validCategoryIds.size() != categoryIds.size()) {
-        throw new IllegalArgumentException("Invalid category ID provided.");
-      }
+
+    List<GameStatic> games;
+
+    if (categoryIds == null || categoryIds.isEmpty()) {
+      games =
+          gameStaticRepository.findFilteredGamesWithoutCategory(
+              query,
+              ratingMin,
+              ratingMax,
+              priceMin,
+              priceMax,
+              singleplay,
+              multiplay,
+              onlinePlayersMin,
+              onlinePlayersMax,
+              mode,
+              limit,
+              offset);
+    } else {
+      Long[] categoryIdsArray = categoryIds.toArray(new Long[0]);
+
+      games =
+          gameStaticRepository.findFilteredGamesWithCategory(
+              query,
+              categoryIdsArray,
+              ratingMin,
+              ratingMax,
+              priceMin,
+              priceMax,
+              singleplay,
+              multiplay,
+              onlinePlayersMin,
+              onlinePlayersMax,
+              mode,
+              limit,
+              offset);
     }
-    List<GameStatic> games =
-        gameStaticRepository.findFilteredGames(
-            query,
-            categoryIds,
-            ratingMin,
-            ratingMax,
-            priceMin,
-            priceMax,
-            singleplay,
-            multiplay,
-            onlinePlayersMin,
-            onlinePlayersMax,
-            mode,
-            sort,
-            limit,
-            offset);
 
     return games.stream()
         .map(game -> new GameSearchResponseDto(game, game.getGame_dynamic()))
