@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import store.warab.common.exception.NotFoundException;
 import store.warab.dto.*;
 import store.warab.entity.Category;
 import store.warab.entity.GameDynamic;
@@ -136,7 +137,7 @@ public class GameService {
   }
 
   public GameLowestPriceDto getLowestPrice(Long id) {
-      GameDynamic gameDynamic = gameDynamicRepository.findById(id).orElseThrow();
+      GameDynamic gameDynamic = gameDynamicRepository.findById(id).orElseThrow(() -> new NotFoundException("게임이 존재하지 않습니다."));
       return new GameLowestPriceDto(gameDynamic);
   }
 }
