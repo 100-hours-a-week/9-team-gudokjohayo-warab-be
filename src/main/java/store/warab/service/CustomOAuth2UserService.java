@@ -1,10 +1,7 @@
 package store.warab.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -52,35 +49,36 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     } else {
       String nickname = userInfo.getNickname();
       if (nickname == null || nickname.isEmpty()) {
-        //nickname = generateUniqueNickname();
-          nickname = nicknameGenerator.generateUniqueNickname();
+        // nickname = generateUniqueNickname();
+        nickname = nicknameGenerator.generateUniqueNickname();
       }
 
-      user = User.builder()
-          .kakaoId(providerId)
-          .nickname(nickname)
-          .createdAt(LocalDateTime.now())
-          .build();
+      user =
+          User.builder()
+              .kakaoId(providerId)
+              .nickname(nickname)
+              .createdAt(LocalDateTime.now())
+              .build();
       userRepository.save(user);
     }
 
     return new CustomUserDetails(user, oAuth2User.getAttributes());
   }
 
-//  // 닉네임 자동 생성 메서드
-//  private String generateUniqueNickname() {
-//    String prefix = "user";
-//    List<String> nicknames = userRepository.findLatestUserNickname(prefix + "%");
-//
-//    if (!nicknames.isEmpty()) {
-//      Pattern pattern = Pattern.compile(prefix + "(\\d+)");
-//      Matcher matcher = pattern.matcher(nicknames.get(0));
-//
-//      if (matcher.find()) {
-//        int number = Integer.parseInt(matcher.group(1));
-//        return prefix + (number + 1);
-//      }
-//    }
-//    return prefix + "1";
-//  }
+  //  // 닉네임 자동 생성 메서드
+  //  private String generateUniqueNickname() {
+  //    String prefix = "user";
+  //    List<String> nicknames = userRepository.findLatestUserNickname(prefix + "%");
+  //
+  //    if (!nicknames.isEmpty()) {
+  //      Pattern pattern = Pattern.compile(prefix + "(\\d+)");
+  //      Matcher matcher = pattern.matcher(nicknames.get(0));
+  //
+  //      if (matcher.find()) {
+  //        int number = Integer.parseInt(matcher.group(1));
+  //        return prefix + (number + 1);
+  //      }
+  //    }
+  //    return prefix + "1";
+  //  }
 }

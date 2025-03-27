@@ -59,7 +59,6 @@ jobs:
                   redirect.oauth2.after.login=${{ steps.env.outputs.CORS_ORIGIN }}/main
                   cors.allowed-origin=${{ steps.env.outputs.CORS_ORIGIN }}
                   discord.bot.token=${{ secrets.DISCORD_BOT_TOKEN }}
-                  spring.security.oauth2.client.registration.kakao.redirect-uri={baseUrl}/login/oauth2/code/kakao
                   EOF
 
             - name: Set up Docker Buildx
