@@ -25,7 +25,7 @@ public class GameService {
   private final CategoryRepository categoryRepository;
   private final UserRepository userRepository;
 
-    public GameService(
+  public GameService(
       GameStaticRepository gameStaticRepository,
       GameDynamicRepository gameDynamicRepository,
       CategoryRepository categoryRepository,
@@ -51,58 +51,58 @@ public class GameService {
     return new GameDetailResponseDto(game_static, game_dynamic);
   }
 
-    public List<GameSearchResponseDto> filterGames(
-        String query,
-        List<Long> categoryIds,
-        Integer ratingMin,
-        Integer ratingMax,
-        Integer priceMin,
-        Integer priceMax,
-        Boolean singleplay,
-        Boolean multiplay,
-        Integer onlinePlayersMin,
-        Integer onlinePlayersMax,
-        String mode,
-        String sort,
-        Integer limit,
-        Integer offset) {
+  public List<GameSearchResponseDto> filterGames(
+      String query,
+      List<Long> categoryIds,
+      Integer ratingMin,
+      Integer ratingMax,
+      Integer priceMin,
+      Integer priceMax,
+      Boolean singleplay,
+      Boolean multiplay,
+      Integer onlinePlayersMin,
+      Integer onlinePlayersMax,
+      String mode,
+      String sort,
+      Integer limit,
+      Integer offset) {
 
-        List<GameStatic> games;
+    List<GameStatic> games;
 
-        if (categoryIds == null || categoryIds.isEmpty()) {
-            games = gameStaticRepository.findFilteredGamesWithoutCategory(
-                query,
-                ratingMin,
-                ratingMax,
-                priceMin,
-                priceMax,
-                singleplay,
-                multiplay,
-                onlinePlayersMin,
-                onlinePlayersMax,
-                mode,
-                limit,
-                offset
-            );
-        } else {
-            Long[] categoryIdsArray = categoryIds.toArray(new Long[0]);
+    if (categoryIds == null || categoryIds.isEmpty()) {
+      games =
+          gameStaticRepository.findFilteredGamesWithoutCategory(
+              query,
+              ratingMin,
+              ratingMax,
+              priceMin,
+              priceMax,
+              singleplay,
+              multiplay,
+              onlinePlayersMin,
+              onlinePlayersMax,
+              mode,
+              limit,
+              offset);
+    } else {
+      Long[] categoryIdsArray = categoryIds.toArray(new Long[0]);
 
-            games = gameStaticRepository.findFilteredGamesWithCategory(
-                query,
-                categoryIdsArray,
-                ratingMin,
-                ratingMax,
-                priceMin,
-                priceMax,
-                singleplay,
-                multiplay,
-                onlinePlayersMin,
-                onlinePlayersMax,
-                mode,
-                limit,
-                offset
-            );
-        }
+      games =
+          gameStaticRepository.findFilteredGamesWithCategory(
+              query,
+              categoryIdsArray,
+              ratingMin,
+              ratingMax,
+              priceMin,
+              priceMax,
+              singleplay,
+              multiplay,
+              onlinePlayersMin,
+              onlinePlayersMax,
+              mode,
+              limit,
+              offset);
+    }
 
     return games.stream()
         .map(game -> new GameSearchResponseDto(game, game.getGame_dynamic()))
