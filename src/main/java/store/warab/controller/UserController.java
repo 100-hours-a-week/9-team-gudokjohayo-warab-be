@@ -5,7 +5,7 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import store.warab.common.util.ApiResponse;
-import store.warab.dto.UserDto;
+import store.warab.dto.UserProfileResponseDto;
 import store.warab.dto.UserProfileUpdateRequest;
 import store.warab.service.AuthService;
 import store.warab.service.DiscordService;
@@ -31,9 +31,9 @@ public class UserController {
   @GetMapping("/profile")
   public ResponseEntity<ApiResponse> getProfile(@CookieValue("jwt") String token) {
     Long tokenUserId = authService.extractUserId(token);
-    UserDto userDto = userService.getUserById(tokenUserId);
+    UserProfileResponseDto userProfileResponseDto = userService.getUserById(tokenUserId);
 
-    return ResponseEntity.ok(new ApiResponse("user_profile_inquiry_success", userDto));
+    return ResponseEntity.ok(new ApiResponse("user_profile_inquiry_success", userProfileResponseDto));
   }
 
   // 닉네임 중복 확인
