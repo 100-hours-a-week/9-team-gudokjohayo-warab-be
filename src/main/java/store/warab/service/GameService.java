@@ -7,10 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import store.warab.dto.GameDetailResponseDto;
-import store.warab.dto.GameInfoDto;
-import store.warab.dto.GameSearchResponseDto;
-import store.warab.dto.MainPageResponseDto;
+import store.warab.dto.*;
 import store.warab.entity.Category;
 import store.warab.entity.GameDynamic;
 import store.warab.entity.GameStatic;
@@ -136,5 +133,10 @@ public class GameService {
               });
     }
     return result;
+  }
+
+  public GameLowestPriceDto getLowestPrice(Long id) {
+      GameDynamic gameDynamic = gameDynamicRepository.findById(id).orElseThrow();
+      return new GameLowestPriceDto(gameDynamic);
   }
 }
