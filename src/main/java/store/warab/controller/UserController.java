@@ -56,14 +56,14 @@ public class UserController {
       try {
           discordService.validateDiscordLink(discordLink, isDuplicated);
           return ResponseEntity.ok(
-              Map.of("message", "available_discord_link", "duplication", isDuplicated));
+              Map.of("message", "available_discordLink", "duplication", false));
       } catch (ResponseStatusException e) {
           if (isDuplicated) {
               return ResponseEntity.ok(
-                  Map.of("message", "already_exist_discord_link", "duplication", true));
+                  Map.of("message", "already_exist_discordLink", "duplication", true));
           }
           return ResponseEntity.status(e.getStatusCode())
-              .body(Map.of("message", e.getReason(), "error", e.getMessage()));
+              .body(Map.of("message", "invalid_discordlink", "error", e.getMessage()));
       }
   }
 
