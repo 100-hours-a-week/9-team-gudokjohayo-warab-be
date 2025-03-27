@@ -19,7 +19,7 @@ public class AuthController {
     cookie.setHttpOnly(true);
 
     response.addCookie(cookie);
-    response.sendRedirect("/login");
+    //response.sendRedirect("/login");
 
     return ResponseEntity.ok().body("로그아웃에 성공하였습니다.");
   }
