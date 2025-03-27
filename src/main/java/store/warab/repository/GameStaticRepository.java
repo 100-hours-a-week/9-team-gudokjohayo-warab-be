@@ -44,7 +44,8 @@ public interface GameStaticRepository extends JpaRepository<GameStatic, Long> {
               + "LEFT JOIN game_dynamic gd ON gs.id = gd.game_id "
               + "LEFT JOIN game_category gc ON gs.id = gc.game_id "
               + "WHERE (COALESCE(:query, '') = '' OR LOWER(gs.title) LIKE LOWER(CONCAT('%', :query, '%'))) "
-//              + "AND (:category_ids_non_empty IS NULL OR gc.category_id = ANY(CAST(:category_ids_non_empty AS BIGINT[]))) "
+              //              + "AND (:category_ids_non_empty IS NULL OR gc.category_id =
+              // ANY(CAST(:category_ids_non_empty AS BIGINT[]))) "
               + "AND (:price_min IS NULL OR gs.price >= :price_min) "
               + "AND (:price_max IS NULL OR gs.price <= :price_max) "
               + "AND (:rating_min IS NULL OR gd.rating >= :rating_min) "
@@ -73,8 +74,7 @@ public interface GameStaticRepository extends JpaRepository<GameStatic, Long> {
       @Param("sort") String sort,
       @Param("mode") String mode,
       @Param("limit") Integer limit,
-      @Param("offset") Integer offset
-  );
+      @Param("offset") Integer offset);
 
   @Query(
       value =
