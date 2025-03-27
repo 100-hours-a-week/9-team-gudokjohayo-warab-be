@@ -2,6 +2,7 @@ package store.warab.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,10 +18,16 @@ public class UserProfileResponseDto {
   @JsonProperty("discord_link")
   private String discordLink;
 
-  private Set<Category> categories;
+  private Set<CategoryResponseDto> categorys;
 
   public static UserProfileResponseDto fromEntity(User user) {
-    return new UserProfileResponseDto(
-        user.getNickname(), user.getDiscordLink(), user.getCategories());
+    Set<Category> categoryEntity = user.getCategories();
+
+    Set<CategoryResponseDto> categories =
+        categoryEntity.stream()
+            .map(category -> new CategoryResponseDto(category.getId(), category.getCategoryName()))
+            .collect(Collectors.toSet());
+
+    return new UserProfileResponseDto(user.getNickname(), user.getDiscordLink(), categories);
   }
 }

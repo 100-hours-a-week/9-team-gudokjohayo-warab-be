@@ -44,25 +44,37 @@ public interface GameStaticRepository extends JpaRepository<GameStatic, Long> {
               + "LEFT JOIN game_dynamic gd ON gs.id = gd.game_id "
               + "LEFT JOIN game_category gc ON gs.id = gc.game_id "
               + "WHERE (COALESCE(:query, '') = '' OR LOWER(gs.title) LIKE LOWER(CONCAT('%', :query, '%'))) "
+              //              + "AND (:category_ids_non_empty IS NULL OR gc.category_id =
+              // ANY(CAST(:category_ids_non_empty AS BIGINT[]))) "
               + "AND (:price_min IS NULL OR gs.price >= :price_min) "
+              + "AND (:price_max IS NULL OR gs.price <= :price_max) "
+              + "AND (:rating_min IS NULL OR gd.rating >= :rating_min) "
+              + "AND (:rating_max IS NULL OR gd.rating <= :rating_max) "
+              + "AND (:singleplay IS NULL OR gs.is_singleplay = true)"
+              + "AND (:multiplay IS NULL OR gs.is_multiplay = true)"
+              + "AND (:online_players_min IS NULL OR gd.active_players >= :online_players_min) "
+              + "AND (:online_players_max IS NULL OR gd.active_players <= :online_players_max) "
               + "AND (:mode IS NULL OR "
               + ":mode = 'default' OR"
               + "(:mode = 'discounted' AND gd.on_sale = true)) "
               + "ORDER BY gs.id, gd.total_reviews DESC "
-              + "LIMIT :limit",
+              + "LIMIT :limit OFFSET :offset",
       nativeQuery = true)
   List<GameStatic> findFilteredGames(
-      @Param("category_ids") Set<Long> category_ids,
       @Param("query") String query,
+      @Param("category_ids") Set<Long> category_ids,
+      @Param("rating_min") Integer rating_min,
+      @Param("rating_max") Integer rating_max,
       @Param("price_min") Integer price_min,
       @Param("price_max") Integer price_max,
-      @Param("players_min") Integer players_min,
-      @Param("players_max") Integer players_max,
+      @Param("singleplay") Boolean singleplay,
+      @Param("multiplay") Boolean multiplay,
       @Param("online_players_min") Integer online_players_min,
       @Param("online_players_max") Integer online_players_max,
       @Param("sort") String sort,
       @Param("mode") String mode,
-      @Param("limit") Integer limit);
+      @Param("limit") Integer limit,
+      @Param("offset") Integer offset);
 
   @Query(
       value =
