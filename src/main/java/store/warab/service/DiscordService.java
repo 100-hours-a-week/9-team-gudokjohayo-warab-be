@@ -35,12 +35,12 @@ public class DiscordService {
   // 초대 코드 유효성 검사 메서드
   public boolean isValidInviteLink(String inviteCode) {
     if (botToken == null || botToken.isEmpty()) {
-        log.error("Discord bot token이 설정되지 않았습니다.");
+      log.error("Discord bot token이 설정되지 않았습니다.");
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Discord 서비스 설정 오류");
     }
 
     try {
-        log.info("DiscordClient 생성 시작 - botToken: {}", botToken);
+      log.info("DiscordClient 생성 시작 - botToken: {}", botToken);
       DiscordClient client = DiscordClient.create(botToken);
       log.info("Discord 초대 링크 검증 중 - 초대 코드: {}", inviteCode);
       InviteData inviteData = client.getInvite(inviteCode).block();

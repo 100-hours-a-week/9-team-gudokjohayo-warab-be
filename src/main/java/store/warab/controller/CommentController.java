@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import store.warab.common.util.ApiResponse;
 import store.warab.dto.CommentRequest;
 import store.warab.dto.CommentResponseDto;
-import store.warab.entity.Comment;
-import store.warab.entity.User;
 import store.warab.service.AuthService;
 import store.warab.service.CommentService;
 
@@ -44,7 +42,7 @@ public class CommentController {
   /** [GET] /api/v1/games/{gameId}/comment 특정 게임에 달린 댓글 목록 */
   @GetMapping("/{gameId}/comment")
   public ResponseEntity<ApiResponse> getCommentsByGame(@PathVariable Integer gameId) {
-      List<CommentResponseDto>  comments = commentService.getCommentDtosByGameId(gameId);
+    List<CommentResponseDto> comments = commentService.getCommentDtosByGameId(gameId);
     Map<String, Object> data = new HashMap<>();
     data.put("comments", comments);
     return ResponseEntity.ok(new ApiResponse("comment_list inquiry_success", data));

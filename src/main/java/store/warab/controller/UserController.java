@@ -4,13 +4,13 @@ package store.warab.controller;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import store.warab.common.util.ApiResponse;
 import store.warab.dto.UserProfileResponseDto;
 import store.warab.dto.UserProfileUpdateRequest;
 import store.warab.service.AuthService;
 import store.warab.service.DiscordService;
 import store.warab.service.UserService;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -34,7 +34,8 @@ public class UserController {
     Long tokenUserId = authService.extractUserId(token);
     UserProfileResponseDto userProfileResponseDto = userService.getUserById(tokenUserId);
 
-    return ResponseEntity.ok(new ApiResponse("user_profile_inquiry_success", userProfileResponseDto));
+    return ResponseEntity.ok(
+        new ApiResponse("user_profile_inquiry_success", userProfileResponseDto));
   }
 
   // 닉네임 중복 확인
@@ -51,20 +52,20 @@ public class UserController {
 
   // 디스코드 링크 유효성 확인
   @GetMapping("/check_discord_link")
-  public ResponseEntity<?> checkDiscordLink(@RequestParam(required = true, name = "discord_link") String discordLink) {
-      boolean isDuplicated = userService.isDiscordLinkDuplicated(discordLink);
-      try {
-          discordService.validateDiscordLink(discordLink, isDuplicated);
-          return ResponseEntity.ok(
-              Map.of("message", "available_discordLink", "duplication", false));
-      } catch (ResponseStatusException e) {
-          if (isDuplicated) {
-              return ResponseEntity.ok(
-                  Map.of("message", "already_exist_discordLink", "duplication", true));
-          }
-          return ResponseEntity.status(e.getStatusCode())
-              .body(Map.of("message", "invalid_discordlink", "error", e.getMessage()));
+  public ResponseEntity<?> checkDiscordLink(
+      @RequestParam(required = true, name = "discord_link") String discordLink) {
+    boolean isDuplicated = userService.isDiscordLinkDuplicated(discordLink);
+    try {
+      discordService.validateDiscordLink(discordLink, isDuplicated);
+      return ResponseEntity.ok(Map.of("message", "available_discordLink", "duplication", false));
+    } catch (ResponseStatusException e) {
+      if (isDuplicated) {
+        return ResponseEntity.ok(
+            Map.of("message", "already_exist_discordLink", "duplication", true));
       }
+      return ResponseEntity.status(e.getStatusCode())
+          .body(Map.of("message", "invalid_discordlink", "error", e.getMessage()));
+    }
   }
 
   // 회원 정보 수정
@@ -74,7 +75,7 @@ public class UserController {
       @RequestBody UserProfileUpdateRequest dto, @CookieValue("jwt") String token) {
     Long tokenUserId = authService.extractUserId(token);
 
-    userService.updateUserInfo(dto,tokenUserId);
+    userService.updateUserInfo(dto, tokenUserId);
     return ResponseEntity.ok(new ApiResponse("update_user_data_success", null));
   }
 }

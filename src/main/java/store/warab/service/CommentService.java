@@ -2,7 +2,6 @@ package store.warab.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import store.warab.dto.CommentResponseDto;
@@ -16,11 +15,11 @@ import store.warab.repository.UserRepository;
 public class CommentService {
 
   private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    public CommentService(CommentRepository commentRepository, UserRepository userRepository) {
+  public CommentService(CommentRepository commentRepository, UserRepository userRepository) {
     this.commentRepository = commentRepository;
-        this.userRepository = userRepository;
+    this.userRepository = userRepository;
   }
 
   // 댓글 작성
@@ -40,20 +39,20 @@ public class CommentService {
     return commentRepository.findByGameId(gameId);
   }
 
-    public List<CommentResponseDto> getCommentDtosByGameId(Integer gameId)
-    {
-        List<Comment> comments = commentRepository.findByGameId(gameId);
-        return comments.stream()
-            .map(comment -> {
-                User user = userRepository.findById(comment.getUserId())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-                return new CommentResponseDto(
-                    user,comment
-                );
+  public List<CommentResponseDto> getCommentDtosByGameId(Integer gameId) {
+    List<Comment> comments = commentRepository.findByGameId(gameId);
+    return comments.stream()
+        .map(
+            comment -> {
+              User user =
+                  userRepository
+                      .findById(comment.getUserId())
+                      .orElseThrow(() -> new RuntimeException("User not found"));
+              return new CommentResponseDto(user, comment);
             })
-            .collect(Collectors.toList());
+        .collect(Collectors.toList());
+  }
 
-    }
   // 특정 댓글
   @Transactional(readOnly = true)
   public Comment getComment(Integer commentId) {

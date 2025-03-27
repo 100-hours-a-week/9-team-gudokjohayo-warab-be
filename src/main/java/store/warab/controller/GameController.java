@@ -80,8 +80,8 @@ public class GameController {
   }
 
   @GetMapping("/{id}/lowest-price")
-    public ResponseEntity<ApiResponse> getLowestPrice(@PathVariable Long id) {
-      GameLowestPriceDto data = gameService.getLowestPrice(id);
-      return ResponseEntity.ok(new ApiResponse("get_lowest_price_success", data));
+  public ResponseEntity<ApiResponse> getLowestPrice(@PathVariable Long id) {
+    GameLowestPriceDto data = gameService.getLowestPrice(id);
+    return ResponseEntity.ok(new ApiResponse("get_lowest_price_success", data));
   }
 }

@@ -137,7 +137,10 @@ public class GameService {
   }
 
   public GameLowestPriceDto getLowestPrice(Long id) {
-      GameDynamic gameDynamic = gameDynamicRepository.findById(id).orElseThrow(() -> new NotFoundException("게임이 존재하지 않습니다."));
-      return new GameLowestPriceDto(gameDynamic);
+    GameDynamic gameDynamic =
+        gameDynamicRepository
+            .findById(id)
+            .orElseThrow(() -> new NotFoundException("게임이 존재하지 않습니다."));
+    return new GameLowestPriceDto(gameDynamic);
   }
 }

@@ -4,11 +4,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.NoHandlerFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -52,7 +50,8 @@ public class GlobalExceptionHandler {
   // 500 Error
   @ExceptionHandler(InternalServerException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  public ResponseEntity<ErrorResponse> handleInternalServerException(InternalServerException e, HttpServletRequest request) {
+  public ResponseEntity<ErrorResponse> handleInternalServerException(
+      InternalServerException e, HttpServletRequest request) {
     log.error("서버 에러 발생: ", e);
 
     ErrorResponse response =
