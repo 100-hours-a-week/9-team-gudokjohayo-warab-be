@@ -17,6 +17,6 @@ public class UserProfileUpdateRequest {
   @JsonProperty("discord")
   private String discordLink;
 
-  @JsonProperty("categories")
+  @JsonProperty("category")
   private Set<Long> categoryIds;
 }
