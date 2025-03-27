@@ -10,6 +10,7 @@ import store.warab.dto.UserProfileUpdateRequest;
 import store.warab.service.AuthService;
 import store.warab.service.DiscordService;
 import store.warab.service.UserService;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -50,17 +51,20 @@ public class UserController {
 
   // 디스코드 링크 유효성 확인
   @GetMapping("/check_discord_link")
-  public ResponseEntity<?> checkDiscordLink(@RequestParam(required = true) String discordLink) {
-    boolean isDuplicated =
-        discordService.validateDiscordLink(
-            discordLink, userService.isDiscordLinkDuplicated(discordLink));
-    if (isDuplicated) {
-      return ResponseEntity.ok(
-          Map.of("message", "already_exist_discord_link", "duplication", isDuplicated));
-    }
-
-    return ResponseEntity.ok(
-        Map.of("message", "available_discord_link", "duplication", isDuplicated));
+  public ResponseEntity<?> checkDiscordLink(@RequestParam(required = true, name = "discord_link") String discordLink) {
+      boolean isDuplicated = userService.isDiscordLinkDuplicated(discordLink);
+      try {
+          discordService.validateDiscordLink(discordLink, isDuplicated);
+          return ResponseEntity.ok(
+              Map.of("message", "available_discord_link", "duplication", isDuplicated));
+      } catch (ResponseStatusException e) {
+          if (isDuplicated) {
+              return ResponseEntity.ok(
+                  Map.of("message", "already_exist_discord_link", "duplication", true));
+          }
+          return ResponseEntity.status(e.getStatusCode())
+              .body(Map.of("message", e.getReason(), "error", e.getMessage()));
+      }
   }
 
   // 회원 정보 수정
