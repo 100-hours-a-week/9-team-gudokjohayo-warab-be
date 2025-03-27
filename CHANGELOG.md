@@ -1,5 +1,32 @@
 # Change Log
 
+# [1.8.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.7.5...v1.8.0) (2025-03-27)
+
+
+### Bug Fixes
+
+* api 응답 형식을 명세서에 맞게 수정 ([2a240aa](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/2a240aa6bdb6fba8c1779f0498f8faf4d0e5bb44))
+* build error 수정 ([e8feb19](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/e8feb1941ff824daad12067c34b9b2ff8c8e60d8))
+* **cd:** add secrets: discord token ([a69c656](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/a69c6569f6e576af73d76f31f578323f4e909417))
+* **cd:** update deploy.yaml ([ddd7945](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/ddd79457aee79caa47f4f10643ce23e3ba2ba0fe))
+* **cd:** update deploy.yaml ([f058f5b](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/f058f5b04743ad60683b1176de84995ec2c8b498))
+* **cd:** update deploy.yaml ([5db9b68](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/5db9b6801804b1a8a705784c6cae013ac5ee0617))
+* comment api 동작 하도록 수정 ([f14f8de](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/f14f8de5c6a9127343d3659083c36fb078a55a49))
+* hot fix.  remove Discord Bot Token in application.properties ([43aab0c](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/43aab0c026db7a3e0db048217bd5dc8879178682))
+* hot fix. Discord Bot Token in application.properties 주석 해제 ([5855d0b](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/5855d0b78928be41eba3171db3b30e3362233a1c))
+* jwt를 쿠키로 받도록 수정 ([d2dd723](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/d2dd7236b8deab8a41b93ca306d9d517a43421cb))
+* updateProfile 명세서에 맞는 요청 받아 처리할 수 있도록 수정 ([f561a02](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/f561a0231aabdd0d3a2b37f7b16c6464c529b04c))
+* userProfile 조회 응답 명세서 따라 api, ResponseDto 수정 ([2978d88](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/2978d88d41ecfe1bf7775caba83073c5f7b86329))
+* 디스코드 링크 중복 확인 로직 수정 ([c344245](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/c34424580fea9929c1d4ad6496ecc5d11fa26a11))
+* 선호 카테고리 관련 : 회원정보 수정, 메인 페이지 ([809447a](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/809447aa3a4c836193714f42f9b535c9b8f4115c))
+
+
+### Features
+
+* 권한 확인 로직 추가 ([9902d65](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/9902d65359900e1eb12039ce4d2f125f75d06d29))
+* 디스코드 유효성 검사 로직 추가 ([14fcb9c](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/14fcb9c143683c8bbbba74ab89942e4dea9aa2c1))
+* 인기게임, 할인게임 for mainPage ([fc79eaf](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/fc79eaf9a8b77a955220173ee59c8744564c5c74))
+
 # [1.8.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.7.5...v1.8.0) (2025-03-26)
 
 
