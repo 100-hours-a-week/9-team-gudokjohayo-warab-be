@@ -63,8 +63,25 @@ public class UserService {
             .findById(userId)
             .orElseThrow(
                 () ->
-                    new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다: " + userId));
+                    new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다: " + userId));
+
+    // 닉네임 중복 검사
+    if (!user.getNickname().equals(request.getNickname())
+        && isNicknameDuplicated(request.getNickname())) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 사용 중인 닉네임입니다.");
+    }
+
+    // 디스코드 링크 유효성 및 중복 검사
+    if (request.getDiscordLink() != null && !request.getDiscordLink().isEmpty()) {
+      // 본인이 사용 중인 링크가 아닌 경우에만 중복 검사
+      boolean isDuplicate = false;
+      if (!request.getDiscordLink().equals(user.getDiscordLink())) {
+        isDuplicate = isDiscordLinkDuplicated(request.getDiscordLink());
+      }
+
+      // 유효성 및 중복 검사
+      discordService.validateDiscordLink(request.getDiscordLink(), isDuplicate);
+    }
 
     // 닉네임, 디스코드 업데이트
     user.setNickname(request.getNickname());

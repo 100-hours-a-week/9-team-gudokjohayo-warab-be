@@ -1,19 +1,25 @@
 package store.warab.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import store.warab.dto.CommentResponseDto;
 import store.warab.entity.Comment;
+import store.warab.entity.User;
 import store.warab.repository.CommentRepository;
+import store.warab.repository.UserRepository;
 
 @Service
 @Transactional
 public class CommentService {
 
   private final CommentRepository commentRepository;
+  private final UserRepository userRepository;
 
-  public CommentService(CommentRepository commentRepository) {
+  public CommentService(CommentRepository commentRepository, UserRepository userRepository) {
     this.commentRepository = commentRepository;
+    this.userRepository = userRepository;
   }
 
   // 댓글 작성
@@ -31,6 +37,20 @@ public class CommentService {
   @Transactional(readOnly = true)
   public List<Comment> getCommentsByGameId(Integer gameId) {
     return commentRepository.findByGameId(gameId);
+  }
+
+  public List<CommentResponseDto> getCommentDtosByGameId(Integer gameId) {
+    List<Comment> comments = commentRepository.findByGameId(gameId);
+    return comments.stream()
+        .map(
+            comment -> {
+              User user =
+                  userRepository
+                      .findById(comment.getUserId())
+                      .orElseThrow(() -> new RuntimeException("User not found"));
+              return new CommentResponseDto(user, comment);
+            })
+        .collect(Collectors.toList());
   }
 
   // 특정 댓글

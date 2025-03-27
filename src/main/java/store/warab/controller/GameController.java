@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import store.warab.common.util.ApiResponse;
 import store.warab.dto.GameDetailResponseDto;
+import store.warab.dto.GameLowestPriceDto;
 import store.warab.dto.GameSearchResponseDto;
 import store.warab.dto.MainPageResponseDto;
 import store.warab.service.AuthService;
@@ -88,5 +89,11 @@ public class GameController {
     Map<String, Object> data = new HashMap<>();
     data.put("games", games);
     return ResponseEntity.ok(new ApiResponse("main_page_inquiry_success", data));
+  }
+
+  @GetMapping("/{id}/lowest-price")
+  public ResponseEntity<ApiResponse> getLowestPrice(@PathVariable Long id) {
+    GameLowestPriceDto data = gameService.getLowestPrice(id);
+    return ResponseEntity.ok(new ApiResponse("get_lowest_price_success", data));
   }
 }
