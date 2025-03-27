@@ -17,6 +17,7 @@ public class AuthController {
     cookie.setMaxAge(0); // 쿠키 즉시 만료
     cookie.setPath("/");
     cookie.setHttpOnly(true);
+    cookie.setSecure(true);
 
     response.addCookie(cookie);
     //response.sendRedirect("/login");
