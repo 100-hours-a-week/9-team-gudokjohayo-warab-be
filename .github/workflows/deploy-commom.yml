@@ -1,0 +1,114 @@
+name: Deploy Common
+
+on:
+    workflow_call:
+        inputs:
+            environment:
+                required: true
+                type: string
+            cors_origin:
+                required: true
+                type: string
+        secrets:
+            AWS_ACCESS_KEY_ID:
+                required: true
+            AWS_SECRET_ACCESS_KEY:
+                required: true
+            ECR_REGISTRY:
+                required: true
+            DATABASE_URL:
+                required: true
+            DATABASE_USER:
+                required: true
+            DATABASE_PASSWD:
+                required: true
+            KAKAO_CLIENT_ID:
+                required: true
+            KAKAO_CLIENT_SECRET:
+                required: true
+            JWT_SECRET_KEY:
+                required: true
+            SENTRY_TOKEN:
+                required: true
+            SENTRY_DSN:
+                required: true
+            DISCORD_BOT_TOKEN:
+                required: true
+            DEPLOY_REPO_PAT:
+                required: true
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        environment: ${{ inputs.environment }}
+
+        steps:
+            - name: Checkout warab-be
+              uses: actions/checkout@v3
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v2
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ap-northeast-2
+
+            - name: Log in to Amazon ECR
+              uses: aws-actions/amazon-ecr-login@v2
+              id: ecr-login
+
+            - name: Generate application-secrets.properties
+              run: |
+                  mkdir -p src/main/resources
+                  cat <<EOF > src/main/resources/application-secrets.properties
+                  spring.datasource.url=${{ secrets.DATABASE_URL }}
+                  spring.datasource.username=${{ secrets.DATABASE_USER }}
+                  spring.datasource.password=${{ secrets.DATABASE_PASSWD }}
+                  spring.security.oauth2.client.registration.kakao.client-id=${{ secrets.KAKAO_CLIENT_ID }}
+                  spring.security.oauth2.client.registration.kakao.client-secret=${{ secrets.KAKAO_CLIENT_SECRET }}
+                  spring.jwt.secret=${{ secrets.JWT_SECRET_KEY }}
+                  sentry.auth.token=${{ secrets.SENTRY_TOKEN }}
+                  sentry.dsn=${{ secrets.SENTRY_DSN }}
+                  redirect.oauth2.after.login=${{ inputs.cors_origin }}/main
+                  cors.allowed-origin=${{ inputs.cors_origin }}
+                  discord.bot.token=${{ secrets.DISCORD_BOT_TOKEN }}
+                  EOF
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+              with:
+                  driver-opts: |
+                      image=moby/buildkit:v0.12.1
+                      network=host
+                      memory=8g
+
+            - name: Build and push Docker image
+              uses: docker/build-push-action@v5
+              with:
+                  context: .
+                  platforms: linux/arm64
+                  push: true
+                  tags: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}-${{ inputs.environment }}
+                  build-args: |
+                      GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g -Dorg.gradle.parallel=true"
+
+            - name: Checkout warab-deploy
+              uses: actions/checkout@v3
+              with:
+                  repository: kjr2020/warab-deploy
+                  token: ${{ secrets.DEPLOY_REPO_PAT }}
+                  path: deploy
+
+            - name: Update patch-deployment.yaml
+              run: |
+                  sed -i "s|image:.*|image: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}-${{ inputs.environment }}|" \
+                    deploy/k8s/overlays/${{ inputs.environment }}/patch-deployment.yaml
+
+            - name: Commit & push to warab-deploy
+              run: |
+                  cd deploy
+                  git config user.name "github-actions"
+                  git config user.email "actions@github.com"
+                  git add k8s/overlays/${{ inputs.environment }}/patch-deployment.yaml
+                  git commit -m "chore: update image tag for ${{ inputs.environment }} - ${{ github.sha }}"
+                  git push
