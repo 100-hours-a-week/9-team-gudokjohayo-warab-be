@@ -65,9 +65,15 @@ public class UserService {
                 () ->
                     new ResponseStatusException(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다: " + userId));
 
+    // 닉네임의 양 옆 공백 제거
+    request.setNickname(request.getNickname().trim());
+
+    if (request.getNickname().isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "닉네임은 공백으로 이루어질 수 없습니다.");
+    }
     // 닉네임 중복 검사
-    if (!user.getNickname().equals(request.getNickname())
-        && isNicknameDuplicated(request.getNickname())) {
+    if ((!user.getNickname().equals(request.getNickname())
+        && isNicknameDuplicated(request.getNickname()))) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 사용 중인 닉네임입니다.");
     }
 
@@ -88,7 +94,9 @@ public class UserService {
     user.setDiscordLink(request.getDiscordLink());
 
     // 카테고리 ID 검증 및 설정
-    if (request.getCategoryIds() != null && !request.getCategoryIds().isEmpty()) {
+    if (request.getCategoryIds().isEmpty()) {
+      user.setCategories(null);
+    } else { // Bean Validation 사용하여 null check 생략 가능.
       Set<Long> validCategoryIds =
           categoryRepository.findValidCategoryIds(request.getCategoryIds());
       Set<Category> preferredCategories =
