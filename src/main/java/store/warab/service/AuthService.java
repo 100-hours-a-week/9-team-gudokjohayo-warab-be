@@ -1,8 +1,8 @@
 package store.warab.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import store.warab.common.exception.ForbiddenException;
+import store.warab.common.exception.InvalidTokenException;
 import store.warab.jwt.JWTUtil;
 
 @Service
@@ -22,7 +22,7 @@ public class AuthService {
    */
   public Long extractUserId(String token) {
     if (token == null) {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다.");
+      throw new InvalidTokenException("유효하지 않은 토큰입니다.");
     }
     return jwtUtil.getUserIdFromToken(token);
   }
@@ -35,7 +35,7 @@ public class AuthService {
    */
   public void verifyUser(Long tokenUserId, Long userId) {
     if (!tokenUserId.equals(userId)) {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "권한이 없습니다.");
+      throw new ForbiddenException("권한이 없습니다.");
     }
   }
 }

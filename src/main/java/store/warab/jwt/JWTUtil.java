@@ -9,6 +9,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import store.warab.common.exception.InvalidTokenException;
 
 @Component
 public class JWTUtil {
@@ -51,7 +52,7 @@ public class JWTUtil {
       return claims.get("userId", Long.class);
 
     } catch (JwtException e) {
-      throw new RuntimeException("유효하지 않은 JWT 토큰입니다.", e);
+      throw new InvalidTokenException("유효하지 않은 JWT 토큰입니다.");
     }
   }
 

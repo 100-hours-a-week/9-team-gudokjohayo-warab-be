@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import store.warab.common.exception.NotFoundException;
 import store.warab.dto.*;
 import store.warab.entity.Category;
@@ -83,8 +81,7 @@ public class GameService {
               mode,
               limit,
               offset);
-    }
-    else {
+    } else {
       Long[] categoryIdsArray = categoryIds.toArray(new Long[0]);
 
       games =
@@ -111,7 +108,7 @@ public class GameService {
 
   public List<MainPageResponseDto> getGamesForMainPage(Long userId) {
     User user =
-        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("게임이 존재하지 않습니다."));
 
     List<MainPageResponseDto> result = new ArrayList<>();
 

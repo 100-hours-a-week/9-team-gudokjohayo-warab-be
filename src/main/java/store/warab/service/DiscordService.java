@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import store.warab.common.exception.BadRequestException;
+import store.warab.common.exception.InternalServerException;
 
 @Slf4j
 @Service
@@ -36,7 +38,7 @@ public class DiscordService {
   public boolean isValidInviteLink(String inviteCode) {
     if (botToken == null || botToken.isEmpty()) {
       log.error("Discord bot token이 설정되지 않았습니다.");
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Discord 서비스 설정 오류");
+      throw new InternalServerException("Discord 서비스 설정 오류");
     }
 
     try {
@@ -47,7 +49,7 @@ public class DiscordService {
       return inviteData != null;
     } catch (Exception e) {
       log.error("Discord 초대 링크 검증 중 오류 발생: {}", e.getMessage(), e);
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Discord API 호출 중 오류 발생");
+      throw new InternalServerException("Discord API 호출 중 오류 발생");
     }
   }
 
@@ -56,22 +58,23 @@ public class DiscordService {
     String inviteCode = extractInviteCode(discordLink);
 
     if (inviteCode == null) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "올바른 디스코드 초대 링크 형식이 아닙니다.");
+      throw new BadRequestException("올바른 디스코드 초대 링크 형식이 아닙니다.");
     }
 
     try {
       if (!isValidInviteLink(inviteCode)) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "유효하지 않은 디스코드 초대 링크입니다.");
+        throw new BadRequestException("유효하지 않은 디스코드 초대 링크입니다.");
       }
     } catch (ResponseStatusException e) {
       if (e.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
         throw e;
       }
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "유효하지 않은 디스코드 초대 링크입니다.");
+      // 왜 굳이 다시 포장해서 throw하는거지?
+      throw new BadRequestException("유효하지 않은 디스코드 초대 링크입니다.");
     }
 
     if (isDuplicate) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 사용 중인 디스코드 링크입니다.");
+      throw new BadRequestException("이미 사용 중인 디스코드 링크입니다.");
     }
   }
 }
