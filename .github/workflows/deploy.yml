@@ -13,7 +13,6 @@ jobs:
         with:
             environment: dev
             cors_origin: https://dev.warab.store
-        environment: dev
 
     deploy-prod:
         if: github.ref == 'refs/heads/main'
@@ -21,4 +20,3 @@ jobs:
         with:
             environment: prod
             cors_origin: https://warab.store
-        environment: prod
