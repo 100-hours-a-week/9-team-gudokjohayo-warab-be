@@ -13,20 +13,7 @@ jobs:
         with:
             environment: dev
             cors_origin: https://dev.warab.store
-        secrets:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-            DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
-            DATABASE_USER: ${{ secrets.DEV_DATABASE_USER }}
-            DATABASE_PASSWD: ${{ secrets.DEV_DATABASE_PASSWD }}
-            KAKAO_CLIENT_ID: ${{ secrets.DEV_KAKAO_CLIENT_ID }}
-            KAKAO_CLIENT_SECRET: ${{ secrets.DEV_KAKAO_CLIENT_SECRET }}
-            JWT_SECRET_KEY: ${{ secrets.DEV_JWT_SECRET_KEY }}
-            SENTRY_TOKEN: ${{ secrets.DEV_SENTRY_TOKEN }}
-            SENTRY_DSN: ${{ secrets.DEV_SENTRY_DSN }}
-            DISCORD_BOT_TOKEN: ${{ secrets.DEV_DISCORD_BOT_TOKEN }}
-            DEPLOY_REPO_PAT: ${{ secrets.DEPLOY_REPO_PAT }}
+        environment: dev
 
     deploy-prod:
         if: github.ref == 'refs/heads/main'
@@ -34,17 +21,4 @@ jobs:
         with:
             environment: prod
             cors_origin: https://warab.store
-        secrets:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-            DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
-            DATABASE_USER: ${{ secrets.PROD_DATABASE_USER }}
-            DATABASE_PASSWD: ${{ secrets.PROD_DATABASE_PASSWD }}
-            KAKAO_CLIENT_ID: ${{ secrets.PROD_KAKAO_CLIENT_ID }}
-            KAKAO_CLIENT_SECRET: ${{ secrets.PROD_KAKAO_CLIENT_SECRET }}
-            JWT_SECRET_KEY: ${{ secrets.PROD_JWT_SECRET_KEY }}
-            SENTRY_TOKEN: ${{ secrets.PROD_SENTRY_TOKEN }}
-            SENTRY_DSN: ${{ secrets.PROD_SENTRY_DSN }}
-            DISCORD_BOT_TOKEN: ${{ secrets.PROD_DISCORD_BOT_TOKEN }}
-            DEPLOY_REPO_PAT: ${{ secrets.DEPLOY_REPO_PAT }}
+        environment: prod
