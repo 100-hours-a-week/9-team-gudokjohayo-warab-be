@@ -41,8 +41,7 @@ public class GameService {
     GameStatic game_static =
         gameStaticRepository
             .findById(game_id)
-            .orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게임을 찾을 수 없습니다.") {});
+            .orElseThrow(() -> new NotFoundException("게임이 존재하지 않습니다."));
 
     // 2️⃣ GameDynamic 조회 (존재하지 않을 수도 있음)
     GameDynamic game_dynamic = gameDynamicRepository.findById(game_id).orElse(null);
@@ -84,7 +83,8 @@ public class GameService {
               mode,
               limit,
               offset);
-    } else {
+    }
+    else {
       Long[] categoryIdsArray = categoryIds.toArray(new Long[0]);
 
       games =

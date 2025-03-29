@@ -104,7 +104,8 @@ public interface GameStaticRepository extends JpaRepository<GameStatic, Long> {
   List<GameStatic> findTopPopularGames();
 
   @Query(
-      value = """
+      value =
+          """
         SELECT gs.*
         FROM game_static gs
         LEFT JOIN game_dynamic gd ON gs.id = gd.game_id
