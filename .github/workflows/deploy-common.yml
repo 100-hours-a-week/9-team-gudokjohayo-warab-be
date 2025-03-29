@@ -9,11 +9,39 @@ on:
             cors_origin:
                 required: true
                 type: string
+        secrets:
+            AWS_ACCESS_KEY_ID:
+                required: true
+            AWS_SECRET_ACCESS_KEY:
+                required: true
+            ECR_REGISTRY:
+                required: true
+            DATABASE_URL:
+                required: true
+            DATABASE_USER:
+                required: true
+            DATABASE_PASSWD:
+                required: true
+            KAKAO_CLIENT_ID:
+                required: true
+            KAKAO_CLIENT_SECRET:
+                required: true
+            JWT_SECRET_KEY:
+                required: true
+            SENTRY_TOKEN:
+                required: true
+            SENTRY_DSN:
+                required: true
+            DISCORD_BOT_TOKEN:
+                required: true
+            DEPLOY_REPO_PAT:
+                required: true
 
 jobs:
     deploy:
         runs-on: ubuntu-latest
-        environment: ${{ inputs.environment }}
+        # 환경 설정은 주석 처리 또는 제거
+        # environment: ${{ inputs.environment }}
 
         steps:
             - name: Checkout warab-be
