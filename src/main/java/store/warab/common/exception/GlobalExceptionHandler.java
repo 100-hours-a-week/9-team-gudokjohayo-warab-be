@@ -29,6 +29,40 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
   }
 
+  // 401 Unauthorized
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  @ExceptionHandler(InvalidTokenException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidTokenException(
+      InvalidTokenException e, HttpServletRequest request) {
+
+    ErrorResponse response =
+        ErrorResponse.builder()
+            .status(HttpStatus.UNAUTHORIZED.value())
+            .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+            .message(e.getMessage())
+            .path(request.getRequestURI())
+            .build();
+
+    return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+  }
+
+  // 403 Error
+  @ExceptionHandler(ForbiddenException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  public ResponseEntity<ErrorResponse> handleForbiddenException(
+      ForbiddenException e, HttpServletRequest request) {
+
+    ErrorResponse response =
+        ErrorResponse.builder()
+            .status(HttpStatus.FORBIDDEN.value())
+            .error(HttpStatus.FORBIDDEN.getReasonPhrase())
+            .message(e.getMessage())
+            .path(request.getRequestURI())
+            .build();
+
+    return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+  }
+
   // 404 Error
   @ExceptionHandler(NotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -40,7 +74,7 @@ public class GlobalExceptionHandler {
         ErrorResponse.builder()
             .status(HttpStatus.NOT_FOUND.value())
             .error(HttpStatus.NOT_FOUND.getReasonPhrase())
-            .message("not_found")
+            .message(e.getMessage())
             .path(request.getRequestURI())
             .build();
 
@@ -58,7 +92,7 @@ public class GlobalExceptionHandler {
         ErrorResponse.builder()
             .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
             .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-            .message("internal_server_error")
+            .message(e.getMessage())
             .path(request.getRequestURI())
             .build();
 

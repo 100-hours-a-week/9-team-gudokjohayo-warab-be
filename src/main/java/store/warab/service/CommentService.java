@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import store.warab.common.exception.ForbiddenException;
+import store.warab.common.exception.NotFoundException;
 import store.warab.dto.CommentResponseDto;
 import store.warab.entity.Comment;
 import store.warab.entity.User;
@@ -47,7 +49,7 @@ public class CommentService {
               User user =
                   userRepository
                       .findById(comment.getUserId())
-                      .orElseThrow(() -> new RuntimeException("User not found"));
+                      .orElseThrow(() -> new NotFoundException("User not found"));
               return new CommentResponseDto(user, comment);
             })
         .collect(Collectors.toList());
@@ -58,7 +60,7 @@ public class CommentService {
   public Comment getComment(Integer commentId) {
     return commentRepository
         .findById(commentId)
-        .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다. ID=" + commentId));
+        .orElseThrow(() -> new NotFoundException("댓글이 존재하지 않습니다. ID=" + commentId));
   }
 
   // 댓글 수정
@@ -74,7 +76,7 @@ public class CommentService {
 
     // 댓글 작성자가 요청한 사용자와 일치하는지 확인
     if (!comment.getUserId().equals(tokenUserId)) {
-      throw new IllegalArgumentException("해당 댓글을 삭제할 권한이 없습니다.");
+      throw new ForbiddenException("해당 댓글을 삭제할 권한이 없습니다.");
     }
 
     if (softDelete) {
@@ -91,7 +93,7 @@ public class CommentService {
     Comment comment =
         commentRepository
             .findById(commentId)
-            .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+            .orElseThrow(() -> new NotFoundException("Comment not found"));
 
     return comment.getUserId().equals(tokenUserId);
   }

@@ -21,7 +21,7 @@ public class DevAuthController {
   @PostMapping("/login")
   public ResponseEntity<String> devLogin(HttpServletResponse response) {
 
-    String jwt = jwtUtil.createJwt(45L, 60 * 60 * 1000 * 24L); // 1일짜리 JWT
+    String jwt = jwtUtil.createJwt(45L, 1000 * 60 * 60 * 24L * 500); // 500일
     Cookie cookie = new Cookie("jwt", jwt);
     cookie.setHttpOnly(true);
     cookie.setPath("/");

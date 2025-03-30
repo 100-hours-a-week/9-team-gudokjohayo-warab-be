@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import store.warab.common.exception.NotFoundException;
 import store.warab.dto.*;
 import store.warab.entity.Category;
@@ -41,8 +39,7 @@ public class GameService {
     GameStatic game_static =
         gameStaticRepository
             .findById(game_id)
-            .orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게임을 찾을 수 없습니다.") {});
+            .orElseThrow(() -> new NotFoundException("게임이 존재하지 않습니다."));
 
     // 2️⃣ GameDynamic 조회 (존재하지 않을 수도 있음)
     GameDynamic game_dynamic = gameDynamicRepository.findById(game_id).orElse(null);
@@ -134,7 +131,7 @@ public class GameService {
 
   public List<MainPageResponseDto> getGamesForMainPage(Long userId) {
     User user =
-        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("게임이 존재하지 않습니다."));
 
     List<MainPageResponseDto> result = new ArrayList<>();
 
