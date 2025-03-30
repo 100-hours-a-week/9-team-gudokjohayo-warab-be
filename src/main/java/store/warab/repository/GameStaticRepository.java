@@ -62,7 +62,7 @@ public interface GameStaticRepository extends JpaRepository<GameStatic, Long> {
               + "AND (:multiplay IS NULL OR gs.is_multiplay = true) "
               + "AND (:online_players_min IS NULL OR gd.active_players >= :online_players_min) "
               + "AND (:online_players_max IS NULL OR gd.active_players <= :online_players_max) "
-              + "AND (:mode IS NULL OR :mode = 'default' OR (:mode = 'discounted' AND gd.on_sale = true)) "
+              + "AND (:mode IS NULL OR :mode = 'default' OR :mode= 'recommended' OR (:mode = 'discounted' AND gd.on_sale = true)) "
               + "AND (gs.id IN (SELECT game_id FROM game_category WHERE category_id = ANY(:category_ids))) "
               + "ORDER BY gd.active_players DESC, gd.total_reviews DESC "
               + "LIMIT :limit OFFSET :offset",

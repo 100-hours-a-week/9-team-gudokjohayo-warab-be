@@ -49,6 +49,7 @@ public class GameService {
   }
 
   public List<GameSearchResponseDto> filterGames(
+      Long userId,
       String query,
       List<Long> categoryIds,
       Integer ratingMin,
@@ -65,8 +66,30 @@ public class GameService {
       Integer offset) {
 
     List<GameStatic> games;
+    if ("recommended".equals(mode)) {
+      User user =
+          userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+      Set<Category> preferredCategories = user.getCategories();
 
-    if (categoryIds == null || categoryIds.isEmpty()) {
+      // 일단 아래에 기능이 보장된 카테고리 필터링과 과정을 똑같게 하기 위해 자료형을 두번에 걸쳐 바꿈.
+      categoryIds = preferredCategories.stream().map(Category::getId).collect(Collectors.toList());
+      Long[] categoryIdsArray = categoryIds.toArray(new Long[0]);
+      games =
+          gameStaticRepository.findFilteredGamesWithCategory(
+              query,
+              categoryIdsArray,
+              ratingMin,
+              ratingMax,
+              priceMin,
+              priceMax,
+              singleplay,
+              multiplay,
+              onlinePlayersMin,
+              onlinePlayersMax,
+              mode,
+              limit,
+              offset);
+    } else if (categoryIds == null || categoryIds.isEmpty()) {
       games =
           gameStaticRepository.findFilteredGamesWithoutCategory(
               query,

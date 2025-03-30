@@ -1,6 +1,7 @@
 package store.warab.controller;
 
 // import java.lang.classfile.constantpool.StringEntry;
+import jakarta.validation.Valid;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -72,7 +73,7 @@ public class UserController {
   //    /api/v1/users/profile
   @PutMapping("/profile")
   public ResponseEntity<ApiResponse> updateProfile(
-      @RequestBody UserProfileUpdateRequest dto, @CookieValue("jwt") String token) {
+      @Valid @RequestBody UserProfileUpdateRequest dto, @CookieValue("jwt") String token) {
     Long tokenUserId = authService.extractUserId(token);
 
     userService.updateUserInfo(dto, tokenUserId);

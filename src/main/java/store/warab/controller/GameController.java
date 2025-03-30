@@ -47,13 +47,16 @@ public class GameController {
       @RequestParam(required = false) String sort,
       //  limit과 page에 default 값을 설정
       @RequestParam(value = "limit", defaultValue = "10") Integer limit,
-      @RequestParam(value = "page", defaultValue = "0") Integer page) {
+      @RequestParam(value = "page", defaultValue = "0") Integer page,
+      @CookieValue("jwt") String token) {
+    Long tokenUserId = authService.extractUserId(token);
 
     // page를 offset으로 변환
     Integer offset = page * limit;
 
     List<GameSearchResponseDto> games =
         gameService.filterGames(
+            tokenUserId,
             query,
             category_ids,
             rating_min,
