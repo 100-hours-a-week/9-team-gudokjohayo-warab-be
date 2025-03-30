@@ -64,7 +64,7 @@ public class UserService {
     request.setNickname(request.getNickname().trim());
 
     if (request.getNickname().isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "닉네임은 공백으로 이루어질 수 없습니다.");
+      throw new BadRequestException("닉네임은 공백으로 이루어질 수 없습니다.");
     }
     // 닉네임 중복 검사
     if (!user.getNickname().equals(request.getNickname())
