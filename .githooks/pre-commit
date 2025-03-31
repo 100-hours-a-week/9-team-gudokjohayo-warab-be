@@ -1,5 +1,25 @@
  #!/bin/sh
 
+echo "🔧 Spotless 검사 중..."
+
+# 현재 스테이징된 Java 파일만 추출
+STAGED=$(git diff --cached --name-only --diff-filter=ACM | grep '\.java$')
+
+
+if [ -n "$STAGED" ]; then
+  ./gradlew spotlessCheck > /dev/null 2>&1
+
+  if [ $? -ne 0 ]; then
+    echo "⚠️ 포맷팅이 맞지 않아 자동으로 수정합니다..."
+    ./gradlew spotlessApply
+
+    echo "$STAGED" | xargs git add
+
+    echo "✅ 수정 완료. 다시 커밋해주세요."
+    exit 1
+  fi
+fi
+
  echo "🔍 Running pre-commit hook..."
 
  # 테스트 실행 (선택)
@@ -8,13 +28,5 @@
      echo "❌ Tests failed! Fix the issues before committing."
      exit 1
  fi
-
- ./gradlew spotlessApply build
- if [ $? -ne 0 ]; then
-     echo "❌ Checkstyle failed! Fix the issues before committing."
-     exit 1
- fi
-
- echo "✅ pre-commit checks passed!"
-
  exit 0
+
