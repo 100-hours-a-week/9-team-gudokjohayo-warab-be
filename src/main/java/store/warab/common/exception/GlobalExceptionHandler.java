@@ -98,4 +98,36 @@ public class GlobalExceptionHandler {
 
     return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
   }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ErrorResponse> handleAllExceptions(
+      Exception ex, HttpServletRequest request) {
+    log.error("Unexpected Exception: ", ex);
+
+    ErrorResponse response =
+        ErrorResponse.builder()
+            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+            .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+            .message("서버 내부 오류가 발생했습니다.")
+            .path(request.getRequestURI())
+            .build();
+
+    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  @ExceptionHandler(RuntimeException.class)
+  public ResponseEntity<ErrorResponse> handleRuntime(
+      RuntimeException ex, HttpServletRequest request) {
+    log.error("Runtime Exception: ", ex);
+
+    ErrorResponse response =
+        ErrorResponse.builder()
+            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+            .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+            .message("예상치 못한 오류가 발생했습니다.")
+            .path(request.getRequestURI())
+            .build();
+
+    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 }
