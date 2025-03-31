@@ -173,11 +173,16 @@ public class GameService {
     return result;
   }
 
-  public GameLowestPriceDto getLowestPrice(Long id) {
+  public GameLowestPriceDto getLowestPrice(Long gameId) {
+    GameStatic game_static =
+        gameStaticRepository
+            .findById(gameId)
+            .orElseThrow(() -> new NotFoundException("게임이 존재하지 않습니다."));
+
     GameDynamic gameDynamic =
         gameDynamicRepository
-            .findById(id)
-            .orElseThrow(() -> new NotFoundException("게임이 존재하지 않습니다."));
+            .findById(gameId)
+            .orElseThrow(() -> new NotFoundException("해당 게임의 동적 정보가 존재하지 않습니다."));
     return new GameLowestPriceDto(gameDynamic);
   }
 }

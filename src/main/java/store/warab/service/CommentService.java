@@ -8,24 +8,35 @@ import store.warab.common.exception.ForbiddenException;
 import store.warab.common.exception.NotFoundException;
 import store.warab.dto.CommentResponseDto;
 import store.warab.entity.Comment;
+import store.warab.entity.GameStatic;
 import store.warab.entity.User;
 import store.warab.repository.CommentRepository;
+import store.warab.repository.GameStaticRepository;
 import store.warab.repository.UserRepository;
 
 @Service
 @Transactional
 public class CommentService {
-
+  private final GameStaticRepository gameStaticRepository;
   private final CommentRepository commentRepository;
   private final UserRepository userRepository;
 
-  public CommentService(CommentRepository commentRepository, UserRepository userRepository) {
+  public CommentService(
+      GameStaticRepository gameStaticRepository,
+      CommentRepository commentRepository,
+      UserRepository userRepository) {
+    this.gameStaticRepository = gameStaticRepository;
     this.commentRepository = commentRepository;
     this.userRepository = userRepository;
   }
 
   // 댓글 작성
   public Comment createComment(Long userId, Long gameId, String content) {
+    GameStatic game_static =
+        gameStaticRepository
+            .findById(gameId)
+            .orElseThrow(() -> new NotFoundException("게임이 존재하지 않습니다."));
+
     // userId, gameId 검증(존재 여부 등)은 추후 실제 User, Game 매핑 후에 처리
     Comment comment = new Comment();
     comment.setUserId(userId);
