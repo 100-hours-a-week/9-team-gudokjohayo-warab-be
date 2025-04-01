@@ -75,13 +75,14 @@ public class UserService {
     // 디스코드 링크 유효성 및 중복 검사
     if (request.getDiscordLink() != null && !request.getDiscordLink().isEmpty()) {
       // 본인이 사용 중인 링크가 아닌 경우에만 중복 검사
-      boolean isDuplicate = false;
+      boolean isDuplicate;
       if (!request.getDiscordLink().equals(user.getDiscordLink())) {
-        isDuplicate = isDiscordLinkDuplicated(request.getDiscordLink());
+        if (isDiscordLinkDuplicated(request.getDiscordLink()))
+          throw new BadRequestException("이미 등록된 디스코드 링크 입니다.");
       }
 
       // 유효성 및 중복 검사
-      discordService.validateDiscordLink(request.getDiscordLink(), isDuplicate);
+      discordService.validateDiscordLink(request.getDiscordLink());
     }
 
     // 닉네임, 디스코드 업데이트
@@ -94,6 +95,9 @@ public class UserService {
     } else { // Bean Validation 사용하여 null check 생략 가능.
       Set<Long> validCategoryIds =
           categoryRepository.findValidCategoryIds(request.getCategoryIds());
+      if (validCategoryIds.size() > 5) {
+        throw new BadRequestException("카테고리는 5개까지 설정 가능합니다.");
+      }
       Set<Category> preferredCategories =
           new HashSet<>(categoryRepository.findAllById(validCategoryIds));
       user.setCategories(preferredCategories);

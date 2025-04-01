@@ -1,6 +1,5 @@
 package store.warab.controller;
 
-// import java.lang.classfile.constantpool.StringEntry;
 import jakarta.validation.Valid;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
@@ -56,14 +55,13 @@ public class UserController {
   public ResponseEntity<?> checkDiscordLink(
       @RequestParam(required = true, name = "discord_link") String discordLink) {
     boolean isDuplicated = userService.isDiscordLinkDuplicated(discordLink);
+    if (isDuplicated)
+      return ResponseEntity.ok(
+          Map.of("message", "already_exist_discord_link", "duplication", isDuplicated));
     try {
-      discordService.validateDiscordLink(discordLink, isDuplicated);
+      discordService.validateDiscordLink(discordLink);
       return ResponseEntity.ok(Map.of("message", "available_discordLink", "duplication", false));
     } catch (ResponseStatusException e) {
-      if (isDuplicated) {
-        return ResponseEntity.ok(
-            Map.of("message", "already_exist_discordLink", "duplication", true));
-      }
       return ResponseEntity.status(e.getStatusCode())
           .body(Map.of("message", "invalid_discordlink", "error", e.getMessage()));
     }
@@ -75,7 +73,6 @@ public class UserController {
   public ResponseEntity<ApiResponse> updateProfile(
       @Valid @RequestBody UserProfileUpdateRequest dto, @CookieValue("jwt") String token) {
     Long tokenUserId = authService.extractUserId(token);
-
     userService.updateUserInfo(dto, tokenUserId);
     return ResponseEntity.ok(new ApiResponse("update_user_data_success", null));
   }

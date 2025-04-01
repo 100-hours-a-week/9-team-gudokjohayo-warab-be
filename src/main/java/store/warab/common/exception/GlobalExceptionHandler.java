@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ResponseEntity<ErrorResponse> handleBadRequestException(
       BadRequestException e, HttpServletRequest request) {
-    log.error("400 Error (Validation Failed): ", e.getMessage());
+    log.error("400 Error (Validation Failed): {}", e.getMessage());
 
     ErrorResponse response =
         ErrorResponse.builder()
@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public ResponseEntity<ErrorResponse> handleNotFoundException(
       NotFoundException e, HttpServletRequest request) {
-    log.error("404 Error: ", e.getMessage());
+    log.error("404 Error: {}", e.getMessage());
 
     ErrorResponse response =
         ErrorResponse.builder()

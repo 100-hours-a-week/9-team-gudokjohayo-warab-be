@@ -25,6 +25,8 @@ jobs:
             JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
             SENTRY_TOKEN: ${{ secrets.SENTRY_TOKEN }}
             SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+            SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+            SENTRY_PROJECT_NAME: ${{ secrets.SENTRY_PROJECT_NAME }}
             DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
             DEPLOY_REPO_PAT: ${{ secrets.DEPLOY_REPO_PAT }}
 
@@ -46,5 +48,9 @@ jobs:
             JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
             SENTRY_TOKEN: ${{ secrets.SENTRY_TOKEN }}
             SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+            SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+            SENTRY_PROJECT_NAME: ${{ secrets.SENTRY_PROJECT_NAME }}
             DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
             DEPLOY_REPO_PAT: ${{ secrets.DEPLOY_REPO_PAT }}
+
+
