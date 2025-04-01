@@ -1,11 +1,10 @@
 package store.warab.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.Getter;
-import store.warab.entity.GameCategory;
 import store.warab.entity.GameDynamic;
 import store.warab.entity.GameStatic;
 
@@ -20,6 +19,13 @@ public class GameDetailResponseDto {
   private String developer;
   private String publisher;
   private Integer rating;
+
+  @JsonProperty("single_play")
+  private Boolean singlePlay;
+
+  @JsonProperty("multi_play")
+  private Boolean multiPlay;
+
   private Integer recent_player;
   private LocalDateTime updated_at;
   private List<String> categories;
@@ -36,8 +42,8 @@ public class GameDetailResponseDto {
         gameStatic.getGame_categories().stream()
             .map(gc -> gc.getCategory().getCategoryName())
             .collect(Collectors.toList());
-    List<GameCategory> a = gameStatic.getGame_categories();
-    Stream<GameCategory> b = gameStatic.getGame_categories().stream();
+    this.singlePlay = gameStatic.getIsSinglePlay();
+    this.multiPlay = gameStatic.getIsMultiplay();
     if (gameDynamic != null) {
       this.lowest_price = gameDynamic.getLowest_price();
       this.rating = gameDynamic.getRating();
