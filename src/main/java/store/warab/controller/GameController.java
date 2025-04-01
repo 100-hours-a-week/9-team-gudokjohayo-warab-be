@@ -3,6 +3,7 @@ package store.warab.controller;
 import java.util.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import store.warab.common.exception.BadRequestException;
 import store.warab.common.util.ApiResponse;
 import store.warab.dto.GameDetailResponseDto;
 import store.warab.dto.GameLowestPriceDto;
@@ -50,7 +51,9 @@ public class GameController {
       @RequestParam(value = "page", defaultValue = "0") Integer page,
       @CookieValue("jwt") String token) {
     Long tokenUserId = authService.extractUserId(token);
-
+    if (category_ids.size() > 5) {
+      throw new BadRequestException("카테고리는 5개까지 선택가능합니다.");
+    }
     // page를 offset으로 변환
     Integer offset = page * limit;
 
