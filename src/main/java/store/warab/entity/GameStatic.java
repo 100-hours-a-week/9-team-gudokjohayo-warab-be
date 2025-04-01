@@ -24,6 +24,12 @@ public class GameStatic {
   private String thumbnail;
   private Integer price;
 
+  @Column(name = "is_singleplay")
+  private Boolean isSinglePlay;
+
+  @Column(name = "is_multiplay")
+  private Boolean isMultiplay;
+
   // 🔹 FK를 갖는 쪽(GameDynamic)에서 관계를 설정하므로 mappedBy 사용
   @OneToOne(
       mappedBy = "game_static",
