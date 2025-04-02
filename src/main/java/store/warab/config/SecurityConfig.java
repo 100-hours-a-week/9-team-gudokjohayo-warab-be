@@ -129,7 +129,7 @@ public class SecurityConfig {
     // 경로별 인가 작업
     http.authorizeHttpRequests(
         (auth) ->
-            auth.requestMatchers("/", "/api/health", "/api/dev/login", "/api/v1/auth/logout")
+            auth.requestMatchers("/", "/api/health", "/api/v1/auth/logout")
                 .permitAll()
                 .anyRequest()
                 .authenticated());
