@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import store.warab.common.exception.BadRequestException;
 import store.warab.common.exception.NotFoundException;
+import store.warab.dto.AuthUserResponseDto;
 import store.warab.dto.UserProfileResponseDto;
 import store.warab.dto.UserProfileUpdateRequest;
 import store.warab.entity.Category;
@@ -30,6 +31,21 @@ public class UserService {
             .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다" + userId));
 
     return UserProfileResponseDto.fromEntity(user);
+  }
+
+  /**
+   * 사용자 인증 정보 조회
+   *
+   * @param userId 사용자 ID
+   * @return AuthUserResponseDto 사용자 인증 정보
+   */
+  public AuthUserResponseDto getAuthUserInfo(long userId) {
+    User user =
+        userRepository
+            .findById(userId)
+            .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다: " + userId));
+
+    return AuthUserResponseDto.fromEntity(user);
   }
 
   public boolean isNicknameDuplicated(String nickname) {
