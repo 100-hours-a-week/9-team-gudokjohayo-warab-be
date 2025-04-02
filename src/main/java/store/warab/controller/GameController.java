@@ -51,7 +51,7 @@ public class GameController {
       @RequestParam(value = "page", defaultValue = "0") Integer page,
       @CookieValue("jwt") String token) {
     Long tokenUserId = authService.extractUserId(token);
-    if (category_ids.size() > 5) {
+    if (category_ids != null && category_ids.size() > 5) {
       throw new BadRequestException("카테고리는 5개까지 선택가능합니다.");
     }
     // page를 offset으로 변환
