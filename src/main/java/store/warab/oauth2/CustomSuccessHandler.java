@@ -48,7 +48,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     Long userId = user.getId();
 
     // JWT 생성
-    String token = jwtUtil.createJwt(userId, 60 * 60 * 60L);
+    String token = jwtUtil.createJwt(userId, 60 * 60 * 200 * 60L);
 
     // 쿠키에 저장 후 리다이렉션
     response.addCookie(createCookie("jwt", token));
@@ -58,7 +58,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
   private Cookie createCookie(String key, String value) {
 
     Cookie cookie = new Cookie(key, value);
-    cookie.setMaxAge(60 * 60 * 60);
+    cookie.setMaxAge(60 * 60 * 60 * 200);
     // cookie.setSecure(true);
     cookie.setPath("/");
     cookie.setHttpOnly(true);
