@@ -40,9 +40,9 @@ jobs:
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-            DATABASE_URL: ${{ secrets.DATABASE_URL }}
-            DATABASE_USER: ${{ secrets.DATABASE_USER }}
-            DATABASE_PASSWD: ${{ secrets.DATABASE_PASSWD }}
+            DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+            DATABASE_USER: ${{ secrets.PROD_DATABASE_USER }}
+            DATABASE_PASSWD: ${{ secrets.PROD_DATABASE_PASSWD }}
             KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
             KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
             JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
