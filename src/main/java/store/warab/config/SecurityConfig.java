@@ -1,7 +1,6 @@
 package store.warab.config;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Collections;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -45,32 +42,32 @@ public class SecurityConfig {
     this.jwtUtil = jwtUtil;
   }
 
-  @Bean
-  public AuthenticationEntryPoint customAuthenticationEntryPoint() {
-    return (request, response, authException) -> {
-      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-      response.setContentType("application/json;charset=UTF-8");
-      response.getWriter().write("{\"error\": \"인증되지 않은 요청입니다.\"}");
-    };
-  }
-
-  @Bean
-  public AccessDeniedHandler customAccessDeniedHandler() {
-    return (request, response, accessDeniedException) -> {
-      response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-      response.setContentType("application/json;charset=UTF-8");
-      response.getWriter().write("{\"error\": \"접근 권한이 없습니다.\"}");
-    };
-  }
+  //  @Bean
+  //  public AuthenticationEntryPoint customAuthenticationEntryPoint() {
+  //    return (request, response, authException) -> {
+  //      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+  //      response.setContentType("application/json;charset=UTF-8");
+  //      response.getWriter().write("{\"error\": \"인증되지 않은 요청입니다.\"}");
+  //    };
+  //  }
+  //
+  //  @Bean
+  //  public AccessDeniedHandler customAccessDeniedHandler() {
+  //    return (request, response, accessDeniedException) -> {
+  //      response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+  //      response.setContentType("application/json;charset=UTF-8");
+  //      response.getWriter().write("{\"error\": \"접근 권한이 없습니다.\"}");
+  //    };
+  //  }
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-    http.exceptionHandling(
-        exception ->
-            exception
-                .authenticationEntryPoint(customAuthenticationEntryPoint())
-                .accessDeniedHandler(customAccessDeniedHandler()));
+    //    http.exceptionHandling(
+    //        exception ->
+    //            exception
+    //                .authenticationEntryPoint(customAuthenticationEntryPoint())
+    //                .accessDeniedHandler(customAccessDeniedHandler()));
 
     // CORS
     http.cors(
