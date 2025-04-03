@@ -76,7 +76,7 @@ jobs:
                   sentry.dsn=${{ secrets.SENTRY_DSN }}
                   sentry.org=${{ secrets.SENTRY_ORG }}
                   sentry.projectName=${{ secrets.SENTRY_PROJECT_NAME }}
-                  redirect.oauth2.after.login=${{ inputs.cors_origin }}/main
+                  redirect.oauth2.after.login=${{ inputs.cors_origin }}/info
                   cors.allowed-origin=${{ inputs.cors_origin }}
                   discord.bot.token=${{ secrets.DISCORD_BOT_TOKEN }}
                   EOF
