@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import store.warab.common.exception.ForbiddenException;
 import store.warab.common.util.ApiResponse;
 import store.warab.dto.UserProfileResponseDto;
 import store.warab.dto.UserProfileUpdateRequest;
@@ -30,9 +31,13 @@ public class UserController {
   // 로그인 구현 되면 다른 사람이 못들어오게 해야함
   // /api/v1/users/profile
   @GetMapping("/profile")
-  public ResponseEntity<ApiResponse> getProfile(@CookieValue("jwt") String token) {
-    Long tokenUserId = authService.extractUserId(token);
-    UserProfileResponseDto userProfileResponseDto = userService.getUserById(tokenUserId);
+  public ResponseEntity<ApiResponse> getProfile(
+      @CookieValue(value = "jwt", required = false) String token) {
+    Long userId = null;
+    if (authService.isValid(token)) {
+      userId = authService.extractUserId(token); // 유효하지 않으면 null
+    } else throw new ForbiddenException("권한이 없습니다.");
+    UserProfileResponseDto userProfileResponseDto = userService.getUserById(userId);
 
     return ResponseEntity.ok(
         new ApiResponse("user_profile_inquiry_success", userProfileResponseDto));
