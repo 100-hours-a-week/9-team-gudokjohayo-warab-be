@@ -1,51 +1,6 @@
-name: Deploy Common
-
-on:
-    workflow_call:
-        inputs:
-            environment:
-                required: true
-                type: string
-            cors_origin:
-                required: true
-                type: string
-        secrets:
-            AWS_ACCESS_KEY_ID:
-                required: true
-            AWS_SECRET_ACCESS_KEY:
-                required: true
-            ECR_REGISTRY:
-                required: true
-            DATABASE_URL:
-                required: true
-            DATABASE_USER:
-                required: true
-            DATABASE_PASSWD:
-                required: true
-            KAKAO_CLIENT_ID:
-                required: true
-            KAKAO_CLIENT_SECRET:
-                required: true
-            JWT_SECRET_KEY:
-                required: true
-            SENTRY_TOKEN:
-                required: true
-            SENTRY_DSN:
-                required: true
-            SENTRY_ORG:
-                required: true
-            SENTRY_PROJECT_NAME:
-                required: true
-            DISCORD_BOT_TOKEN:
-                required: true
-            DEPLOY_REPO_PAT:
-                required: true
-
 jobs:
     deploy:
         runs-on: ubuntu-latest
-        # 환경 설정은 주석 처리 또는 제거
-        # environment: ${{ inputs.environment }}
 
         steps:
             - name: Checkout warab-be
@@ -57,10 +12,6 @@ jobs:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   aws-region: ap-northeast-2
-
-            - name: Log in to Amazon ECR
-              uses: aws-actions/amazon-ecr-login@v2
-              id: ecr-login
 
             - name: Generate application-secrets.properties
               run: |
@@ -81,6 +32,12 @@ jobs:
                   discord.bot.token=${{ secrets.DISCORD_BOT_TOKEN }}
                   spring.profiles.active=${{ inputs.environment }}
                   EOF
+
+            - name: Check application-secrets.properties created
+              run: test -f src/main/resources/application-secrets.properties
+
+            - name: Gradle Build Test (pre-check)
+              run: ./gradlew build --no-daemon
 
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
