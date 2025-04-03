@@ -37,9 +37,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
       HttpServletRequest request, HttpServletResponse response, Authentication authentication)
       throws IOException, ServletException {
 
-    // Test
-    System.out.println("✅ CustomSuccessHandler - Login success");
-
     // OAuth2User
     OAuth2User customUserDetails = (OAuth2User) authentication.getPrincipal();
     // String username = customUserDetails.getAttribute("username");
@@ -57,17 +54,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     // JWT 생성
     String token = jwtUtil.createJwt(userId, 60 * 60 * 200 * 60L);
 
-    // 쿠키 수동으로 내보내기
-    String cookieValue =
-        "jwt="
-            + token
-            + "; Path=/; HttpOnly; Secure; SameSite=None; Domain=warab.store; Max-Age=7200000";
-    response.setHeader("Set-Cookie", cookieValue);
-
-    System.out.println("✅ Set-Cookie: " + cookieValue);
-
     // 쿠키에 저장 후 리다이렉션
-    // response.addCookie(createCookie("jwt", token));
+    response.addCookie(createCookie("jwt", token));
     response.sendRedirect(oauthRedirect);
   }
 
