@@ -22,6 +22,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
   @Value("${redirect.oauth2.after.login}")
   private String oauthRedirect;
 
+  @Value("${spring.profiles.active}")
+  private String activeProfile;
+
   public CustomSuccessHandler(JWTUtil jwtUtil, UserRepository userRepository) {
 
     this.jwtUtil = jwtUtil;
@@ -55,6 +58,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     response.sendRedirect(oauthRedirect);
   }
 
+  public boolean isProd() {
+    return "prod".equalsIgnoreCase(activeProfile);
+  }
+
   private Cookie createCookie(String key, String value) {
 
     Cookie cookie = new Cookie(key, value);
@@ -62,6 +69,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     cookie.setSecure(true);
     cookie.setPath("/");
     cookie.setHttpOnly(true);
+
+    if (isProd()) {
+      cookie.setDomain(".warab.store");
+    }
 
     return cookie;
   }

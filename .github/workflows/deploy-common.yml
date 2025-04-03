@@ -79,6 +79,7 @@ jobs:
                   redirect.oauth2.after.login=${{ inputs.cors_origin }}/info
                   cors.allowed-origin=${{ inputs.cors_origin }}
                   discord.bot.token=${{ secrets.DISCORD_BOT_TOKEN }}
+                  spring.profiles.active=${{ inputs.environment }}
                   EOF
 
             - name: Set up Docker Buildx
