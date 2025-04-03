@@ -80,6 +80,7 @@ jobs:
                   cors.allowed-origin=${{ inputs.cors_origin }}
                   discord.bot.token=${{ secrets.DISCORD_BOT_TOKEN }}
                   EOF
+                  echo ${{ inputs.cors_origin }}
 
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
