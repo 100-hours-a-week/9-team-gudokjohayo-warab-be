@@ -13,6 +13,7 @@ jobs:
         with:
             environment: dev
             cors_origin: https://dev.warab.store
+            redirect_uri: https://dev.api.warab.store/login/oauth2/code/kakao
         secrets:
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -36,6 +37,7 @@ jobs:
         with:
             environment: prod
             cors_origin: https://warab.store
+            redirect_uri: https://api.warab.store/login/oauth2/code/kakao
         secrets:
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
