@@ -56,6 +56,22 @@ public class JWTUtil {
     }
   }
 
+  // 토큰 유효성 검사
+  public boolean validateToken(String token) {
+    try {
+      // 토큰 파싱해서 유효한지 확인 (서명 검증 포함)
+      Jwts.parser()
+          .verifyWith(secretKey) // HMAC 또는 RSA 키
+          .build()
+          .parseSignedClaims(token);
+
+      return true;
+    } catch (JwtException | IllegalArgumentException e) {
+      // 유효하지 않은 토큰
+      return false;
+    }
+  }
+
   // 토큰 만료 확인
   public boolean isTokenExpired(String token) {
     try {
