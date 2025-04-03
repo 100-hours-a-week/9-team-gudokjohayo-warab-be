@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import store.warab.common.exception.NotFoundException;
 import store.warab.entity.User;
 import store.warab.jwt.JWTUtil;
 import store.warab.repository.UserRepository;
@@ -36,6 +37,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
       HttpServletRequest request, HttpServletResponse response, Authentication authentication)
       throws IOException, ServletException {
 
+    // Test
+    System.out.println("✅ CustomSuccessHandler - Login success");
+
     // OAuth2User
     OAuth2User customUserDetails = (OAuth2User) authentication.getPrincipal();
     // String username = customUserDetails.getAttribute("username");
@@ -46,15 +50,24 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     User user =
         userRepository
             .findByKakaoId(kakaoId)
-            .orElseThrow(() -> new RuntimeException("User with id " + kakaoId + " not found"));
+            .orElseThrow(() -> new NotFoundException("User with id " + kakaoId + " not found"));
 
     Long userId = user.getId();
 
     // JWT 생성
     String token = jwtUtil.createJwt(userId, 60 * 60 * 200 * 60L);
 
+    // 쿠키 수동으로 내보내기
+    String cookieValue =
+        "jwt="
+            + token
+            + "; Path=/; HttpOnly; Secure; SameSite=None; Domain=warab.store; Max-Age=7200000";
+    response.setHeader("Set-Cookie", cookieValue);
+
+    System.out.println("✅ Set-Cookie: " + cookieValue);
+
     // 쿠키에 저장 후 리다이렉션
-    response.addCookie(createCookie("jwt", token));
+    // response.addCookie(createCookie("jwt", token));
     response.sendRedirect(oauthRedirect);
   }
 
