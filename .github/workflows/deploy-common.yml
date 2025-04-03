@@ -9,6 +9,9 @@ on:
             cors_origin:
                 required: true
                 type: string
+            redirect_uri:
+                required: true
+                type: string
         secrets:
             AWS_ACCESS_KEY_ID:
                 required: true
