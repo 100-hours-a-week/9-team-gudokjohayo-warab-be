@@ -24,7 +24,8 @@ public class UserService {
   private final CategoryRepository categoryRepository;
   private final DiscordService discordService;
 
-  public UserProfileResponseDto getUserById(long userId) {
+  public UserProfileResponseDto getUserById(Long userId) {
+
     User user =
         userRepository
             .findById(userId)
