@@ -80,6 +80,7 @@ jobs:
                   cors.allowed-origin=${{ inputs.cors_origin }}
                   discord.bot.token=${{ secrets.DISCORD_BOT_TOKEN }}
                   spring.profiles.active=${{ inputs.environment }}
+                  spring.security.oauth2.client.registration.kakao.redirect-uri=${{ inputs.redirect_uri }}
                   EOF
 
             - name: Set up Docker Buildx
