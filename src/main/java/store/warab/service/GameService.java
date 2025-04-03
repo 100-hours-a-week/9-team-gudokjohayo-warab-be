@@ -11,7 +11,6 @@ import store.warab.entity.Category;
 import store.warab.entity.GameDynamic;
 import store.warab.entity.GameStatic;
 import store.warab.entity.User;
-import store.warab.repository.CategoryRepository;
 import store.warab.repository.GameDynamicRepository;
 import store.warab.repository.GameStaticRepository;
 import store.warab.repository.UserRepository;
@@ -20,17 +19,17 @@ import store.warab.repository.UserRepository;
 public class GameService {
   private final GameStaticRepository gameStaticRepository;
   private final GameDynamicRepository gameDynamicRepository;
-  private final CategoryRepository categoryRepository;
+  private final AuthService authService;
   private final UserRepository userRepository;
 
   public GameService(
       GameStaticRepository gameStaticRepository,
       GameDynamicRepository gameDynamicRepository,
-      CategoryRepository categoryRepository,
+      AuthService authService,
       UserRepository userRepository) {
     this.gameStaticRepository = gameStaticRepository;
     this.gameDynamicRepository = gameDynamicRepository;
-    this.categoryRepository = categoryRepository;
+    this.authService = authService;
     this.userRepository = userRepository;
   }
 
@@ -49,7 +48,7 @@ public class GameService {
   }
 
   public List<GameSearchResponseDto> filterGames(
-      Long userId,
+      String token,
       String query,
       List<Long> categoryIds,
       Integer ratingMin,
@@ -67,6 +66,8 @@ public class GameService {
 
     List<GameStatic> games;
     if ("recommended".equals(mode)) {
+      Long userId = authService.extractUserId(token);
+
       User user =
           userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
       Set<Category> preferredCategories = user.getCategories();
@@ -104,7 +105,7 @@ public class GameService {
               mode,
               limit,
               offset);
-    } else {
+    } else { // 카테고리 필터가 걸려서 온 경우
       Long[] categoryIdsArray = categoryIds.toArray(new Long[0]);
 
       games =
@@ -129,9 +130,11 @@ public class GameService {
         .collect(Collectors.toList());
   }
 
-  public List<MainPageResponseDto> getGamesForMainPage(Long userId) {
-    User user =
-        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("게임이 존재하지 않습니다."));
+  public List<MainPageResponseDto> getGamesForMainPage(String token) {
+    Long userId = null;
+    if (authService.isValid(token)) {
+      userId = authService.extractUserId(token); // 유효하지 않으면 null
+    }
 
     List<MainPageResponseDto> result = new ArrayList<>();
 
@@ -153,22 +156,28 @@ public class GameService {
     result.add(new MainPageResponseDto("🏆 지금 인기 많은 게임이에요", popularGamesList));
 
     // 3. 카테고리별 추천 게임
-    Set<Category> preferredCategories = user.getCategories();
-    if (!preferredCategories.isEmpty()) {
-      preferredCategories.stream()
-          .limit(5)
-          .forEach(
-              category -> {
-                List<GameStatic> games =
-                    gameStaticRepository.findTop10ByCategoryId(category.getId());
-                List<GameInfoDto> gameList =
-                    games.stream()
-                        .map(game -> new GameInfoDto(game, game.getGame_dynamic()))
-                        .collect(Collectors.toList());
-                result.add(
-                    new MainPageResponseDto(
-                        "🎮 " + category.getCategoryName() + " 게임이에요", gameList));
-              });
+    if (userId != null) {
+      User user =
+          userRepository
+              .findById(userId)
+              .orElseThrow(() -> new NotFoundException("유저가 존재하지 않습니다."));
+      Set<Category> preferredCategories = user.getCategories();
+      if (!preferredCategories.isEmpty()) {
+        preferredCategories.stream()
+            .limit(5)
+            .forEach(
+                category -> {
+                  List<GameStatic> games =
+                      gameStaticRepository.findTop10ByCategoryId(category.getId());
+                  List<GameInfoDto> gameList =
+                      games.stream()
+                          .map(game -> new GameInfoDto(game, game.getGame_dynamic()))
+                          .collect(Collectors.toList());
+                  result.add(
+                      new MainPageResponseDto(
+                          "🎮 " + category.getCategoryName() + " 게임이에요", gameList));
+                });
+      }
     }
     return result;
   }
