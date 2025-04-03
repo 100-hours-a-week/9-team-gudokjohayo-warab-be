@@ -49,8 +49,7 @@ public class GameController {
       //  limit과 page에 default 값을 설정
       @RequestParam(value = "limit", defaultValue = "10") Integer limit,
       @RequestParam(value = "page", defaultValue = "0") Integer page,
-      @CookieValue("jwt") String token) {
-    Long tokenUserId = authService.extractUserId(token);
+      @CookieValue(value = "jwt", required = false) String token) {
     if (category_ids != null && category_ids.size() > 5) {
       throw new BadRequestException("카테고리는 5개까지 선택가능합니다.");
     }
@@ -59,7 +58,7 @@ public class GameController {
 
     List<GameSearchResponseDto> games =
         gameService.filterGames(
-            tokenUserId,
+            token,
             query,
             category_ids,
             rating_min,
@@ -81,9 +80,9 @@ public class GameController {
 
   //  api/v1/games/main
   @GetMapping("/main")
-  public ResponseEntity<ApiResponse> getMainPage(@CookieValue("jwt") String token) {
-    Long tokenUserId = authService.extractUserId(token);
-    List<MainPageResponseDto> games = gameService.getGamesForMainPage(tokenUserId);
+  public ResponseEntity<ApiResponse> getMainPage(
+      @CookieValue(value = "jwt", required = false) String token) {
+    List<MainPageResponseDto> games = gameService.getGamesForMainPage(token);
     Map<String, Object> data = new HashMap<>();
     data.put("games", games);
     return ResponseEntity.ok(new ApiResponse("main_page_inquiry_success", data));

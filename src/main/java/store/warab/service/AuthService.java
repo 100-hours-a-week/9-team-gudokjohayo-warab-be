@@ -27,6 +27,15 @@ public class AuthService {
     return jwtUtil.getUserIdFromToken(token);
   }
 
+  public boolean isValid(String token) {
+    try {
+      if (token == null) return false;
+      return jwtUtil.validateToken(token); // 이 내부에서 JwtException 던질 수 있음
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
   /**
    * 사용자 ID가 동일한지 확인
    *

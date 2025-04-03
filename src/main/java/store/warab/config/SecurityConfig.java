@@ -1,21 +1,18 @@
 package store.warab.config;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Collections;
-
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
-
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -77,15 +74,14 @@ public class SecurityConfig {
     };
   }
 
-
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-       http.exceptionHandling(
-           exception ->
-               exception
-                   .authenticationEntryPoint(customAuthenticationEntryPoint())
-                   .accessDeniedHandler(customAccessDeniedHandler()));
+    http.exceptionHandling(
+        exception ->
+            exception
+                .authenticationEntryPoint(customAuthenticationEntryPoint())
+                .accessDeniedHandler(customAccessDeniedHandler()));
 
     // CORS
     http.cors(
@@ -144,7 +140,7 @@ public class SecurityConfig {
     // 경로별 인가 작업
     http.authorizeHttpRequests(
         (auth) ->
-            auth.requestMatchers("/", "/api/health", "/api/v1/auth/logout")
+            auth.requestMatchers("/", "/api/health", "/api/v1/**", "/api/dev/login")
                 .permitAll()
                 .anyRequest()
                 .authenticated());
