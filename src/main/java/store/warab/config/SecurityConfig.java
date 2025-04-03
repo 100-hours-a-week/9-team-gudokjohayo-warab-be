@@ -3,13 +3,21 @@ package store.warab.config;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Collections;
+
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -42,32 +50,42 @@ public class SecurityConfig {
     this.jwtUtil = jwtUtil;
   }
 
-  //  @Bean
-  //  public AuthenticationEntryPoint customAuthenticationEntryPoint() {
-  //    return (request, response, authException) -> {
-  //      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-  //      response.setContentType("application/json;charset=UTF-8");
-  //      response.getWriter().write("{\"error\": \"인증되지 않은 요청입니다.\"}");
-  //    };
-  //  }
-  //
-  //  @Bean
-  //  public AccessDeniedHandler customAccessDeniedHandler() {
-  //    return (request, response, accessDeniedException) -> {
-  //      response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-  //      response.setContentType("application/json;charset=UTF-8");
-  //      response.getWriter().write("{\"error\": \"접근 권한이 없습니다.\"}");
-  //    };
-  //  }
+  @Bean
+  public AuthenticationEntryPoint customAuthenticationEntryPoint() {
+    return (request, response, authException) -> {
+      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+      if (auth != null && auth.isAuthenticated()) {
+        // DispatcherServlet으로 넘겨서 GlobalExceptionHandler에서 처리되게 함
+        request.setAttribute("exception", authException);
+        request.getRequestDispatcher(request.getRequestURI()).forward(request, response);
+        return;
+      }
+
+      // 인증이 안 된 경우는 여기서 직접 401 응답
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      response.setContentType("application/json;charset=UTF-8");
+      response.getWriter().write("{\"error\": \"인증되지 않은 요청입니다.\"}");
+    };
+  }
+
+  @Bean
+  public AccessDeniedHandler customAccessDeniedHandler() {
+    return (request, response, accessDeniedException) -> {
+      response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+      response.setContentType("application/json;charset=UTF-8");
+      response.getWriter().write("{\"error\": \"접근 권한이 없습니다.\"}");
+    };
+  }
+
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-    //    http.exceptionHandling(
-    //        exception ->
-    //            exception
-    //                .authenticationEntryPoint(customAuthenticationEntryPoint())
-    //                .accessDeniedHandler(customAccessDeniedHandler()));
+       http.exceptionHandling(
+           exception ->
+               exception
+                   .authenticationEntryPoint(customAuthenticationEntryPoint())
+                   .accessDeniedHandler(customAccessDeniedHandler()));
 
     // CORS
     http.cors(
@@ -132,9 +150,9 @@ public class SecurityConfig {
                 .authenticated());
 
     // 경로별 인가 작업
-    //          http.authorizeHttpRequests(
-    //              (auth) -> auth.
-    //                  anyRequest().permitAll()); // 모든 요청 허용
+    //              http.authorizeHttpRequests(
+    //                  (auth) -> auth.
+    //                      anyRequest().permitAll()); // 모든 요청 허용
 
     // 세션 설정
     http.sessionManagement(

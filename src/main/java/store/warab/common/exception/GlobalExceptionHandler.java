@@ -5,129 +5,83 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
-@Slf4j
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
-  // 400 Error
-  @ExceptionHandler(BadRequestException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ResponseEntity<ErrorResponse> handleBadRequestException(
-      BadRequestException e, HttpServletRequest request) {
-    log.error("400 Error (Validation Failed): {}", e.getMessage());
-
+  private ResponseEntity<ErrorResponse> buildErrorResponse(
+      HttpStatus status, String message, String path) {
     ErrorResponse response =
         ErrorResponse.builder()
-            .status(HttpStatus.BAD_REQUEST.value())
-            .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-            .message(e.getMessage())
-            .path(request.getRequestURI())
+            .status(status.value())
+            .error(status.getReasonPhrase())
+            .message(message)
+            .path(path)
             .build();
-    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(response, status);
   }
 
-  // 401 Unauthorized
-  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  @ExceptionHandler(BadRequestException.class)
+  public ResponseEntity<ErrorResponse> handleBadRequestException(
+      BadRequestException e, HttpServletRequest request) {
+    log.error("400 Error: {}", e.getMessage());
+    return buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage(), request.getRequestURI());
+  }
+
   @ExceptionHandler(InvalidTokenException.class)
   public ResponseEntity<ErrorResponse> handleInvalidTokenException(
       InvalidTokenException e, HttpServletRequest request) {
-
-    ErrorResponse response =
-        ErrorResponse.builder()
-            .status(HttpStatus.UNAUTHORIZED.value())
-            .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
-            .message(e.getMessage())
-            .path(request.getRequestURI())
-            .build();
-
-    return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    return buildErrorResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), request.getRequestURI());
   }
 
-  // 403 Error
   @ExceptionHandler(ForbiddenException.class)
-  @ResponseStatus(HttpStatus.FORBIDDEN)
   public ResponseEntity<ErrorResponse> handleForbiddenException(
       ForbiddenException e, HttpServletRequest request) {
-
-    ErrorResponse response =
-        ErrorResponse.builder()
-            .status(HttpStatus.FORBIDDEN.value())
-            .error(HttpStatus.FORBIDDEN.getReasonPhrase())
-            .message(e.getMessage())
-            .path(request.getRequestURI())
-            .build();
-
-    return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    return buildErrorResponse(HttpStatus.FORBIDDEN, e.getMessage(), request.getRequestURI());
   }
 
-  // 404 Error
   @ExceptionHandler(NotFoundException.class)
-  @ResponseStatus(HttpStatus.NOT_FOUND)
   public ResponseEntity<ErrorResponse> handleNotFoundException(
       NotFoundException e, HttpServletRequest request) {
     log.error("404 Error: {}", e.getMessage());
-
-    ErrorResponse response =
-        ErrorResponse.builder()
-            .status(HttpStatus.NOT_FOUND.value())
-            .error(HttpStatus.NOT_FOUND.getReasonPhrase())
-            .message(e.getMessage())
-            .path(request.getRequestURI())
-            .build();
-
-    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    return buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage(), request.getRequestURI());
   }
 
-  // 500 Error
   @ExceptionHandler(InternalServerException.class)
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public ResponseEntity<ErrorResponse> handleInternalServerException(
       InternalServerException e, HttpServletRequest request) {
-    log.error("서버 에러 발생: ", e);
+    log.error("500 Error: ", e);
+    return buildErrorResponse(
+        HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), request.getRequestURI());
+  }
 
-    ErrorResponse response =
-        ErrorResponse.builder()
-            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-            .message(e.getMessage())
-            .path(request.getRequestURI())
-            .build();
+  @ExceptionHandler(NoHandlerFoundException.class)
+  public ResponseEntity<ErrorResponse> handleNoHandlerFound(
+      NoHandlerFoundException ex, HttpServletRequest request) {
+    return buildErrorResponse(HttpStatus.NOT_FOUND, "요청한 경로가 없습니다.", request.getRequestURI());
+  }
 
-    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+  @ExceptionHandler(ResponseStatusException.class)
+  public ResponseEntity<ErrorResponse> handleResponseStatus(
+      ResponseStatusException ex, HttpServletRequest request) {
+    return buildErrorResponse(
+        HttpStatus.valueOf(ex.getStatusCode().value()), ex.getReason(), request.getRequestURI());
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<ErrorResponse> handleIllegalArgument(
+      IllegalArgumentException ex, HttpServletRequest request) {
+    return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getRequestURI());
   }
 
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<ErrorResponse> handleAllExceptions(
-      Exception ex, HttpServletRequest request) {
-    log.error("Unexpected Exception: ", ex);
-
-    ErrorResponse response =
-        ErrorResponse.builder()
-            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-            .message("서버 내부 오류가 발생했습니다.")
-            .path(request.getRequestURI())
-            .build();
-
-    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-  }
-
-  @ExceptionHandler(RuntimeException.class)
-  public ResponseEntity<ErrorResponse> handleRuntime(
-      RuntimeException ex, HttpServletRequest request) {
-    log.error("Runtime Exception: ", ex);
-
-    ErrorResponse response =
-        ErrorResponse.builder()
-            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-            .message("예상치 못한 오류가 발생했습니다.")
-            .path(request.getRequestURI())
-            .build();
-
-    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+  public ResponseEntity<ErrorResponse> fallback(Exception ex, HttpServletRequest request) {
+    log.error("Unhandled exception", ex);
+    return buildErrorResponse(
+        HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류", request.getRequestURI());
   }
 }
