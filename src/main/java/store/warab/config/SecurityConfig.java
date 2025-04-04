@@ -1,5 +1,6 @@
 package store.warab.config;
 
+import io.sentry.Sentry;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
@@ -132,6 +133,7 @@ public class SecurityConfig {
                 .successHandler(customSuccessHandler)
                 .failureHandler(
                     (request, response, exception) -> {
+                      Sentry.captureException(exception);
                       log.error("OAuth 로그인 실패: {}", exception.getMessage(), exception);
                       response.sendRedirect("/login?error"); // 실패시 리다이렉트
                     }));

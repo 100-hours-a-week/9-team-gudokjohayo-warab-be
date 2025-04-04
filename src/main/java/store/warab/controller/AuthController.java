@@ -1,5 +1,6 @@
 package store.warab.controller;
 
+import io.sentry.Sentry;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -62,6 +63,7 @@ public class AuthController {
 
       return ResponseEntity.ok(new ApiResponse("authenticated", userInfo));
     } catch (Exception e) {
+      Sentry.captureException(e);
       return ResponseEntity.ok(new ApiResponse("invalid_token", null));
     }
   }
