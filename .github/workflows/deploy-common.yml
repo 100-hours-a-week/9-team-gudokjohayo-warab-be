@@ -46,7 +46,7 @@ on:
 
 jobs:
     deploy:
-        runs-on: [self-hosted, Linux, X64]
+        runs-on: [self-hosted, macOS, ARM64]
         # 환경 설정은 주석 처리 또는 제거
         # environment: ${{ inputs.environment }}
         steps:
@@ -86,6 +86,7 @@ jobs:
                   EOF
 
             - name: Set up QEMU
+              if: runner.arch == 'X64'
               uses: docker/setup-qemu-action@v3
 
             - name: Set up Docker Buildx
