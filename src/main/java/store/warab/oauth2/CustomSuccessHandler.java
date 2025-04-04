@@ -89,12 +89,12 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
   private Cookie createCookie(String key, String value) {
     Cookie cookie = new Cookie(key, value);
     cookie.setMaxAge(60 * 60 * 60 * 200);
-    cookie.setSecure(true);
+    // cookie.setSecure(true);
     cookie.setPath("/");
     cookie.setHttpOnly(true);
 
     // SameSite 설정을 None으로 변경
-    cookie.setAttribute("SameSite", "None");
+    // cookie.setAttribute("SameSite", "None");
 
     if (isProd()) {
       cookie.setDomain("warab.store"); // 점(.) 제거
