@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Collections;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,7 @@ import store.warab.service.CustomOAuth2UserService;
 // import lombok.RequiredArgsConstructor;
 // import org.springframework.security.config.Customizer;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -130,7 +132,7 @@ public class SecurityConfig {
                 .successHandler(customSuccessHandler)
                 .failureHandler(
                     (request, response, exception) -> {
-                      System.out.println("OAuth 로그인 실패: " + exception.getMessage());
+                      log.error("OAuth 로그인 실패: {}", exception.getMessage(), exception);
                       response.sendRedirect("/login?error"); // 실패시 리다이렉트
                     }));
 
