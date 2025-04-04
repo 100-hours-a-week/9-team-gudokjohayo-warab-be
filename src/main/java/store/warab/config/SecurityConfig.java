@@ -140,7 +140,9 @@ public class SecurityConfig {
                           scope -> {
                             scope.setExtra(
                                 "customOAuth2UserService",
-                                customOAuth2UserService.toString()); // 여기다 변수들 추가하면 됨!
+                                String.valueOf(
+                                    customOAuth2UserService
+                                        .getOAuth2UserForDebug())); // 여기다 변수들 추가하면 됨!
                             scope.setExtra("redirectURL", redirectOauth2AfterLogin);
                             Sentry.captureException(new RuntimeException(exception));
                           });
