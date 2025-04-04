@@ -60,7 +60,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     // JWT 생성
     String token = jwtUtil.createJwt(userId, 60 * 60 * 200 * 60L);
 
-  
     //    ResponseCookie cookie =
     //        ResponseCookie.from("jwt", token)
     //            .httpOnly(true)
@@ -80,7 +79,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     //     .maxAge(Duration.ofDays(1))
     //     .build();
 
-    //response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    // response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
     // 쿠키에 저장 후 리다이렉션
     response.addCookie(createCookie("jwt", token));
