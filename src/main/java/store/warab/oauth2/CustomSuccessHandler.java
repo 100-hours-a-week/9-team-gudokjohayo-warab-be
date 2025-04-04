@@ -93,13 +93,13 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     cookie.setPath("/");
     cookie.setHttpOnly(true);
 
-    // SameSite 설정 추가
-    cookie.setAttribute("SameSite", "Lax");
+    // SameSite 설정을 None으로 변경
+    cookie.setAttribute("SameSite", "None");
 
     if (isProd()) {
-      cookie.setDomain(".warab.store");
+      cookie.setDomain("warab.store"); // 점(.) 제거
     } else {
-      cookie.setDomain(".dev.warab.store");
+      cookie.setDomain("dev.warab.store"); // 점(.) 제거
     }
 
     return cookie;
