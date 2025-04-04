@@ -41,6 +41,9 @@ public class SecurityConfig {
   @Value("${cors.allowed-origin}")
   private String corsAllowedOrigin;
 
+  @Value("${redirect.oauth2.after.login}")
+  private String redirectOauth2AfterLogin;
+
   public SecurityConfig(
       CustomOAuth2UserService customOAuth2UserService,
       CustomSuccessHandler customSuccessHandler,
@@ -133,7 +136,14 @@ public class SecurityConfig {
                 .successHandler(customSuccessHandler)
                 .failureHandler(
                     (request, response, exception) -> {
-                      Sentry.captureException(exception);
+                      Sentry.withScope(
+                          scope -> {
+                            scope.setExtra(
+                                "customOAuth2UserService",
+                                customOAuth2UserService.toString()); // 여기다 변수들 추가하면 됨!
+                            scope.setExtra("redirectURL", redirectOauth2AfterLogin);
+                            Sentry.captureException(exception);
+                          });
                       log.error("OAuth 로그인 실패: {}", exception.getMessage(), exception);
                       response.sendRedirect("/login?error"); // 실패시 리다이렉트
                     }));
