@@ -1,14 +1,12 @@
 package store.warab.oauth2;
 
+import io.sentry.Sentry;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.Duration;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -40,6 +38,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
       HttpServletRequest request, HttpServletResponse response, Authentication authentication)
       throws IOException, ServletException {
 
+    Sentry.captureMessage("enter in onAuthenticationSuccess");
+
     // OAuth2User
     OAuth2User customUserDetails = (OAuth2User) authentication.getPrincipal();
     // String username = customUserDetails.getAttribute("username");
@@ -59,23 +59,23 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     String setDomain = isProd() ? "warab.store" : "dev.warab.store";
 
-    ResponseCookie cookie =
-        ResponseCookie.from("jwt", token)
-            .httpOnly(true)
-            .secure(true)
-            .sameSite("None") // ✅ 크로스사이트 대응
-            .domain(setDomain) // ✅ 프론트 도메인과 공유되게 설정
-            .path("/")
-            .maxAge(Duration.ofDays(1))
-            .build();
+    //    ResponseCookie cookie =
+    //        ResponseCookie.from("jwt", token)
+    //            .httpOnly(true)
+    //            .secure(true)
+    //            .sameSite("None") // ✅ 크로스사이트 대응
+    //            .domain(setDomain) // ✅ 프론트 도메인과 공유되게 설정
+    //            .path("/")
+    //            .maxAge(Duration.ofDays(1))
+    //            .build();
 
-    response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    //    response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     //    response.flushBuffer();
 
     logger.info("✅ 프론트로 리다이렉트: " + oauthRedirect);
 
     // 쿠키에 저장 후 리다이렉션
-    //    response.addCookie(createCookie("jwt", token));
+    response.addCookie(createCookie("jwt", token));
     response.sendRedirect(oauthRedirect);
   }
 

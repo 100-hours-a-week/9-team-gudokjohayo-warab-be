@@ -51,6 +51,9 @@ public class SecurityConfig {
     this.customOAuth2UserService = customOAuth2UserService;
     this.customSuccessHandler = customSuccessHandler;
     this.jwtUtil = jwtUtil;
+    Sentry.captureMessage("✅ customOAuth2UserService 주입됨1: " + customOAuth2UserService);
+    Sentry.captureMessage(
+        "✅ customOAuth2UserService 주입됨2: " + customOAuth2UserService.getOAuth2UserForDebug());
   }
 
   @Bean
@@ -131,20 +134,26 @@ public class SecurityConfig {
         (oauth2) ->
             oauth2
                 .userInfoEndpoint(
-                    (userInfoEndpointConfig) ->
-                        userInfoEndpointConfig.userService(customOAuth2UserService))
+                    (userInfoEndpointConfig) -> {
+                      Sentry.captureMessage("🟡 userInfoEndpoint 설정 진입 - loadUser() 이전 단계");
+                      userInfoEndpointConfig.userService(customOAuth2UserService);
+                    })
                 .successHandler(customSuccessHandler)
                 .failureHandler(
                     (request, response, exception) -> {
                       Sentry.withScope(
                           scope -> {
+                            Sentry.captureMessage("🔴 enter in failureHandler");
                             scope.setExtra(
                                 "customOAuth2UserService",
                                 String.valueOf(
                                     customOAuth2UserService
                                         .getOAuth2UserForDebug())); // 여기다 변수들 추가하면 됨!
                             scope.setExtra("redirectURL", redirectOauth2AfterLogin);
-                            Sentry.captureException(new RuntimeException(exception));
+                            scope.setExtra("exceptionClass", exception.getClass().getName());
+                            scope.setExtra("exceptionMessage", exception.getMessage());
+                            scope.setExtra("redirectURL", redirectOauth2AfterLogin);
+                            Sentry.captureException(exception); // 그냥 원래 예외 던지는 게 디버깅엔 더 도움됨
                           });
                       log.error("OAuth 로그인 실패: {}", exception.getMessage(), exception);
                       response.sendRedirect("/login?error"); // 실패시 리다이렉트

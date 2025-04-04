@@ -1,5 +1,6 @@
 package store.warab.service;
 
+import io.sentry.Sentry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +35,7 @@ public class GameService {
   }
 
   public GameDetailResponseDto getGameDetail(Long game_id) {
+    Sentry.captureMessage("test용");
     // 1️⃣ GameStatic 조회 (게임이 존재하는지 확인)
     GameStatic game_static =
         gameStaticRepository
