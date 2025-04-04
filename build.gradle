@@ -83,8 +83,19 @@ repositories {
     mavenCentral()
 }
 
+configurations.all {
+    exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+    exclude group: 'ch.qos.logback'
+}
 // 프로젝트 의존성
 dependencies {
+        // 기본 로깅 제거
+    implementation("org.springframework.boot:spring-boot-starter") {
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+    }
+
+        // log4j2 사용
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -136,6 +147,7 @@ dependencies {
 
     // sentry
     implementation 'io.sentry:sentry-spring-boot-starter:6.32.0'
+
 }
 
 // JUnit 설정
