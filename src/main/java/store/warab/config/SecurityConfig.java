@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -23,6 +25,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import store.warab.jwt.JWTFilter;
 import store.warab.jwt.JWTUtil;
 import store.warab.oauth2.CustomSuccessHandler;
+import store.warab.remove.OAuth2LoginCallbackLoggingFilter;
+import store.warab.remove.OAuth2LoginStartLoggingFilter;
 import store.warab.service.CustomOAuth2UserService;
 
 // import store.warab.service.CustomOAuth2UserService;
@@ -146,9 +150,7 @@ public class SecurityConfig {
                             Sentry.captureMessage("🔴 enter in failureHandler");
                             scope.setExtra(
                                 "customOAuth2UserService",
-                                String.valueOf(
-                                    customOAuth2UserService
-                                        .getOAuth2UserForDebug())); // 여기다 변수들 추가하면 됨!
+                                String.valueOf(customOAuth2UserService)); // 여기다 변수들 추가하면 됨!
                             scope.setExtra("redirectURL", redirectOauth2AfterLogin);
                             scope.setExtra("exceptionClass", exception.getClass().getName());
                             scope.setExtra("exceptionMessage", exception.getMessage());
@@ -160,6 +162,12 @@ public class SecurityConfig {
                     }));
 
     // JWT Filter 추가
+    // SecurityConfig 에 등록
+    http.addFilterBefore(
+            new OAuth2LoginStartLoggingFilter(), OAuth2AuthorizationRequestRedirectFilter.class)
+        .addFilterBefore(
+            new OAuth2LoginCallbackLoggingFilter(), OAuth2LoginAuthenticationFilter.class);
+
     http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
     // 경로별 인가 작업
