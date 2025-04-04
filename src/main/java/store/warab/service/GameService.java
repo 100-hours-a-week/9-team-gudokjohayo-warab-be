@@ -38,7 +38,7 @@ public class GameService {
     GameStatic game_static =
         gameStaticRepository
             .findById(game_id)
-            .orElseThrow(() -> new NotFoundException("게임이 존재하지 않습니다."));
+            .orElseThrow(() -> new NotFoundException("게임이 존재하지 않습니다. + captureTest"));
 
     // 2️⃣ GameDynamic 조회 (존재하지 않을 수도 있음)
     GameDynamic game_dynamic = gameDynamicRepository.findById(game_id).orElse(null);

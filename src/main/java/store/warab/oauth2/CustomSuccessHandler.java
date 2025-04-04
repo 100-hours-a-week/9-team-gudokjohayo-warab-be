@@ -38,7 +38,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
       HttpServletRequest request, HttpServletResponse response, Authentication authentication)
       throws IOException, ServletException {
 
-    Sentry.captureMessage("entre in onAuthenticationSuccess");
+    Sentry.captureMessage("enter in onAuthenticationSuccess");
 
     // OAuth2User
     OAuth2User customUserDetails = (OAuth2User) authentication.getPrincipal();
