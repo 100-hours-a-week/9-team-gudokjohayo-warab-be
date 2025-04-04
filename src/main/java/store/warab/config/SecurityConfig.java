@@ -108,17 +108,13 @@ public class SecurityConfig {
                     CorsConfiguration configuration = new CorsConfiguration();
 
                     configuration.setAllowedOrigins(Collections.singletonList(corsAllowedOrigin));
-                    // origin URL 추가할 때 쉼표로 구분
-                    //                    configuration.setAllowedOrigins(
-                    //                        Arrays.asList(corsAllowedOrigin.split(",")));
-                    configuration.setAllowedMethods(Collections.singletonList("*"));
+                    configuration.setAllowedMethods(
+                        Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     configuration.setAllowCredentials(true);
-                    configuration.setAllowedHeaders(Collections.singletonList("*"));
+                    configuration.setAllowedHeaders(
+                        Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
                     configuration.setMaxAge(3600L);
                     configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization"));
-
-                    // configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
-                    // configuration.setExposedHeaders(Collections.singletonList("Authorization"));
 
                     return configuration;
                   }
@@ -140,6 +136,7 @@ public class SecurityConfig {
                 .userInfoEndpoint(
                     (userInfoEndpointConfig) -> {
                       Sentry.captureMessage("🟡 userInfoEndpoint 설정 진입 - loadUser() 이전 단계");
+                      Sentry.captureMessage("🟡 cors.allowed-origin: " + corsAllowedOrigin);
                       userInfoEndpointConfig.userService(customOAuth2UserService);
                     })
                 .successHandler(customSuccessHandler)
