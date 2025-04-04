@@ -1,5 +1,6 @@
 package store.warab.service;
 
+import io.sentry.Sentry;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
   @Override
   public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+    Sentry.captureMessage("enter in loadUser");
     // 1. OAuth2 로그인 유저 정보를 가져옴
     OAuth2User oAuth2User = super.loadUser(userRequest);
     log.info("getAttributes : {}", oAuth2User.getAttributes());
