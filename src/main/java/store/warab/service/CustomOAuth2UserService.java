@@ -2,6 +2,7 @@ package store.warab.service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -23,10 +24,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
   private final ClientRegistrationRepository clientRegistrationRepository;
   private final NicknameGenerator nicknameGenerator;
 
+  @Getter private OAuth2User oAuth2UserForDebug;
+
   @Override
   public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
     // 1. OAuth2 로그인 유저 정보를 가져옴
     OAuth2User oAuth2User = super.loadUser(userRequest);
+    this.oAuth2UserForDebug = oAuth2User;
+
     log.info("getAttributes : {}", oAuth2User.getAttributes());
 
     // 2. provider : kakao
