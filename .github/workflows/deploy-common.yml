@@ -117,8 +117,13 @@ jobs:
 
             - name: Update patch-deployment.yaml
               run: |
-                  sed -i "s|image:.*|image: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}-${{ inputs.environment }}|" \
-                    deploy/k8s/overlays/${{ inputs.environment }}/patch-deployment.yaml
+                  if [[ "$RUNNER_OS" == "macOS" ]]; then
+                    sed -i '' "s|image:.*|image: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}-${{ inputs.environment }}|" \
+                      deploy/k8s/overlays/${{ inputs.environment }}/patch-deployment.yaml
+                  else
+                    sed -i "s|image:.*|image: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}-${{ inputs.environment }}|" \
+                      deploy/k8s/overlays/${{ inputs.environment }}/patch-deployment.yaml
+                  fi
 
             - name: Commit & push to warab-deploy
               run: |
