@@ -74,7 +74,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     logger.info("✅ 프론트로 리다이렉트: " + oauthRedirect);
 
     // 쿠키에 저장 후 리다이렉션
-    response.addCookie(createCookie("jwt", token));
+    // response.addCookie(createCookie("jwt", token));
     response.sendRedirect(oauthRedirect);
   }
 
