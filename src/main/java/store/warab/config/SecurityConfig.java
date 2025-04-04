@@ -142,7 +142,7 @@ public class SecurityConfig {
                                 "customOAuth2UserService",
                                 customOAuth2UserService.toString()); // 여기다 변수들 추가하면 됨!
                             scope.setExtra("redirectURL", redirectOauth2AfterLogin);
-                            Sentry.captureException(exception);
+                            Sentry.captureException(new RuntimeException(exception));
                           });
                       log.error("OAuth 로그인 실패: {}", exception.getMessage(), exception);
                       response.sendRedirect("/login?error"); // 실패시 리다이렉트
