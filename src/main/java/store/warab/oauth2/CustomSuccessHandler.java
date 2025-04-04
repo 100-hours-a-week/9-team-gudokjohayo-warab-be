@@ -6,7 +6,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Duration;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -60,29 +63,20 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     // JWT 생성
     String token = jwtUtil.createJwt(userId, 60 * 60 * 200 * 60L);
 
-    //    ResponseCookie cookie =
-    //        ResponseCookie.from("jwt", token)
-    //            .httpOnly(true)
-    //            .secure(true)
-    //            .sameSite("None") // ✅ 크로스사이트 대응
-    //            .domain(setDomain) // ✅ 프론트 도메인과 공유되게 설정
-    //            .path("/")
-    //            .maxAge(Duration.ofDays(1))
-    //            .build();
-
     // ResponseCookie를 사용하여 쿠키 설정 (더 안전하고 현대적인 방법)
-    // ResponseCookie cookie = ResponseCookie.from("jwt", token)
-    //     .httpOnly(true)
-    //     .secure(true)
-    //     .sameSite("None")
-    //     .path("/")
-    //     .maxAge(Duration.ofDays(1))
-    //     .build();
+    ResponseCookie cookie =
+        ResponseCookie.from("jwt", token)
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("None")
+            .path("/")
+            .maxAge(Duration.ofDays(1))
+            .build();
 
-    // response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
     // 쿠키에 저장 후 리다이렉션
-    response.addCookie(createCookie("jwt", token));
+    // response.addCookie(createCookie("jwt", token));
     response.sendRedirect(oauthRedirect);
   }
 
