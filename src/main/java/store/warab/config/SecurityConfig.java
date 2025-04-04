@@ -55,9 +55,6 @@ public class SecurityConfig {
     this.customOAuth2UserService = customOAuth2UserService;
     this.customSuccessHandler = customSuccessHandler;
     this.jwtUtil = jwtUtil;
-    Sentry.captureMessage("✅ customOAuth2UserService 주입됨1: " + customOAuth2UserService);
-    Sentry.captureMessage(
-        "✅ customOAuth2UserService 주입됨2: " + customOAuth2UserService.getOAuth2UserForDebug());
   }
 
   @Bean
@@ -139,7 +136,7 @@ public class SecurityConfig {
             oauth2
                 .userInfoEndpoint(
                     (userInfoEndpointConfig) -> {
-                      Sentry.captureMessage("🟡 userInfoEndpoint 설정 진입 - loadUser() 이전 단계");
+                      Sentry.captureMessage("🟡 userInfoEndpoint 설정 진입 -  loadUser() 이전 단계");
                       userInfoEndpointConfig.userService(customOAuth2UserService);
                     })
                 .successHandler(customSuccessHandler)
@@ -147,7 +144,7 @@ public class SecurityConfig {
                     (request, response, exception) -> {
                       Sentry.withScope(
                           scope -> {
-                            Sentry.captureMessage("🔴 enter in failureHandler");
+                            Sentry.captureMessage("🔴 enter in funcking failureHandler");
                             scope.setExtra(
                                 "customOAuth2UserService",
                                 String.valueOf(customOAuth2UserService)); // 여기다 변수들 추가하면 됨!
@@ -184,10 +181,8 @@ public class SecurityConfig {
     //                      anyRequest().permitAll()); // 모든 요청 허용
 
     // 세션 설정
-    // http.sessionManagement(
-    //     session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     http.sessionManagement(
-        session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
     return http.build();
   }
