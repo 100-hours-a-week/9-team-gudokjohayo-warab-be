@@ -46,7 +46,7 @@ on:
 
 jobs:
     deploy:
-        runs-on: ubuntu-latest
+        runs-on: [self-hosted, Linux, X64]
         # 환경 설정은 주석 처리 또는 제거
         # environment: ${{ inputs.environment }}
 
