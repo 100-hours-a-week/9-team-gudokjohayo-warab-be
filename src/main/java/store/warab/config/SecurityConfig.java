@@ -51,6 +51,7 @@ public class SecurityConfig {
     this.customOAuth2UserService = customOAuth2UserService;
     this.customSuccessHandler = customSuccessHandler;
     this.jwtUtil = jwtUtil;
+    Sentry.captureMessage("✅ customOAuth2UserService 주입됨: " + customOAuth2UserService);
   }
 
   @Bean
