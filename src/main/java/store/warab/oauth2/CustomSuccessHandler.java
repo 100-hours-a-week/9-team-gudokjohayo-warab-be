@@ -70,11 +70,12 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             .build();
 
     response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    //    response.flushBuffer();
 
     logger.info("✅ 프론트로 리다이렉트: " + oauthRedirect);
 
     // 쿠키에 저장 후 리다이렉션
-    // response.addCookie(createCookie("jwt", token));
+    //    response.addCookie(createCookie("jwt", token));
     response.sendRedirect(oauthRedirect);
   }
 
