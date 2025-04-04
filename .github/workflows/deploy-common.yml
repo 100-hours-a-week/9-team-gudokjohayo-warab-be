@@ -83,7 +83,7 @@ jobs:
                   cors.allowed-origin=${{ inputs.cors_origin }}
                   discord.bot.token=${{ secrets.DISCORD_BOT_TOKEN }}
                   spring.profiles.active=${{ inputs.environment }}
-                  spring.security.oauth2.client.registration.kakao.redirect-uri=${{ inputs.redirect_uri }}
+                  spring.security.oauth2.client.registration.kakao.redirect-uri={baseUrl}/login/oauth2/code/kakao
                   EOF
                   echo ${{ inputs.cors_origin }}
 
