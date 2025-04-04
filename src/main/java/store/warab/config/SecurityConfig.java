@@ -184,8 +184,10 @@ public class SecurityConfig {
     //                      anyRequest().permitAll()); // 모든 요청 허용
 
     // 세션 설정
+    // http.sessionManagement(
+    //     session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     http.sessionManagement(
-        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
     return http.build();
   }
