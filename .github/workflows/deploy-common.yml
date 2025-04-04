@@ -46,7 +46,9 @@ on:
 
 jobs:
     deploy:
-        runs-on: self-hosted  # <- self-hosted runner 사용
+        runs-on: [self-hosted, Linux, X64]
+        # 환경 설정은 주석 처리 또는 제거
+        # environment: ${{ inputs.environment }}
         steps:
             - name: Checkout warab-be
               uses: actions/checkout@v3
