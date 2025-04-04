@@ -60,8 +60,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     // JWT 생성
     String token = jwtUtil.createJwt(userId, 60 * 60 * 200 * 60L);
 
-    String setDomain = isProd() ? "warab.store" : "dev.warab.store";
-
+  
     //    ResponseCookie cookie =
     //        ResponseCookie.from("jwt", token)
     //            .httpOnly(true)
@@ -72,10 +71,16 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     //            .maxAge(Duration.ofDays(1))
     //            .build();
 
-    //    response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-    //    response.flushBuffer();
+    // ResponseCookie를 사용하여 쿠키 설정 (더 안전하고 현대적인 방법)
+    // ResponseCookie cookie = ResponseCookie.from("jwt", token)
+    //     .httpOnly(true)
+    //     .secure(true)
+    //     .sameSite("None")
+    //     .path("/")
+    //     .maxAge(Duration.ofDays(1))
+    //     .build();
 
-    logger.info("✅ 프론트로 리다이렉트: " + oauthRedirect);
+    //response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
     // 쿠키에 저장 후 리다이렉션
     response.addCookie(createCookie("jwt", token));
@@ -89,18 +94,12 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
   private Cookie createCookie(String key, String value) {
     Cookie cookie = new Cookie(key, value);
     cookie.setMaxAge(60 * 60 * 60 * 200);
-    // cookie.setSecure(true);
+    cookie.setSecure(true);
     cookie.setPath("/");
     cookie.setHttpOnly(true);
 
     // SameSite 설정을 None으로 변경
-    // cookie.setAttribute("SameSite", "None");
-
-    if (isProd()) {
-      cookie.setDomain("warab.store"); // 점(.) 제거
-    } else {
-      cookie.setDomain("dev.warab.store"); // 점(.) 제거
-    }
+    cookie.setAttribute("SameSite", "None");
 
     return cookie;
   }
