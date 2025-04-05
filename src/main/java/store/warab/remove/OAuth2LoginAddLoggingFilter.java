@@ -28,7 +28,7 @@ public class OAuth2LoginAddLoggingFilter extends OncePerRequestFilter {
   private void logKakaoOAuthCallback(HttpServletRequest request) {
     try {
       StringBuilder logBuilder = new StringBuilder();
-      logBuilder.append("🔁 카카오 OAuth 콜백 정보:\n");
+      logBuilder.append("🔁 카카오 OAuth 콜백 정보 (in addLoggin):\n");
 
       // 기본 요청 정보
       logBuilder.append("URI: ").append(request.getRequestURI()).append("\n");
@@ -130,7 +130,7 @@ public class OAuth2LoginAddLoggingFilter extends OncePerRequestFilter {
 
       // 세션 ID만 별도로 간단히 로깅
       String sessionId = session != null ? session.getId() : "null";
-      Sentry.captureMessage("🔁 redirect URI 도착 - session ID: " + sessionId);
+      Sentry.captureMessage("🔁 redirect URI 도착 - session ID: (in addLoggin) " + sessionId);
 
     } catch (Exception e) {
       // 로깅 과정에서 오류가 발생해도 원래 요청 처리에는 영향을 주지 않도록 함
