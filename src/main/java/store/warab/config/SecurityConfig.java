@@ -1,10 +1,13 @@
 package store.warab.config;
 
 import io.sentry.Sentry;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -141,24 +144,26 @@ public class SecurityConfig {
                       userInfoEndpointConfig.userService(customOAuth2UserService);
                     })
                 .successHandler(customSuccessHandler)
-                .failureHandler(
-                    (request, response, exception) -> {
-                      Sentry.withScope(
-                          scope -> {
-                            Sentry.captureMessage("🔴 enter in failureHandler");
-                            scope.setExtra(
-                                "customOAuth2UserService",
-                                String.valueOf(customOAuth2UserService)); // 여기다 변수들 추가하면 됨!
-                            scope.setExtra("redirectURL", redirectOauth2AfterLogin);
+                    .failureHandler((request, response, exception) -> {
+                        Sentry.withScope(scope -> {
                             scope.setExtra("exceptionClass", exception.getClass().getName());
                             scope.setExtra("exceptionMessage", exception.getMessage());
-                            scope.setExtra("redirectURL", redirectOauth2AfterLogin);
-                            Sentry.captureException(exception); // 그냥 원래 예외 던지는 게 디버깅엔 더 도움됨
-                          });
-                      log.error("OAuth 로그인 실패: {}", exception.getMessage(), exception);
-                      if (customSuccessHandler.isProd())
-                        response.sendRedirect("https://warab.store/info");
-                      else response.sendRedirect("/login?error"); // 실패시 리다이렉트
+                            scope.setExtra("requestURI", request.getRequestURI());
+                            scope.setExtra("stateParam", request.getParameter("state"));
+                            scope.setExtra("codeParam", request.getParameter("code"));
+                            scope.setExtra("referer", request.getHeader("Referer"));
+                            scope.setExtra("cookie_JSESSIONID",
+                                    Arrays.stream(Optional.ofNullable(request.getCookies()).orElse(new Cookie[]{}))
+                                            .filter(c -> c.getName().equals("JSESSIONID"))
+                                            .findFirst()
+                                            .map(Cookie::getValue)
+                                            .orElse("none")
+                            );
+                            Sentry.captureMessage("🔴 failureHandler fired with full context");
+                            Sentry.captureException(exception);
+                        });
+
+                        response.sendRedirect("/login?error");
                     }));
 
     // JWT Filter 추가
@@ -187,10 +192,10 @@ public class SecurityConfig {
     //                      anyRequest().permitAll()); // 모든 요청 허용
 
     // 세션 설정
-    // http.sessionManagement(
-    //     session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-    http.sessionManagement(
-        session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+     http.sessionManagement(
+         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//    http.sessionManagement(
+//        session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
     return http.build();
   }
