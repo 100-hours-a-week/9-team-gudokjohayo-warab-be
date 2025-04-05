@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -144,26 +143,32 @@ public class SecurityConfig {
                       userInfoEndpointConfig.userService(customOAuth2UserService);
                     })
                 .successHandler(customSuccessHandler)
-                    .failureHandler((request, response, exception) -> {
-                        Sentry.withScope(scope -> {
+                .failureHandler(
+                    (request, response, exception) -> {
+                      Sentry.withScope(
+                          scope -> {
                             scope.setExtra("exceptionClass", exception.getClass().getName());
                             scope.setExtra("exceptionMessage", exception.getMessage());
                             scope.setExtra("requestURI", request.getRequestURI());
                             scope.setExtra("stateParam", request.getParameter("state"));
                             scope.setExtra("codeParam", request.getParameter("code"));
                             scope.setExtra("referer", request.getHeader("Referer"));
-                            scope.setExtra("cookie_JSESSIONID",
-                                    Arrays.stream(Optional.ofNullable(request.getCookies()).orElse(new Cookie[]{}))
-                                            .filter(c -> c.getName().equals("JSESSIONID"))
-                                            .findFirst()
-                                            .map(Cookie::getValue)
-                                            .orElse("none")
-                            );
+                            scope.setExtra(
+                                "cookie_JSESSIONID",
+                                Arrays.stream(
+                                        Optional.ofNullable(request.getCookies())
+                                            .orElse(new Cookie[] {}))
+                                    .filter(c -> c.getName().equals("JSESSIONID"))
+                                    .findFirst()
+                                    .map(Cookie::getValue)
+                                    .orElse("none"));
+
+                            // ✅ 스코프 내에서 capture
                             Sentry.captureMessage("🔴 failureHandler fired with full context");
                             Sentry.captureException(exception);
-                        });
+                          });
 
-                        response.sendRedirect("/login?error");
+                      response.sendRedirect("/login?error");
                     }));
 
     // JWT Filter 추가
@@ -192,10 +197,11 @@ public class SecurityConfig {
     //                      anyRequest().permitAll()); // 모든 요청 허용
 
     // 세션 설정
-     http.sessionManagement(
-         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//    http.sessionManagement(
-//        session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+    //    http.sessionManagement(
+    //        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+    http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
+    //    http.sessionManagement(
+    //        session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
     return http.build();
   }
