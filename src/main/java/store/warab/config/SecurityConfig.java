@@ -156,7 +156,9 @@ public class SecurityConfig {
                             Sentry.captureException(exception); // 그냥 원래 예외 던지는 게 디버깅엔 더 도움됨
                           });
                       log.error("OAuth 로그인 실패: {}", exception.getMessage(), exception);
-                      response.sendRedirect("/login?error"); // 실패시 리다이렉트
+                      if (customSuccessHandler.isProd())
+                        response.sendRedirect("https://warab.store/info");
+                      else response.sendRedirect("/login?error"); // 실패시 리다이렉트
                     }));
 
     // JWT Filter 추가
