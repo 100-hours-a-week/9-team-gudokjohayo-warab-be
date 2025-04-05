@@ -24,7 +24,7 @@ public class OAuth2LoginAddLoggingFilter extends OncePerRequestFilter {
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
     // 모든 요청에 대해 세션 정보 로깅 (로그인 전/후 상태 모두 캡처하기 위함)
-    logSessionState(request, "필터 시작 지점");
+    // logSessionState(request, "필터 시작 지점");
 
     // 카카오 OAuth 콜백 URL인 경우 상세 로깅
     if (request.getRequestURI().contains("/login/oauth2/code/kakao")) {
@@ -35,7 +35,7 @@ public class OAuth2LoginAddLoggingFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
     } finally {
       // 필터 체인 완료 후 세션 상태 다시 로깅
-      logSessionState(request, "필터 종료 지점");
+      // logSessionState(request, "필터 종료 지점");
     }
   }
 
