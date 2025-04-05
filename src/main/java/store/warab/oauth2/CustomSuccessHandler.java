@@ -77,6 +77,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     //    response.flushBuffer();
+    // test
 
     logger.info("✅ 프론트로 리다이렉트: " + oauthRedirect);
 
