@@ -63,7 +63,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     // JWT 생성
     String token = jwtUtil.createJwt(userId, 60 * 60 * 200 * 60L);
 
-    String setDomain = isProd() ? "warab.store" : "dev.warab.store";
+    String setDomain = isProd() ? "api.warab.store" : "dev.api.warab.store";
 
     ResponseCookie cookie =
         ResponseCookie.from("jwt", token)
