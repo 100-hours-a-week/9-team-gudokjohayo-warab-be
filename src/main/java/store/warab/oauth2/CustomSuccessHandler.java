@@ -75,7 +75,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             .maxAge(Duration.ofDays(1))
             .build();
 
-    response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     //    response.flushBuffer();
     // test
 
