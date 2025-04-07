@@ -2,7 +2,9 @@ package store.warab.controller;
 
 import io.sentry.Sentry;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,16 +29,21 @@ public class AuthController {
   }
 
   @PostMapping("/logout")
-  public ResponseEntity<?> logout(HttpServletResponse response) throws IOException {
+  public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
+    HttpSession session = request.getSession(false);
+    if (session != null) {
+      session.invalidate();
+    }
+
     // JWT 토큰이 저장된 쿠키를 제거
     Cookie cookie = new Cookie("jwt", null);
     cookie.setMaxAge(0); // 쿠키 즉시 만료
     cookie.setPath("/");
     cookie.setHttpOnly(true);
-    cookie.setSecure(true);
+    cookie.setSecure(true); // 로컬환경에선 false로 설정해도 됨
 
     response.addCookie(cookie);
-    // response.sendRedirect("/login");
 
     return ResponseEntity.ok().body("로그아웃에 성공하였습니다.");
   }
