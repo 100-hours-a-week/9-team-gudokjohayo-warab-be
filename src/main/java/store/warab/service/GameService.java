@@ -2,6 +2,7 @@ package store.warab.service;
 
 import io.sentry.Sentry;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -224,5 +225,16 @@ public class GameService {
     }
 
     return lst.stream().map(PlatformDiscountInfoDto::new).toList();
+  }
+
+  public LowestPriceLinkDto getLowestPriceLink(Long gameId) {
+    List<PlatformDiscountInfoDto> discountInfo = getDiscountInfoByGameId(gameId);
+
+    PlatformDiscountInfoDto cheapest =
+        discountInfo.stream()
+            .min(Comparator.comparing(PlatformDiscountInfoDto::getDiscountPrice))
+            .orElseThrow(() -> new NotFoundException("할인 정보가 없습니다."));
+
+    return new LowestPriceLinkDto(cheapest.getPlatform(), cheapest.getStoreUrl());
   }
 }
