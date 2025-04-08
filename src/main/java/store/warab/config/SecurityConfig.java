@@ -1,10 +1,12 @@
 package store.warab.config;
 
 import io.sentry.Sentry;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,8 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
-import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -25,8 +25,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import store.warab.jwt.JWTFilter;
 import store.warab.jwt.JWTUtil;
 import store.warab.oauth2.CustomSuccessHandler;
-import store.warab.remove.OAuth2LoginCallbackLoggingFilter;
-import store.warab.remove.OAuth2LoginStartLoggingFilter;
 import store.warab.service.CustomOAuth2UserService;
 
 // import store.warab.service.CustomOAuth2UserService;
@@ -144,26 +142,41 @@ public class SecurityConfig {
                     (request, response, exception) -> {
                       Sentry.withScope(
                           scope -> {
-                            Sentry.captureMessage("🔴 enter in failureHandler");
-                            scope.setExtra(
-                                "customOAuth2UserService",
-                                String.valueOf(customOAuth2UserService)); // 여기다 변수들 추가하면 됨!
-                            scope.setExtra("redirectURL", redirectOauth2AfterLogin);
                             scope.setExtra("exceptionClass", exception.getClass().getName());
                             scope.setExtra("exceptionMessage", exception.getMessage());
-                            scope.setExtra("redirectURL", redirectOauth2AfterLogin);
-                            Sentry.captureException(exception); // 그냥 원래 예외 던지는 게 디버깅엔 더 도움됨
+                            scope.setExtra("requestURI", request.getRequestURI());
+                            scope.setExtra("stateParam", request.getParameter("state"));
+                            scope.setExtra("codeParam", request.getParameter("code"));
+                            scope.setExtra("referer", request.getHeader("Referer"));
+                            scope.setExtra(
+                                "cookie_JSESSIONID",
+                                Arrays.stream(
+                                        Optional.ofNullable(request.getCookies())
+                                            .orElse(new Cookie[] {}))
+                                    .filter(c -> c.getName().equals("JSESSIONID"))
+                                    .findFirst()
+                                    .map(Cookie::getValue)
+                                    .orElse("none"));
+
+                            // ✅ 스코프 내에서 capture
+                            Sentry.captureMessage("🔴 failureHandler fired with full context");
+                            Sentry.captureException(exception);
                           });
-                      log.error("OAuth 로그인 실패: {}", exception.getMessage(), exception);
-                      response.sendRedirect("/login?error"); // 실패시 리다이렉트
+
+                      response.sendRedirect("/login?error");
                     }));
 
     // JWT Filter 추가
     // SecurityConfig 에 등록
-    http.addFilterBefore(
-            new OAuth2LoginStartLoggingFilter(), OAuth2AuthorizationRequestRedirectFilter.class)
-        .addFilterBefore(
-            new OAuth2LoginCallbackLoggingFilter(), OAuth2LoginAuthenticationFilter.class);
+    //    http.addFilterBefore(
+    //            new OAuth2LoginStartLoggingFilter(),
+    // OAuth2AuthorizationRequestRedirectFilter.class)
+    //        .addFilterBefore(
+    //            new OAuth2LoginCallbackLoggingFilter(), OAuth2LoginAuthenticationFilter.class)
+    //        .addFilterBefore(
+    //            new OAuth2LoginAddLoggingFilter(), OAuth2LoginAuthenticationFilter.class // ✅ 여기보다
+    // 먼저 실행
+    //            );
 
     http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
@@ -181,10 +194,11 @@ public class SecurityConfig {
     //                      anyRequest().permitAll()); // 모든 요청 허용
 
     // 세션 설정
-    // http.sessionManagement(
-    //     session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-    http.sessionManagement(
-        session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+    //    http.sessionManagement(
+    //        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+    http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
+    //    http.sessionManagement(
+    //        session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
     return http.build();
   }
