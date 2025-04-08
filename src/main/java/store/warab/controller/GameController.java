@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import store.warab.common.exception.BadRequestException;
 import store.warab.common.util.ApiResponse;
-import store.warab.dto.GameDetailResponseDto;
-import store.warab.dto.GameLowestPriceDto;
-import store.warab.dto.GameSearchResponseDto;
-import store.warab.dto.MainPageResponseDto;
+import store.warab.dto.*;
 import store.warab.service.AuthService;
 import store.warab.service.GameService;
 
@@ -92,5 +89,23 @@ public class GameController {
   public ResponseEntity<ApiResponse> getLowestPrice(@PathVariable Long id) {
     GameLowestPriceDto data = gameService.getLowestPrice(id);
     return ResponseEntity.ok(new ApiResponse("get_lowest_price_success", data));
+  }
+
+  // api/v1/games/prices_by_platform/{gameId}
+  @GetMapping("prices_by_platform/{gameId}")
+  public ResponseEntity<ApiResponse> getPricesByPlatform(@PathVariable Long gameId) {
+    if (gameId <= 0) {
+      throw new BadRequestException("게임 ID는 0보다 커야 합니다.");
+    }
+
+    Integer currentPrice = gameService.getCurrentPrice(gameId);
+    List<PlatformDiscountInfoDto> discountInfo =
+        gameService.getDiscountInfoByGameId(gameId); // 플랫폼별 할인
+
+    GameDiscountInfoDto response = new GameDiscountInfoDto(currentPrice, discountInfo);
+
+    return ResponseEntity.ok(
+        new ApiResponse(
+            "get_prices_by_platform_success", response)); // ApiResponse는 공통 응답 wrapper라고 가정
   }
 }

@@ -8,10 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import store.warab.common.exception.NotFoundException;
 import store.warab.dto.*;
-import store.warab.entity.Category;
-import store.warab.entity.GameDynamic;
-import store.warab.entity.GameStatic;
-import store.warab.entity.User;
+import store.warab.entity.*;
+import store.warab.repository.CurrentPriceByPlatformRepository;
 import store.warab.repository.GameDynamicRepository;
 import store.warab.repository.GameStaticRepository;
 import store.warab.repository.UserRepository;
@@ -22,16 +20,19 @@ public class GameService {
   private final GameDynamicRepository gameDynamicRepository;
   private final AuthService authService;
   private final UserRepository userRepository;
+  private final CurrentPriceByPlatformRepository currentPriceByPlatformRepository;
 
   public GameService(
       GameStaticRepository gameStaticRepository,
       GameDynamicRepository gameDynamicRepository,
       AuthService authService,
-      UserRepository userRepository) {
+      UserRepository userRepository,
+      CurrentPriceByPlatformRepository currentPriceByPlatformRepository) {
     this.gameStaticRepository = gameStaticRepository;
     this.gameDynamicRepository = gameDynamicRepository;
     this.authService = authService;
     this.userRepository = userRepository;
+    this.currentPriceByPlatformRepository = currentPriceByPlatformRepository;
   }
 
   public GameDetailResponseDto getGameDetail(Long game_id) {
@@ -195,5 +196,33 @@ public class GameService {
             .findById(gameId)
             .orElseThrow(() -> new NotFoundException("해당 게임의 동적 정보가 존재하지 않습니다."));
     return new GameLowestPriceDto(gameDynamic);
+  }
+
+  // 생각해보니 꼭 dto를 만들 필요가 없지 않나???
+  //  public GameCurrentPriceDto getCurrentPrice(Long gameId) {
+  //
+  //  }
+  // 그렇다면 이렇게 가능? ->
+  public Integer getCurrentPrice(Long gameId) {
+    GameStatic game_static =
+        gameStaticRepository
+            .findById(gameId)
+            .orElseThrow(
+                () ->
+                    new NotFoundException(
+                        "게임이 존재하지 않습니다.")); // Optional 안에 값이 있으면 꺼내고,없으면 예외를 throw.
+
+    return game_static.getPrice(); // 이렇게 바로 꺼내도 안전하려나?
+  }
+
+  public List<PlatformDiscountInfoDto> getDiscountInfoByGameId(Long gameId) {
+    List<CurrentPriceByPlatform> lst =
+        currentPriceByPlatformRepository.findAllByGameStatic_Id(gameId);
+
+    if (lst.isEmpty()) {
+      throw new NotFoundException("등록된 플랫폼별 할인정보가 존재하지 않습니다.");
+    }
+
+    return lst.stream().map(PlatformDiscountInfoDto::new).toList();
   }
 }
