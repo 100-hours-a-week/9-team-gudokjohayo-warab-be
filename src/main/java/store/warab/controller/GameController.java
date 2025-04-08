@@ -104,8 +104,17 @@ public class GameController {
 
     GameDiscountInfoDto response = new GameDiscountInfoDto(currentPrice, discountInfo);
 
-    return ResponseEntity.ok(
-        new ApiResponse(
-            "get_prices_by_platform_success", response)); // ApiResponse는 공통 응답 wrapper라고 가정
+    return ResponseEntity.ok(new ApiResponse("get_prices_by_platform_success", response));
+  }
+
+  //  api/v1/games/lowest_price_link/{game_id}
+  @GetMapping("lowest_price_link/{gameId}")
+  public ResponseEntity<ApiResponse> getLowestPriceLink(@PathVariable Long gameId) {
+    if (gameId <= 0) {
+      throw new BadRequestException("게임 ID는 0보다 커야 합니다.");
+    }
+    LowestPriceLinkDto response = gameService.getLowestPriceLink(gameId);
+
+    return ResponseEntity.ok(new ApiResponse("get_lowest_price_link_success", response));
   }
 }
