@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import store.warab.common.exception.BadRequestException;
 import store.warab.common.util.ApiResponse;
-import store.warab.dto.GameDetailResponseDto;
-import store.warab.dto.GameLowestPriceDto;
-import store.warab.dto.GameSearchResponseDto;
-import store.warab.dto.MainPageResponseDto;
+import store.warab.dto.*;
 import store.warab.service.AuthService;
 import store.warab.service.GameService;
 
@@ -92,5 +89,11 @@ public class GameController {
   public ResponseEntity<ApiResponse> getLowestPrice(@PathVariable Long id) {
     GameLowestPriceDto data = gameService.getLowestPrice(id);
     return ResponseEntity.ok(new ApiResponse("get_lowest_price_success", data));
+  }
+
+  @GetMapping("/{id}/video")
+  public ResponseEntity<ApiResponse> getGameVideo(@PathVariable Long id) {
+    List<GameVideoDto> data = gameService.getGameVideo(id);
+    return ResponseEntity.ok(new ApiResponse("get_game_video_success", data));
   }
 }

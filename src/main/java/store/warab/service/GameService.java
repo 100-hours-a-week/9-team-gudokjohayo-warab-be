@@ -8,12 +8,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import store.warab.common.exception.NotFoundException;
 import store.warab.dto.*;
-import store.warab.entity.Category;
-import store.warab.entity.GameDynamic;
-import store.warab.entity.GameStatic;
-import store.warab.entity.User;
+import store.warab.entity.*;
 import store.warab.repository.GameDynamicRepository;
 import store.warab.repository.GameStaticRepository;
+import store.warab.repository.GameVideoRepository;
 import store.warab.repository.UserRepository;
 
 @Service
@@ -22,16 +20,19 @@ public class GameService {
   private final GameDynamicRepository gameDynamicRepository;
   private final AuthService authService;
   private final UserRepository userRepository;
+  private final GameVideoRepository gameVideoRepository;
 
   public GameService(
       GameStaticRepository gameStaticRepository,
       GameDynamicRepository gameDynamicRepository,
       AuthService authService,
-      UserRepository userRepository) {
+      UserRepository userRepository,
+      GameVideoRepository gameVideoRepository) {
     this.gameStaticRepository = gameStaticRepository;
     this.gameDynamicRepository = gameDynamicRepository;
     this.authService = authService;
     this.userRepository = userRepository;
+    this.gameVideoRepository = gameVideoRepository;
   }
 
   public GameDetailResponseDto getGameDetail(Long game_id) {
@@ -195,5 +196,15 @@ public class GameService {
             .findById(gameId)
             .orElseThrow(() -> new NotFoundException("해당 게임의 동적 정보가 존재하지 않습니다."));
     return new GameLowestPriceDto(gameDynamic);
+  }
+
+  public List<GameVideoDto> getGameVideo(Long gameId) {
+    GameStatic game =
+        gameStaticRepository
+            .findById(gameId)
+            .orElseThrow(() -> new NotFoundException("게임을 찾을 수 없습니다."));
+
+    List<GameVideo> gameVideoList = gameVideoRepository.findByGameStatic(game);
+    return gameVideoList.stream().map(GameVideoDto::new).collect(Collectors.toList());
   }
 }
