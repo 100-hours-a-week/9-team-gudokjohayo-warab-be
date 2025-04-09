@@ -70,10 +70,10 @@ jobs:
               uses: aws-actions/amazon-ecr-login@v2
               id: ecr-login
 
-            - name: Generate application-secrets.properties
+            - name: Generate application-secrets.yml
               run: |
                   mkdir -p src/main/resources
-                  cat <<EOF > src/main/resources/application-secrets.properties
+                  cat <<EOF > src/main/resources/application-secrets.yml
                   spring.datasource.url=${{ secrets.DATABASE_URL }}
                   spring.datasource.username=${{ secrets.DATABASE_USER }}
                   spring.datasource.password=${{ secrets.DATABASE_PASSWD }}

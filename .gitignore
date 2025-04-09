@@ -148,4 +148,5 @@ docs/HELP.md
 .DS_Store
 application-secret.properties
 /src/main/resources/application-secrets.properties
-
+application-secrets.yml
+/src/main/resources/application-secrets.yml

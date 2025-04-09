@@ -9,7 +9,7 @@ plugins {
 }
 
 def secrets = new Properties()
-file("src/main/resources/application-secrets.properties").withInputStream {
+file("src/main/resources/application-secrets.yml").withInputStream {
     secrets.load(it)
 }
 
