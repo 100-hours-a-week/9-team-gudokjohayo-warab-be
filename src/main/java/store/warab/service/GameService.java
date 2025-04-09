@@ -13,6 +13,7 @@ import store.warab.entity.*;
 import store.warab.repository.CurrentPriceByPlatformRepository;
 import store.warab.repository.GameDynamicRepository;
 import store.warab.repository.GameStaticRepository;
+import store.warab.repository.GameVideoRepository;
 import store.warab.repository.UserRepository;
 
 @Service
@@ -21,6 +22,7 @@ public class GameService {
   private final GameDynamicRepository gameDynamicRepository;
   private final AuthService authService;
   private final UserRepository userRepository;
+  private final GameVideoRepository gameVideoRepository;
   private final CurrentPriceByPlatformRepository currentPriceByPlatformRepository;
 
   public GameService(
@@ -28,11 +30,13 @@ public class GameService {
       GameDynamicRepository gameDynamicRepository,
       AuthService authService,
       UserRepository userRepository,
+      GameVideoRepository gameVideoRepository) {
       CurrentPriceByPlatformRepository currentPriceByPlatformRepository) {
     this.gameStaticRepository = gameStaticRepository;
     this.gameDynamicRepository = gameDynamicRepository;
     this.authService = authService;
     this.userRepository = userRepository;
+    this.gameVideoRepository = gameVideoRepository;
     this.currentPriceByPlatformRepository = currentPriceByPlatformRepository;
   }
 
@@ -199,6 +203,14 @@ public class GameService {
     return new GameLowestPriceDto(gameDynamic);
   }
 
+  public List<GameVideoDto> getGameVideo(Long gameId) {
+    GameStatic game =
+        gameStaticRepository
+            .findById(gameId)
+            .orElseThrow(() -> new NotFoundException("게임을 찾을 수 없습니다."));
+
+    List<GameVideo> gameVideoList = gameVideoRepository.findByGameStatic(game);
+    return gameVideoList.stream().map(GameVideoDto::new).collect(Collectors.toList());
   // 생각해보니 꼭 dto를 만들 필요가 없지 않나???
   //  public GameCurrentPriceDto getCurrentPrice(Long gameId) {
   //

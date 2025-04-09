@@ -91,6 +91,11 @@ public class GameController {
     return ResponseEntity.ok(new ApiResponse("get_lowest_price_success", data));
   }
 
+  @GetMapping("/{id}/video")
+  public ResponseEntity<ApiResponse> getGameVideo(@PathVariable Long id) {
+    List<GameVideoDto> data = gameService.getGameVideo(id);
+    return ResponseEntity.ok(new ApiResponse("get_game_video_success", data));
+    
   // api/v1/games/prices_by_platform/{gameId}
   @GetMapping("prices_by_platform/{gameId}")
   public ResponseEntity<ApiResponse> getPricesByPlatform(@PathVariable Long gameId) {
@@ -116,5 +121,6 @@ public class GameController {
     LowestPriceLinkDto response = gameService.getLowestPriceLink(gameId);
 
     return ResponseEntity.ok(new ApiResponse("get_lowest_price_link_success", response));
+
   }
 }

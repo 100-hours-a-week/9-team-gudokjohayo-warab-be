@@ -43,6 +43,12 @@ on:
                 required: true
             DEPLOY_REPO_PAT:
                 required: true
+            REDIS_HOST:
+                required: true
+            REDIS_PORT:
+                required: true
+            REDIS_PASSWD:
+                required: true
 
 jobs:
     deploy:
@@ -83,6 +89,9 @@ jobs:
                   discord.bot.token=${{ secrets.DISCORD_BOT_TOKEN }}
                   spring.profiles.active=${{ inputs.environment }}
                   spring.security.oauth2.client.registration.kakao.redirect-uri={baseUrl}/login/oauth2/code/kakao
+                  spring.data.redis.host=${{ secrets.REDIS_HOST }}
+                  spring.data.redis.port=${{ secrets.REDIS_PORT }}
+                  spring.data.redis.password=${{ secrets.REDIS_PASSWD }}
                   EOF
 
             - name: Set up QEMU
