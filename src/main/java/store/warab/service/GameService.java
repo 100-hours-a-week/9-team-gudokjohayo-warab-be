@@ -30,7 +30,7 @@ public class GameService {
       GameDynamicRepository gameDynamicRepository,
       AuthService authService,
       UserRepository userRepository,
-      GameVideoRepository gameVideoRepository) {
+      GameVideoRepository gameVideoRepository,
       CurrentPriceByPlatformRepository currentPriceByPlatformRepository) {
     this.gameStaticRepository = gameStaticRepository;
     this.gameDynamicRepository = gameDynamicRepository;
@@ -211,6 +211,8 @@ public class GameService {
 
     List<GameVideo> gameVideoList = gameVideoRepository.findByGameStatic(game);
     return gameVideoList.stream().map(GameVideoDto::new).collect(Collectors.toList());
+  }
+
   // 생각해보니 꼭 dto를 만들 필요가 없지 않나???
   //  public GameCurrentPriceDto getCurrentPrice(Long gameId) {
   //
