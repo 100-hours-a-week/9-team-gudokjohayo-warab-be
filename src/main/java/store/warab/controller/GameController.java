@@ -123,4 +123,11 @@ public class GameController {
 
     return ResponseEntity.ok(new ApiResponse("get_lowest_price_link_success", response));
   }
+
+  //  api/v1/games/autocomplete?keyword=
+  @GetMapping("/autocomplete")
+  public ResponseEntity<List<String>> autocomplete(@RequestParam String keyword) {
+    List<String> suggestions = gameService.autocomplete(keyword);
+    return ResponseEntity.ok(suggestions);
+  }
 }
