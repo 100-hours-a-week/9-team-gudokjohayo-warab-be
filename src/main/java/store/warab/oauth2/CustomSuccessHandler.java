@@ -65,17 +65,30 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     String setDomain = isProd() ? "api.warab.store" : "dev.api.warab.store";
 
-    ResponseCookie cookie =
-        ResponseCookie.from("jwt", token)
-            .httpOnly(true)
-            .secure(true)
-            .sameSite("None") // ✅ 크로스사이트 대응
-            .domain(setDomain) // ✅ 프론트 도메인과 공유되게 설정
-            .path("/")
-            .maxAge(Duration.ofDays(1))
-            .build();
+    if ("local".equals(activeProfile)) {
+      ResponseCookie cookie =
+          ResponseCookie.from("jwt", token)
+              .httpOnly(true)
+              //                .secure(true)
+              //                .sameSite("None") // ✅ 크로스사이트 대응
+              //                .domain(setDomain) // ✅ 프론트 도메인과 공유되게 설정
+              .path("/")
+              .maxAge(Duration.ofDays(1))
+              .build();
+      response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    } else {
+      ResponseCookie cookie =
+          ResponseCookie.from("jwt", token)
+              .httpOnly(true)
+              .secure(true)
+              .sameSite("None") // ✅ 크로스사이트 대응
+              .domain(setDomain) // ✅ 프론트 도메인과 공유되게 설정
+              .path("/")
+              .maxAge(Duration.ofDays(1))
+              .build();
+      response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    }
 
-    response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     //    response.flushBuffer();
     // test
 

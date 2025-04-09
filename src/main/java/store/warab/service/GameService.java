@@ -2,6 +2,7 @@ package store.warab.service;
 
 import io.sentry.Sentry;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import store.warab.common.exception.NotFoundException;
 import store.warab.dto.*;
 import store.warab.entity.*;
+import store.warab.repository.CurrentPriceByPlatformRepository;
 import store.warab.repository.GameDynamicRepository;
 import store.warab.repository.GameStaticRepository;
 import store.warab.repository.GameVideoRepository;
@@ -21,6 +23,7 @@ public class GameService {
   private final AuthService authService;
   private final UserRepository userRepository;
   private final GameVideoRepository gameVideoRepository;
+  private final CurrentPriceByPlatformRepository currentPriceByPlatformRepository;
 
   public GameService(
       GameStaticRepository gameStaticRepository,
@@ -28,11 +31,13 @@ public class GameService {
       AuthService authService,
       UserRepository userRepository,
       GameVideoRepository gameVideoRepository) {
+      CurrentPriceByPlatformRepository currentPriceByPlatformRepository) {
     this.gameStaticRepository = gameStaticRepository;
     this.gameDynamicRepository = gameDynamicRepository;
     this.authService = authService;
     this.userRepository = userRepository;
     this.gameVideoRepository = gameVideoRepository;
+    this.currentPriceByPlatformRepository = currentPriceByPlatformRepository;
   }
 
   public GameDetailResponseDto getGameDetail(Long game_id) {
@@ -206,5 +211,42 @@ public class GameService {
 
     List<GameVideo> gameVideoList = gameVideoRepository.findByGameStatic(game);
     return gameVideoList.stream().map(GameVideoDto::new).collect(Collectors.toList());
+  // 생각해보니 꼭 dto를 만들 필요가 없지 않나???
+  //  public GameCurrentPriceDto getCurrentPrice(Long gameId) {
+  //
+  //  }
+  // 그렇다면 이렇게 가능? ->
+  public Integer getCurrentPrice(Long gameId) {
+    GameStatic game_static =
+        gameStaticRepository
+            .findById(gameId)
+            .orElseThrow(
+                () ->
+                    new NotFoundException(
+                        "게임이 존재하지 않습니다.")); // Optional 안에 값이 있으면 꺼내고,없으면 예외를 throw.
+
+    return game_static.getPrice(); // 이렇게 바로 꺼내도 안전하려나?
+  }
+
+  public List<PlatformDiscountInfoDto> getDiscountInfoByGameId(Long gameId) {
+    List<CurrentPriceByPlatform> lst =
+        currentPriceByPlatformRepository.findAllByGameStatic_Id(gameId);
+
+    if (lst.isEmpty()) {
+      throw new NotFoundException("등록된 플랫폼별 할인정보가 존재하지 않습니다.");
+    }
+
+    return lst.stream().map(PlatformDiscountInfoDto::new).toList();
+  }
+
+  public LowestPriceLinkDto getLowestPriceLink(Long gameId) {
+    List<PlatformDiscountInfoDto> discountInfo = getDiscountInfoByGameId(gameId);
+
+    PlatformDiscountInfoDto cheapest =
+        discountInfo.stream()
+            .min(Comparator.comparing(PlatformDiscountInfoDto::getDiscountPrice))
+            .orElseThrow(() -> new NotFoundException("할인 정보가 없습니다."));
+
+    return new LowestPriceLinkDto(cheapest.getPlatform(), cheapest.getStoreUrl());
   }
 }
