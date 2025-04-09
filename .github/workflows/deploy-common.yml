@@ -70,29 +70,53 @@ jobs:
               uses: aws-actions/amazon-ecr-login@v2
               id: ecr-login
 
-            - name: Generate application-secrets.yml
-              run: |
-                  mkdir -p src/main/resources
-                  cat <<EOF > src/main/resources/application-secrets.yml
-                  spring.datasource.url=${{ secrets.DATABASE_URL }}
-                  spring.datasource.username=${{ secrets.DATABASE_USER }}
-                  spring.datasource.password=${{ secrets.DATABASE_PASSWD }}
-                  spring.security.oauth2.client.registration.kakao.client-id=${{ secrets.KAKAO_CLIENT_ID }}
-                  spring.security.oauth2.client.registration.kakao.client-secret=${{ secrets.KAKAO_CLIENT_SECRET }}
-                  spring.jwt.secret=${{ secrets.JWT_SECRET_KEY }}
-                  sentry.authToken=${{ secrets.SENTRY_TOKEN }}
-                  sentry.dsn=${{ secrets.SENTRY_DSN }}
-                  sentry.org=${{ secrets.SENTRY_ORG }}
-                  sentry.projectName=${{ secrets.SENTRY_PROJECT_NAME }}
-                  redirect.oauth2.after.login=${{ inputs.cors_origin }}/info
-                  cors.allowed-origin=${{ inputs.cors_origin }}
-                  discord.bot.token=${{ secrets.DISCORD_BOT_TOKEN }}
-                  spring.profiles.active=${{ inputs.environment }}
-                  spring.security.oauth2.client.registration.kakao.redirect-uri={baseUrl}/login/oauth2/code/kakao
-                  spring.data.redis.host=${{ secrets.REDIS_HOST }}
-                  spring.data.redis.port=${{ secrets.REDIS_PORT }}
-                  spring.data.redis.password=${{ secrets.REDIS_PASSWD }}
-                  EOF
+            -   name: Generate application-secrets.yml
+                run: |
+                    mkdir -p src/main/resources
+                    cat <<EOF > src/main/resources/application-secrets.yml
+                    spring:
+                      datasource:
+                        url: "${{ secrets.DATABASE_URL }}"
+                        username: "${{ secrets.DATABASE_USER }}"
+                        password: "${{ secrets.DATABASE_PASSWD }}"
+                      security:
+                        oauth2:
+                          client:
+                            registration:
+                              kakao:
+                                client-id: "${{ secrets.KAKAO_CLIENT_ID }}"
+                                client-secret: "${{ secrets.KAKAO_CLIENT_SECRET }}"
+                                redirect-uri: "{baseUrl}/login/oauth2/code/kakao"
+                      jwt:
+                        secret: "${{ secrets.JWT_SECRET_KEY }}"
+                      data:
+                        redis:
+                          host: "${{ secrets.REDIS_HOST }}"
+                          port: ${{
+                            secrets.REDIS_PORT
+                          }}
+                          password: "${{ secrets.REDIS_PASSWD }}"
+                      profiles:
+                        active: "${{ inputs.environment }}"
+
+                    sentry:
+                      authToken: "${{ secrets.SENTRY_TOKEN }}"
+                      dsn: "${{ secrets.SENTRY_DSN }}"
+                      org: "${{ secrets.SENTRY_ORG }}"
+                      projectName: "${{ secrets.SENTRY_PROJECT_NAME }}"
+
+                    redirect:
+                      oauth2:
+                        after:
+                          login: "${{ inputs.cors_origin }}/info"
+
+                    cors:
+                      allowed-origin: "${{ inputs.cors_origin }}"
+
+                    discord:
+                      bot:
+                        token: "${{ secrets.DISCORD_BOT_TOKEN }}"
+                    EOF
 
             - name: Set up QEMU
               if: runner.arch == 'X64'
