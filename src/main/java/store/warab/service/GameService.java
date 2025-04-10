@@ -1,11 +1,12 @@
 package store.warab.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.sentry.Sentry;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import store.warab.common.exception.NotFoundException;
 import store.warab.dto.*;
@@ -17,6 +18,7 @@ import store.warab.repository.GameVideoRepository;
 import store.warab.repository.UserRepository;
 
 @Service
+@AllArgsConstructor
 public class GameService {
   private final GameStaticRepository gameStaticRepository;
   private final GameDynamicRepository gameDynamicRepository;
@@ -24,21 +26,8 @@ public class GameService {
   private final UserRepository userRepository;
   private final GameVideoRepository gameVideoRepository;
   private final CurrentPriceByPlatformRepository currentPriceByPlatformRepository;
-
-  public GameService(
-      GameStaticRepository gameStaticRepository,
-      GameDynamicRepository gameDynamicRepository,
-      AuthService authService,
-      UserRepository userRepository,
-      GameVideoRepository gameVideoRepository,
-      CurrentPriceByPlatformRepository currentPriceByPlatformRepository) {
-    this.gameStaticRepository = gameStaticRepository;
-    this.gameDynamicRepository = gameDynamicRepository;
-    this.authService = authService;
-    this.userRepository = userRepository;
-    this.gameVideoRepository = gameVideoRepository;
-    this.currentPriceByPlatformRepository = currentPriceByPlatformRepository;
-  }
+  private final Optional<CacheService> cacheService;
+  private final ObjectMapper objectMapper;
 
   public GameDetailResponseDto getGameDetail(Long game_id) {
     Sentry.captureMessage("test용");
@@ -138,6 +127,36 @@ public class GameService {
         .collect(Collectors.toList());
   }
 
+  private void loadDiscountGamesFromDBAndCache(List<MainPageResponseDto> result) {
+    List<GameStatic> discountedGames = gameStaticRepository.findTopDiscountedGames();
+    List<GameInfoDto> discountedGamesList =
+        discountedGames.stream()
+            .map(discountedGame -> new GameInfoDto(discountedGame, discountedGame.getGameDynamic()))
+            .collect(Collectors.toList());
+    try {
+      String json = objectMapper.writeValueAsString(discountedGamesList);
+      cacheService.get().cacheMainGames("discount", json); // 캐싱
+    } catch (JsonProcessingException e) {
+      System.err.println("캐싱용 JSON 직렬화 실패"); // 이건 optional 처리
+    }
+    result.add(new MainPageResponseDto("🔥 현재 할인 중인 게임이에요", discountedGamesList));
+  }
+
+  private void loadPopularGamesFromDBAndCache(List<MainPageResponseDto> result) {
+    List<GameStatic> popularGames = gameStaticRepository.findTopPopularGames();
+    List<GameInfoDto> popularGamesList =
+        popularGames.stream()
+            .map(popularGame -> new GameInfoDto(popularGame, popularGame.getGameDynamic()))
+            .collect(Collectors.toList());
+    try {
+      String json = objectMapper.writeValueAsString(popularGamesList);
+      cacheService.get().cacheMainGames("popular", json); // 캐싱
+    } catch (JsonProcessingException e) {
+      System.err.println("캐싱용 JSON 직렬화 실패"); // 이건 optional 처리
+    }
+    result.add(new MainPageResponseDto("🏆 지금 인기 많은 게임이에요", popularGamesList));
+  }
+
   public List<MainPageResponseDto> getGamesForMainPage(String token) {
     Long userId = null;
     if (authService.isValid(token)) {
@@ -147,20 +166,52 @@ public class GameService {
     List<MainPageResponseDto> result = new ArrayList<>();
 
     // 1. 할인 게임
-    List<GameStatic> discountedGames = gameStaticRepository.findTopDiscountedGames();
-    List<GameInfoDto> discountedGamesList =
-        discountedGames.stream()
-            .map(discountedGame -> new GameInfoDto(discountedGame, discountedGame.getGameDynamic()))
-            .collect(Collectors.toList());
-    result.add(new MainPageResponseDto("🔥 현재 할인 중인 게임이에요", discountedGamesList));
+    if (!cacheService.isPresent()) {
+      List<GameStatic> discountedGames = gameStaticRepository.findTopDiscountedGames();
+      List<GameInfoDto> discountedGamesList =
+          discountedGames.stream()
+              .map(
+                  discountedGame ->
+                      new GameInfoDto(discountedGame, discountedGame.getGameDynamic()))
+              .collect(Collectors.toList());
+      result.add(new MainPageResponseDto("🔥 현재 할인 중인 게임이에요", discountedGamesList));
+    } else if (cacheService.get().hasMainGamesCache("discount")) {
+      try {
+        String cached = cacheService.get().getCachedMainGames("discount");
+        List<GameInfoDto> discountedGamesList =
+            objectMapper.readValue(cached, new TypeReference<>() {});
+        result.add(new MainPageResponseDto("🔥 현재 할인 중인 게임이에요", discountedGamesList));
+      } catch (JsonProcessingException e) {
+        // ❗ 캐시 파싱 실패 시 fallback
+        System.err.println("캐시 파싱 실패 → DB에서 가져옵니다.");
+        loadDiscountGamesFromDBAndCache(result);
+      }
+    } else {
+      loadDiscountGamesFromDBAndCache(result);
+    }
 
     // 2. 인기 게임
-    List<GameStatic> popularGames = gameStaticRepository.findTopPopularGames();
-    List<GameInfoDto> popularGamesList =
-        popularGames.stream()
-            .map(popularGame -> new GameInfoDto(popularGame, popularGame.getGameDynamic()))
-            .collect(Collectors.toList());
-    result.add(new MainPageResponseDto("🏆 지금 인기 많은 게임이에요", popularGamesList));
+    if (!cacheService.isPresent()) {
+      List<GameStatic> popularGames = gameStaticRepository.findTopPopularGames();
+      List<GameInfoDto> popularGamesList =
+          popularGames.stream()
+              .map(popularGame -> new GameInfoDto(popularGame, popularGame.getGameDynamic()))
+              .collect(Collectors.toList());
+      result.add(new MainPageResponseDto("🏆 지금 인기 많은 게임이에요", popularGamesList));
+    } else if (cacheService.get().hasMainGamesCache("popular")) {
+      try {
+        String cached = cacheService.get().getCachedMainGames("popular");
+        List<GameInfoDto> popularGamesList =
+            objectMapper.readValue(cached, new TypeReference<>() {});
+        result.add(new MainPageResponseDto("🏆 지금 인기 많은 게임이에요", popularGamesList));
+      } catch (JsonProcessingException e) {
+        // ❗ 캐시 파싱 실패 시 fallback
+        System.err.println("캐시 파싱 실패 → DB에서 가져옵니다.");
+        loadPopularGamesFromDBAndCache(result);
+      }
+    } else {
+      loadPopularGamesFromDBAndCache(result);
+    }
 
     // 3. 카테고리별 추천 게임
     if (userId != null) {
@@ -170,6 +221,8 @@ public class GameService {
               .orElseThrow(() -> new NotFoundException("유저가 존재하지 않습니다."));
       Set<Category> preferredCategories = user.getCategories();
       if (!preferredCategories.isEmpty()) {
+        if (cacheService.isPresent() && cacheService.get().hasMainGamesCache("preferred")) {}
+
         preferredCategories.stream()
             .limit(5)
             .forEach(
@@ -249,5 +302,23 @@ public class GameService {
             .orElseThrow(() -> new NotFoundException("할인 정보가 없습니다."));
 
     return new LowestPriceLinkDto(cheapest.getPlatform(), cheapest.getStoreUrl());
+  }
+
+  public List<String> autocomplete(String keyword) {
+    if (keyword == null || keyword.isBlank()) {
+      return gameStaticRepository.findGameTitlesByKeyword(""); // 기본값
+    }
+
+    // Redis 캐시가 있는 경우만 캐시 활용
+    if (cacheService.isPresent() && cacheService.get().hasAutocompleteCache(keyword)) {
+      return cacheService.get().getCachedAutocomplete(keyword);
+    }
+
+    List<String> result = gameStaticRepository.findGameTitlesByKeyword(keyword);
+
+    // 캐시가 있다면 저장
+    cacheService.ifPresent(service -> service.cacheAutocomplete(keyword, result));
+
+    return result;
   }
 }
