@@ -10,6 +10,6 @@ public class GameLowestPriceDto {
   private int history_lowest_price;
 
   public GameLowestPriceDto(GameDynamic gameDynamic) {
-    this.history_lowest_price = gameDynamic.getHistory_lowest_Price();
+    this.history_lowest_price = gameDynamic.getHistoryLowestPrice();
   }
 }

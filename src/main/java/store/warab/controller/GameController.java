@@ -13,12 +13,10 @@ import store.warab.service.GameService;
 @RequestMapping("/api/v1/games")
 public class GameController {
   private final GameService gameService;
-  private final AuthService authService;
 
   public GameController(GameService gameService, AuthService authService) {
     System.out.println("create GameController");
     this.gameService = gameService;
-    this.authService = authService;
   }
 
   /// api/v1/games/{id}

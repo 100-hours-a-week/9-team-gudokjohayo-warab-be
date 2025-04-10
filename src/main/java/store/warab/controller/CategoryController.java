@@ -15,7 +15,6 @@ import store.warab.service.CategoryService;
 
 @RestController
 @RequestMapping("/api/v1/games/category")
-// @CrossOrigin(origins = "http://localhost:3000") // 프론트 3000번 포트 허용
 @RequiredArgsConstructor
 public class CategoryController {
 

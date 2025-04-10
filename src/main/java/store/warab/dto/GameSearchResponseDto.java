@@ -21,7 +21,7 @@ public class GameSearchResponseDto {
     this.price = gameStatic.getPrice();
 
     if (gameDynamic != null) {
-      this.lowest_price = gameDynamic.getLowest_price();
+      this.lowest_price = gameDynamic.getLowestPrice();
     }
   }
 }

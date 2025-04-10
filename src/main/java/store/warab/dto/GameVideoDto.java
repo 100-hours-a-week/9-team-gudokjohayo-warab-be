@@ -18,9 +18,9 @@ public class GameVideoDto {
     this.thumbnail = gameVideo.getThumbnail();
     this.title = gameVideo.getTitle();
     this.views = gameVideo.getViews();
-    this.upload_date = gameVideo.getUpload_date();
-    this.channel_thumbnail = gameVideo.getChannel_profile_image();
-    this.channel_name = gameVideo.getChannel_name();
-    this.video_url = "https://youtube.com/watch?v=" + gameVideo.getVideo_id();
+    this.upload_date = gameVideo.getUploadDate();
+    this.channel_thumbnail = gameVideo.getChannelProfileImage();
+    this.channel_name = gameVideo.getChannelName();
+    this.video_url = "https://youtube.com/watch?v=" + gameVideo.getVideoId();
   }
 }
