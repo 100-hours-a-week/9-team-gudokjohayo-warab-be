@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import store.warab.common.util.ApiResponse;
 import store.warab.dto.DiscordLinkRequestDto;
 import store.warab.dto.DiscordLinkResponseDto;
+import store.warab.dto.UserServerResponseDto;
 import store.warab.service.AuthService;
 import store.warab.service.DiscordLinkService;
 
@@ -54,7 +55,7 @@ public class DiscordLinkController {
   public ResponseEntity<ApiResponse> getDiscordLinksByUserId(@CookieValue("jwt") String token) {
     try {
       Long userId = authService.extractUserId(token);
-      List<DiscordLinkResponseDto> servers = discordLinkService.getDiscordLinksByUserId(userId);
+      List<UserServerResponseDto> servers = discordLinkService.getUserServers(userId);
       return ResponseEntity.ok(
           new ApiResponse("user_server_list inquiry_success", Map.of("servers", servers)));
     } catch (Exception e) {

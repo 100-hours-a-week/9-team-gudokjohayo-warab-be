@@ -13,6 +13,7 @@ import store.warab.common.exception.NotFoundException;
 import store.warab.dto.DiscordInviteResponseDto;
 import store.warab.dto.DiscordLinkRequestDto;
 import store.warab.dto.DiscordLinkResponseDto;
+import store.warab.dto.UserServerResponseDto;
 import store.warab.entity.DiscordLink;
 import store.warab.entity.GameStatic;
 import store.warab.entity.User;
@@ -145,6 +146,13 @@ public class DiscordLinkService {
     } catch (Exception e) {
       return false;
     }
+  }
+
+  public List<UserServerResponseDto> getUserServers(Long userId) {
+      List<DiscordLink> discordLinks = discordLinkRepository.findByUserIdAndDeletedAtIsNull(userId);
+      return discordLinks.stream()
+          .map(UserServerResponseDto::fromEntity)
+          .collect(Collectors.toList());
   }
 
   private String extractInviteCode(String discordUrl) {
