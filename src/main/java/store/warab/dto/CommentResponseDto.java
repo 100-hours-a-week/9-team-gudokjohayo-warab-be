@@ -12,8 +12,8 @@ public class CommentResponseDto {
   @JsonProperty("user_id")
   private Long userId;
 
-  @JsonProperty("user_discord")
-  private String userDiscord;
+  //  @JsonProperty("user_discord")
+  //  private String userDiscord;
 
   @JsonProperty("name")
   private String nickName;
@@ -33,7 +33,7 @@ public class CommentResponseDto {
   public CommentResponseDto(User user, Comment comment) {
     this.commentId = comment.getCommentId();
     this.userId = user.getId();
-    this.userDiscord = user.getDiscordLink();
+    // this.userDiscord = user.getDiscordLink();
     this.nickName = user.getNickname();
     this.content = comment.getContent();
     this.createdAt = comment.getCreatedAt();

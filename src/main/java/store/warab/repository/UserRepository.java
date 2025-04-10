@@ -15,8 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   Optional<User> findByKakaoId(String kakaoId);
 
-  boolean existsByDiscordLink(String discordLink);
-
   boolean existsByNickname(String nickname);
 
   Optional<User> findByNickname(String nickname);
