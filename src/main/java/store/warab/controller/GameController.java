@@ -126,8 +126,10 @@ public class GameController {
 
   //  api/v1/games/autocomplete?keyword=
   @GetMapping("/autocomplete")
-  public ResponseEntity<List<String>> autocomplete(@RequestParam String keyword) {
-    List<String> suggestions = gameService.autocomplete(keyword);
-    return ResponseEntity.ok(suggestions);
+  public ResponseEntity<ApiResponse> autocomplete(@RequestParam String keyword) {
+    List<String> autocomplete = gameService.autocomplete(keyword);
+    Map<String, Object> data = new HashMap<>();
+    data.put("autocomplete", autocomplete);
+    return ResponseEntity.ok(new ApiResponse("get_result_of_autocomplete", data));
   }
 }
