@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile("prod")
+@Profile({"dev", "prod"})
 public class AutocompleteCacheService {
 
   private final StringRedisTemplate redisTemplate;
