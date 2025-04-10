@@ -1,25 +1,19 @@
 package store.warab.controller;
 
 import java.util.*;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import store.warab.common.exception.BadRequestException;
 import store.warab.common.util.ApiResponse;
 import store.warab.dto.*;
-import store.warab.service.AuthService;
 import store.warab.service.GameService;
 
 @RestController
 @RequestMapping("/api/v1/games")
+@AllArgsConstructor
 public class GameController {
   private final GameService gameService;
-  private final AuthService authService;
-
-  public GameController(GameService gameService, AuthService authService) {
-    System.out.println("create GameController");
-    this.gameService = gameService;
-    this.authService = authService;
-  }
 
   /// api/v1/games/{id}
   @GetMapping("/{id}")
