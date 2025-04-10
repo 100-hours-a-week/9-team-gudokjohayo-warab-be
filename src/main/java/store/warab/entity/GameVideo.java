@@ -19,7 +19,7 @@ public class GameVideo {
   private GameStatic gameStatic;
 
   @Column(name = "video_id", nullable = false)
-  private String video_id;
+  private String videoId;
 
   @Column(name = "title", nullable = false)
   private String title;
@@ -31,22 +31,22 @@ public class GameVideo {
   private Long views;
 
   @Column(name = "upload_date", nullable = false)
-  private LocalDateTime upload_date;
+  private LocalDateTime uploadDate;
 
   @Column(name = "channel_profile_image", nullable = false)
-  private String channel_profile_image;
+  private String channelProfileImage;
 
   @Column(name = "channel_name", nullable = false)
-  private String channel_name;
+  private String channelName;
 
   @CreationTimestamp
   @Column(name = "created_at", nullable = false)
-  private LocalDateTime created_at;
+  private LocalDateTime createdAt;
 
   @UpdateTimestamp
   @Column(name = "updated_at")
-  private LocalDateTime updated_at;
+  private LocalDateTime updatedAt;
 
   @Column(name = "deleted_at")
-  private LocalDateTime deleted_at;
+  private LocalDateTime deletedAt;
 }

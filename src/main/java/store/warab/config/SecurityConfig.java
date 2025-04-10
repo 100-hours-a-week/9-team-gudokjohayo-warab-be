@@ -27,10 +27,6 @@ import store.warab.jwt.JWTUtil;
 import store.warab.oauth2.CustomSuccessHandler;
 import store.warab.service.CustomOAuth2UserService;
 
-// import store.warab.service.CustomOAuth2UserService;
-// import lombok.RequiredArgsConstructor;
-// import org.springframework.security.config.Customizer;
-
 @Slf4j
 @Configuration
 @EnableWebSecurity
@@ -166,18 +162,6 @@ public class SecurityConfig {
                       response.sendRedirect("/login?error");
                     }));
 
-    // JWT Filter 추가
-    // SecurityConfig 에 등록
-    //    http.addFilterBefore(
-    //            new OAuth2LoginStartLoggingFilter(),
-    // OAuth2AuthorizationRequestRedirectFilter.class)
-    //        .addFilterBefore(
-    //            new OAuth2LoginCallbackLoggingFilter(), OAuth2LoginAuthenticationFilter.class)
-    //        .addFilterBefore(
-    //            new OAuth2LoginAddLoggingFilter(), OAuth2LoginAuthenticationFilter.class // ✅ 여기보다
-    // 먼저 실행
-    //            );
-
     http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
     // 경로별 인가 작업
@@ -188,17 +172,7 @@ public class SecurityConfig {
                 .anyRequest()
                 .authenticated());
 
-    // 경로별 인가 작업
-    //              http.authorizeHttpRequests(
-    //                  (auth) -> auth.
-    //                      anyRequest().permitAll()); // 모든 요청 허용
-
-    // 세션 설정
-    //    http.sessionManagement(
-    //        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
-    //    http.sessionManagement(
-    //        session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
     return http.build();
   }

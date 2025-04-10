@@ -1,21 +1,17 @@
 package store.warab.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import store.warab.entity.CurrentPriceByPlatform;
 import store.warab.entity.Platform;
 
 @Getter
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class PlatformDiscountInfoDto {
   private String platform;
-
-  @JsonProperty("discount_price")
   private Integer discountPrice;
-
-  @JsonProperty("discount_rate")
   private Integer discountRate;
-
-  @JsonProperty("store_url")
   private String storeUrl;
 
   public PlatformDiscountInfoDto(CurrentPriceByPlatform currentPriceByPlatform) {

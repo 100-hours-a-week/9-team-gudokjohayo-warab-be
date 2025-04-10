@@ -52,12 +52,6 @@ public class User implements Serializable {
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 
-  // 엔티티가 처음 저장될 때 자동으로 생성일 설정
-  //    @PrePersist
-  //    protected void onCreate() {
-  //        this.createdAt = Timestamp.valueOf(LocalDateTime.now());
-  //    }
-
   @Builder
   public User(String kakaoId, String nickname, String discordLink) {
     this.kakaoId = kakaoId;

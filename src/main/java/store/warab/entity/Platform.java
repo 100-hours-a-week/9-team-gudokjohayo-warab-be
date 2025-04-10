@@ -11,8 +11,8 @@ public class Platform {
   @Id
   @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  Long PlatformId;
+  Long platformId;
 
   @Column(name = "name", nullable = false)
-  String PlatformName;
+  String platformName;
 }

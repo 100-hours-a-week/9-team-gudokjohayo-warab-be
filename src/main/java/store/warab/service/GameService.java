@@ -32,16 +32,16 @@ public class GameService {
   public GameDetailResponseDto getGameDetail(Long game_id) {
     Sentry.captureMessage("test용");
     // 1️⃣ GameStatic 조회 (게임이 존재하는지 확인)
-    GameStatic game_static =
+    GameStatic gameStatic =
         gameStaticRepository
             .findById(game_id)
             .orElseThrow(() -> new NotFoundException("게임이 존재하지 않습니다."));
 
     // 2️⃣ GameDynamic 조회 (존재하지 않을 수도 있음)
-    GameDynamic game_dynamic = gameDynamicRepository.findById(game_id).orElse(null);
+    GameDynamic gameDynamic = gameDynamicRepository.findById(game_id).orElse(null);
 
     // 3️⃣ DTO 변환 후 반환
-    return new GameDetailResponseDto(game_static, game_dynamic);
+    return new GameDetailResponseDto(gameStatic, gameDynamic);
   }
 
   public List<GameSearchResponseDto> filterGames(
@@ -123,7 +123,7 @@ public class GameService {
     }
 
     return games.stream()
-        .map(game -> new GameSearchResponseDto(game, game.getGame_dynamic()))
+        .map(game -> new GameSearchResponseDto(game, game.getGameDynamic()))
         .collect(Collectors.toList());
   }
 
@@ -131,8 +131,7 @@ public class GameService {
     List<GameStatic> discountedGames = gameStaticRepository.findTopDiscountedGames();
     List<GameInfoDto> discountedGamesList =
         discountedGames.stream()
-            .map(
-                discountedGame -> new GameInfoDto(discountedGame, discountedGame.getGame_dynamic()))
+            .map(discountedGame -> new GameInfoDto(discountedGame, discountedGame.getGameDynamic()))
             .collect(Collectors.toList());
     try {
       String json = objectMapper.writeValueAsString(discountedGamesList);
@@ -147,7 +146,7 @@ public class GameService {
     List<GameStatic> popularGames = gameStaticRepository.findTopPopularGames();
     List<GameInfoDto> popularGamesList =
         popularGames.stream()
-            .map(popularGame -> new GameInfoDto(popularGame, popularGame.getGame_dynamic()))
+            .map(popularGame -> new GameInfoDto(popularGame, popularGame.getGameDynamic()))
             .collect(Collectors.toList());
     try {
       String json = objectMapper.writeValueAsString(popularGamesList);
@@ -173,7 +172,7 @@ public class GameService {
           discountedGames.stream()
               .map(
                   discountedGame ->
-                      new GameInfoDto(discountedGame, discountedGame.getGame_dynamic()))
+                      new GameInfoDto(discountedGame, discountedGame.getGameDynamic()))
               .collect(Collectors.toList());
       result.add(new MainPageResponseDto("🔥 현재 할인 중인 게임이에요", discountedGamesList));
     } else if (cacheService.get().hasMainGamesCache("discount")) {
@@ -196,7 +195,7 @@ public class GameService {
       List<GameStatic> popularGames = gameStaticRepository.findTopPopularGames();
       List<GameInfoDto> popularGamesList =
           popularGames.stream()
-              .map(popularGame -> new GameInfoDto(popularGame, popularGame.getGame_dynamic()))
+              .map(popularGame -> new GameInfoDto(popularGame, popularGame.getGameDynamic()))
               .collect(Collectors.toList());
       result.add(new MainPageResponseDto("🏆 지금 인기 많은 게임이에요", popularGamesList));
     } else if (cacheService.get().hasMainGamesCache("popular")) {
@@ -232,7 +231,7 @@ public class GameService {
                       gameStaticRepository.findTop10ByCategoryId(category.getId());
                   List<GameInfoDto> gameList =
                       games.stream()
-                          .map(game -> new GameInfoDto(game, game.getGame_dynamic()))
+                          .map(game -> new GameInfoDto(game, game.getGameDynamic()))
                           .collect(Collectors.toList());
                   result.add(
                       new MainPageResponseDto(
@@ -244,7 +243,7 @@ public class GameService {
   }
 
   public GameLowestPriceDto getLowestPrice(Long gameId) {
-    GameStatic game_static =
+    GameStatic gameStatic =
         gameStaticRepository
             .findById(gameId)
             .orElseThrow(() -> new NotFoundException("게임이 존재하지 않습니다."));
@@ -272,7 +271,7 @@ public class GameService {
   //  }
   // 그렇다면 이렇게 가능? ->
   public Integer getCurrentPrice(Long gameId) {
-    GameStatic game_static =
+    GameStatic gameStatic =
         gameStaticRepository
             .findById(gameId)
             .orElseThrow(
@@ -280,7 +279,7 @@ public class GameService {
                     new NotFoundException(
                         "게임이 존재하지 않습니다.")); // Optional 안에 값이 있으면 꺼내고,없으면 예외를 throw.
 
-    return game_static.getPrice(); // 이렇게 바로 꺼내도 안전하려나?
+    return gameStatic.getPrice(); // 이렇게 바로 꺼내도 안전하려나?
   }
 
   public List<PlatformDiscountInfoDto> getDiscountInfoByGameId(Long gameId) {
