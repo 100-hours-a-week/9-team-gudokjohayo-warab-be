@@ -1,16 +1,15 @@
 package store.warab.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GameDiscountInfoDto {
-  @JsonProperty("current_price")
   private Integer currentPrice;
-
-  @JsonProperty("discount_info")
   private List<PlatformDiscountInfoDto> discountInfo;
 }
