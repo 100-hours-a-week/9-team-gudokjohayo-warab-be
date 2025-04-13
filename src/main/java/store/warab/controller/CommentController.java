@@ -14,7 +14,6 @@ import store.warab.service.CommentService;
 
 @RestController
 @RequestMapping("/api/v1/games") // URL
-// @CrossOrigin(origins = "http://localhost:3000")
 public class CommentController {
 
   private final CommentService commentService;

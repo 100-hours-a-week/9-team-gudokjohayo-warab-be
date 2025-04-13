@@ -1,25 +1,19 @@
 package store.warab.controller;
 
 import java.util.*;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import store.warab.common.exception.BadRequestException;
 import store.warab.common.util.ApiResponse;
 import store.warab.dto.*;
-import store.warab.service.AuthService;
 import store.warab.service.GameService;
 
 @RestController
 @RequestMapping("/api/v1/games")
+@AllArgsConstructor
 public class GameController {
   private final GameService gameService;
-  private final AuthService authService;
-
-  public GameController(GameService gameService, AuthService authService) {
-    System.out.println("create GameController");
-    this.gameService = gameService;
-    this.authService = authService;
-  }
 
   /// api/v1/games/{id}
   @GetMapping("/{id}")
@@ -91,6 +85,12 @@ public class GameController {
     return ResponseEntity.ok(new ApiResponse("get_lowest_price_success", data));
   }
 
+  @GetMapping("/{id}/video")
+  public ResponseEntity<ApiResponse> getGameVideo(@PathVariable Long id) {
+    List<GameVideoDto> data = gameService.getGameVideo(id);
+    return ResponseEntity.ok(new ApiResponse("get_game_video_success", data));
+  }
+
   // api/v1/games/prices_by_platform/{gameId}
   @GetMapping("prices_by_platform/{gameId}")
   public ResponseEntity<ApiResponse> getPricesByPlatform(@PathVariable Long gameId) {
@@ -116,5 +116,14 @@ public class GameController {
     LowestPriceLinkDto response = gameService.getLowestPriceLink(gameId);
 
     return ResponseEntity.ok(new ApiResponse("get_lowest_price_link_success", response));
+  }
+
+  //  api/v1/games/autocomplete?keyword=
+  @GetMapping("/autocomplete")
+  public ResponseEntity<ApiResponse> autocomplete(@RequestParam String keyword) {
+    List<String> autocomplete = gameService.autocomplete(keyword);
+    Map<String, Object> data = new HashMap<>();
+    data.put("autocomplete", autocomplete);
+    return ResponseEntity.ok(new ApiResponse("get_result_of_autocomplete", data));
   }
 }

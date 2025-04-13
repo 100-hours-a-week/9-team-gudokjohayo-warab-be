@@ -10,7 +10,6 @@ import store.warab.jwt.JWTUtil;
 
 @RestController
 @RequestMapping("/api/dev")
-// @Profile("dev") // 운영에선 자동 비활성화됨
 public class DevAuthController {
   private final JWTUtil jwtUtil;
 

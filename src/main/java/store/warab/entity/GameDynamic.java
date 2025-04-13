@@ -11,23 +11,39 @@ import lombok.Setter;
 @Table(name = "game_dynamic")
 public class GameDynamic {
 
-  @Id private Long game_id; // game_static의 ID와 동일한 값을 가짐
+  @Id
+  @Column(name = "game_id")
+  private Long gameId; // game_static의 ID와 동일한 값을 가짐
 
   private Integer rating;
-  private Integer active_players;
-  private Integer lowest_platform;
-  private Integer lowest_price;
-  private Integer history_lowest_Price;
-  private LocalDateTime updated_at;
-  private Long total_reviews;
-  private Boolean on_sale;
+
+  @Column(name = "active_players")
+  private Integer activePlayers;
+
+  @Column(name = "lowest_platform")
+  private Integer lowestPlatform;
+
+  @Column(name = "lowest_price")
+  private Integer lowestPrice;
+
+  @Column(name = "history_lowest_price")
+  private Integer historyLowestPrice;
+
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
+
+  @Column(name = "total_reviews")
+  private Long totalReviews;
+
+  @Column(name = "on_sale")
+  private Boolean onSale;
 
   // 🔹 game_static.id를 참조하는 FK 설정
   @OneToOne
   @JoinColumn(name = "game_id", referencedColumnName = "id")
-  private GameStatic game_static;
+  private GameStatic gameStatic;
 
   public GameStatic getGameStatic() {
-    return game_static;
+    return gameStatic;
   }
 }

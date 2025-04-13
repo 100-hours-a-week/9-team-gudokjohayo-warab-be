@@ -1,6 +1,7 @@
 package store.warab.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,26 +9,22 @@ import lombok.Getter;
 import store.warab.entity.GameDynamic;
 import store.warab.entity.GameStatic;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Getter
 public class GameDetailResponseDto {
   private String title;
   private String thumbnail;
   private Integer price;
-  private Integer lowest_price;
+  private Integer lowestPrice;
   private String description;
-  private String release_date;
+  private String releaseDate;
   private String developer;
   private String publisher;
   private Integer rating;
-
-  @JsonProperty("single_play")
   private Boolean singlePlay;
-
-  @JsonProperty("multi_play")
   private Boolean multiPlay;
-
-  private Integer recent_player;
-  private LocalDateTime updated_at;
+  private Integer recentPlayer;
+  private LocalDateTime updatedAt;
   private List<String> categories;
 
   public GameDetailResponseDto(GameStatic gameStatic, GameDynamic gameDynamic) {
@@ -35,7 +32,7 @@ public class GameDetailResponseDto {
     this.thumbnail = gameStatic.getThumbnail();
     this.price = gameStatic.getPrice();
     this.description = gameStatic.getDescription();
-    this.release_date = gameStatic.getRelease_date();
+    this.releaseDate = gameStatic.getReleaseDate();
     this.developer = gameStatic.getDeveloper();
     this.publisher = gameStatic.getPublisher();
     this.categories =
@@ -45,10 +42,10 @@ public class GameDetailResponseDto {
     this.singlePlay = gameStatic.getIsSinglePlay();
     this.multiPlay = gameStatic.getIsMultiplay();
     if (gameDynamic != null) {
-      this.lowest_price = gameDynamic.getLowest_price();
+      this.lowestPrice = gameDynamic.getLowestPrice();
       this.rating = gameDynamic.getRating();
-      this.recent_player = gameDynamic.getActive_players();
-      this.updated_at = gameDynamic.getUpdated_at();
+      this.recentPlayer = gameDynamic.getActivePlayers();
+      this.updatedAt = gameDynamic.getUpdatedAt();
     }
   }
 }
