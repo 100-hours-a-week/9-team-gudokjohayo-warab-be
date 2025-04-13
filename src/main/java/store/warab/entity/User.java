@@ -30,8 +30,8 @@ public class User implements Serializable {
   @Column(nullable = false, unique = true, length = 12)
   private String nickname;
 
-  @Column(name = "discord_link", length = 255)
-  private String discordLink;
+  // @Column(name = "discord_link", length = 255)
+  // private String discordLink;
 
   @ManyToMany
   @JoinTable(
@@ -53,17 +53,19 @@ public class User implements Serializable {
   private LocalDateTime updatedAt;
 
   @Builder
-  public User(String kakaoId, String nickname, String discordLink) {
+  // public User(String kakaoId, String nickname, String discordLink) {
+  public User(String kakaoId, String nickname) {
     this.kakaoId = kakaoId;
     this.nickname = nickname;
-    this.discordLink = discordLink;
+    // this.discordLink = discordLink;
   }
 
   @Builder
-  public User(String kakaoId, String nickname, String discordLink, Set<Category> categories) {
+  // public User(String kakaoId, String nickname, String discordLink, Set<Category> categories) {
+  public User(String kakaoId, String nickname, Set<Category> categories) {
     this.kakaoId = kakaoId;
     this.nickname = nickname;
-    this.discordLink = discordLink;
+    // this.discordLink = discordLink;
     this.categories = categories;
   }
 }

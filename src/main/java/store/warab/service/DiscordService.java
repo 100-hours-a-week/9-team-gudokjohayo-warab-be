@@ -2,6 +2,7 @@ package store.warab.service;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -12,12 +13,14 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 import store.warab.common.exception.BadRequestException;
 import store.warab.common.exception.InternalServerException;
+import store.warab.dto.DiscordInviteResponseDto;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DiscordService {
 
-  private final RestTemplate restTemplate = new RestTemplate();
+  private final RestTemplate restTemplate;
 
   // 초대 코드 추출 메서드
   public String extractInviteCode(String discordLink) {
@@ -39,8 +42,7 @@ public class DiscordService {
     String url = "https://discord.com/api/v10/invites/" + inviteCode;
 
     try {
-      ResponseEntity<String> response =
-          restTemplate.exchange(url, HttpMethod.GET, null, String.class);
+      ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.GET, null, void.class);
       return response.getStatusCode().is2xxSuccessful();
     } catch (HttpClientErrorException.NotFound e) {
       return false; // 초대 코드가 존재하지 않음
@@ -66,8 +68,27 @@ public class DiscordService {
       if (e.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
         throw e;
       }
-      // 왜 굳이 다시 포장해서 throw하는거지?
       throw new BadRequestException("유효하지 않은 디스코드 초대 링크입니다.");
+    }
+  }
+
+  // 디스코드 초대 링크 정보 조회
+  public DiscordInviteResponseDto getDiscordInviteInfo(String inviteCode) {
+    String url = "https://discord.com/api/v10/invites/" + inviteCode + "?with_counts=true";
+
+    try {
+      ResponseEntity<DiscordInviteResponseDto> response =
+          restTemplate.exchange(url, HttpMethod.GET, null, DiscordInviteResponseDto.class);
+
+      if (response.getStatusCode().is2xxSuccessful()) {
+        return response.getBody();
+      }
+      throw new BadRequestException("유효하지 않은 디스코드 초대 링크입니다.");
+    } catch (HttpClientErrorException.NotFound e) {
+      throw new BadRequestException("존재하지 않는 디스코드 초대 링크입니다.");
+    } catch (Exception e) {
+      log.error("Discord API 호출 중 오류 발생", e);
+      throw new InternalServerException("Discord API 호출 중 오류 발생");
     }
   }
 }

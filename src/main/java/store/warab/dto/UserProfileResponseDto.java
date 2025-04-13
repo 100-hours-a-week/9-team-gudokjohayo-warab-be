@@ -1,5 +1,7 @@
 package store.warab.dto;
 
+
+
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Set;
@@ -16,7 +18,6 @@ import store.warab.entity.User;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserProfileResponseDto {
   private String nickname;
-  private String discordLink;
 
   private Set<CategoryResponseDto> categorys;
 
@@ -28,6 +29,6 @@ public class UserProfileResponseDto {
             .map(category -> new CategoryResponseDto(category.getId(), category.getCategoryName()))
             .collect(Collectors.toSet());
 
-    return new UserProfileResponseDto(user.getNickname(), user.getDiscordLink(), categories);
+    return new UserProfileResponseDto(user.getNickname(), categories);
   }
 }

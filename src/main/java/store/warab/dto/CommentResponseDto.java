@@ -10,7 +10,11 @@ import store.warab.entity.User;
 public class CommentResponseDto {
   private Long commentId;
   private Long userId;
-  private String userDiscord;
+
+  //  @JsonProperty("user_discord")
+  //  private String userDiscord;
+
+  @JsonProperty
   private String nickName;
   private String content;
   private LocalDateTime createdAt;
@@ -20,7 +24,7 @@ public class CommentResponseDto {
   public CommentResponseDto(User user, Comment comment) {
     this.commentId = comment.getCommentId();
     this.userId = user.getId();
-    this.userDiscord = user.getDiscordLink();
+    // this.userDiscord = user.getDiscordLink();
     this.nickName = user.getNickname();
     this.content = comment.getContent();
     this.createdAt = comment.getCreatedAt();
