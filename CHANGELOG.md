@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.9.2](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.9.1...v1.9.2) (2025-04-14)
+
+
+### Bug Fixes
+
+* 응답에 맞게 댓글 dto 수정 ([ea8ef9e](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/ea8ef9ed56df74e6ae4b91128d3f36b9ec3b47db))
+
 ## [1.9.1](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.9.0...v1.9.1) (2025-04-14)
 
 
