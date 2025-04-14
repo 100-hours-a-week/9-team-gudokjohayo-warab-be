@@ -149,10 +149,10 @@ public class DiscordLinkService {
   }
 
   public List<UserServerResponseDto> getUserServers(Long userId) {
-      List<DiscordLink> discordLinks = discordLinkRepository.findByUserIdAndDeletedAtIsNull(userId);
-      return discordLinks.stream()
-          .map(UserServerResponseDto::fromEntity)
-          .collect(Collectors.toList());
+    List<DiscordLink> discordLinks = discordLinkRepository.findByUserIdAndDeletedAtIsNull(userId);
+    return discordLinks.stream()
+        .map(UserServerResponseDto::fromEntity)
+        .collect(Collectors.toList());
   }
 
   private String extractInviteCode(String discordUrl) {
