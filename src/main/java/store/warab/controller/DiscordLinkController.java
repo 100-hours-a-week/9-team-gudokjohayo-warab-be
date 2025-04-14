@@ -7,6 +7,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import store.warab.common.exception.BadRequestException;
 import store.warab.common.util.ApiResponse;
 import store.warab.dto.DiscordLinkRequestDto;
 import store.warab.dto.DiscordLinkResponseDto;
@@ -33,6 +34,9 @@ public class DiscordLinkController {
 
       discordLinkService.createDiscordLink(userId, gameId, request);
       return ResponseEntity.ok(new ApiResponse("server_create_success", null));
+    } catch (BadRequestException e) {
+      e.printStackTrace();
+      return ResponseEntity.status(400).body(new ApiResponse("요청 오류: " + e.getMessage(), null));
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.status(500).body(new ApiResponse("서버 오류: " + e.getMessage(), null));
