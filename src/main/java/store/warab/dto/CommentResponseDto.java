@@ -17,7 +17,7 @@ public class CommentResponseDto {
   //  @JsonProperty("user_discord")
   //  private String userDiscord;
 
-  @JsonProperty private String nickName;
+  @JsonProperty private String name;
   private String content;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
@@ -27,7 +27,7 @@ public class CommentResponseDto {
     this.commentId = comment.getCommentId();
     this.userId = user.getId();
     // this.userDiscord = user.getDiscordLink();
-    this.nickName = user.getNickname();
+    this.name = user.getNickname();
     this.content = comment.getContent();
     this.createdAt = comment.getCreatedAt();
     this.updatedAt = comment.getUpdatedAt();
