@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.9.1](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.9.0...v1.9.1) (2025-04-14)
+
+
+### Bug Fixes
+
+* 댓글 응답에 필요한 필드 직렬화 안되던 문제 해결 ([ccbd2dd](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/ccbd2ddb53ba1fe8d762fe10bc9f7635ddd86c23))
+
 # [1.9.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.8.0...v1.9.0) (2025-04-14)
 
 
