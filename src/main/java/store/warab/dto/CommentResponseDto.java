@@ -1,5 +1,6 @@
 package store.warab.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.time.LocalDateTime;
@@ -14,8 +15,7 @@ public class CommentResponseDto {
   //  @JsonProperty("user_discord")
   //  private String userDiscord;
 
-  @JsonProperty
-  private String nickName;
+  @JsonProperty private String nickName;
   private String content;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
