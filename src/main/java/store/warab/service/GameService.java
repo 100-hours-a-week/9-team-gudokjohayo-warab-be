@@ -233,14 +233,38 @@ public class GameService {
                       games.stream()
                           .map(game -> new GameInfoDto(game, game.getGameDynamic()))
                           .collect(Collectors.toList());
-                  result.add(
-                      new MainPageResponseDto(
-                          "🎮 " + category.getCategoryName() + " 게임이에요", gameList));
+
+                  String message =
+                      CATEGORY_MESSAGES.getOrDefault(
+                          category.getId(), "🎮 " + category.getCategoryName() + " 게임이에요");
+                  result.add(new MainPageResponseDto(message, gameList));
                 });
       }
     }
     return result;
   }
+
+  private static final Map<Long, String> CATEGORY_MESSAGES =
+      Map.ofEntries(
+          Map.entry(1L, "심장이 쫄깃해지는 액션을 원한다면, 이 게임은 어떨까요?"),
+          Map.entry(2L, "지갑 걱정 없이 즐길 수 있는 무료 게임이에요"),
+          Map.entry(3L, "머리를 쓰고 싶을 때, 이 전략 게임들을 확인해보세요"),
+          Map.entry(4L, "새로운 세계로의 모험을 떠나고 싶다면 주목하세요"),
+          Map.entry(5L, "당신만의 이야기를 써내려갈 준비가 됐나요?"),
+          Map.entry(6L, "현실에서 벗어나 꿈꿔왔던 세계를 경험해보세요"),
+          Map.entry(7L, "스피드에 취하고 싶다면, 출발은 지금이에요"),
+          Map.entry(8L, "부담 없이 가볍게 즐기기 좋은 게임이에요"),
+          Map.entry(9L, "독창적인 아이디어가 빛나는 인디 게임을 만나보세요"),
+          Map.entry(10L, "수천 명의 플레이어와 함께하는 세계가 기다려요"),
+          Map.entry(11L, "정식 출시 전 미리 경험하는 재미, 얼리 액세스 게임이에요"),
+          Map.entry(12L, "실제 경기장의 열기를 느끼고 싶다면 여기를 주목하세요"),
+          Map.entry(13L, "자극적인 액션과 강렬한 전투를 원한다면 추천해요"),
+          Map.entry(16L, "약한 마음은 피하세요! 긴장감 넘치는 고어 게임이에요"),
+          Map.entry(14L, "플레이를 돕는 똑똑한 기능들, 더 편하게 즐겨보세요"),
+          Map.entry(15L, "상상을 현실로 만들고 싶은 개발자들을 위한 추천작이에요"),
+          Map.entry(17L, "아름다운 예술성이 돋보이는 작품들을 만나보세요"),
+          Map.entry(18L, "재미있게 배울 수 있는 교육용 게임을 찾고 계신가요?"),
+          Map.entry(19L, "미래를 바꾸는 힘, 소프트웨어 교육이 여기 있어요"));
 
   public GameLowestPriceDto getLowestPrice(Long gameId) {
     GameStatic gameStatic =
