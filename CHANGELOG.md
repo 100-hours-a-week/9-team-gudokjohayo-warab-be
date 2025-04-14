@@ -1,5 +1,12 @@
 # Change Log
 
+# [1.10.0](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.9.2...v1.10.0) (2025-04-14)
+
+
+### Features
+
+* 카테고리 별 스타일 문구 적용 ([e468967](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/commit/e468967123e6e2183e30c3f9299a057e36d775f0))
+
 ## [1.9.2](https://github.com/100-hours-a-week/9-team-gudokjohayo-warab-be/compare/v1.9.1...v1.9.2) (2025-04-14)
 
 
