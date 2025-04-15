@@ -1,3 +1,11 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.yaml:snakeyaml:2.2'
+    }
+}
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.3'
@@ -8,17 +16,20 @@ plugins {
     id "io.sentry.jvm.gradle" version "5.3.0"
 }
 
-def secrets = new Properties()
-file("src/main/resources/application-secrets.properties").withInputStream {
-    secrets.load(it)
-}
+import org.yaml.snakeyaml.Yaml
+import java.nio.file.Files
+import java.nio.file.Paths
+
+def secretsYamlFile = file("src/main/resources/application-secrets.yml")
+def yaml = new Yaml()
+def secretsMap = yaml.load(Files.newInputStream(Paths.get(secretsYamlFile.toURI()))) as Map<String, Object>
+def sentryMap = secretsMap.get("sentry") as Map<String, Object>
 
 sentry {
     includeSourceContext = true
-
-    org = secrets.getProperty("sentry.org")
-    projectName = secrets.getProperty("sentry.projectName")
-    authToken = secrets.getProperty("sentry.authToken")
+    org = sentryMap.get("org")
+    projectName = sentryMap.get("projectName")
+    authToken = sentryMap.get("authToken")
 }
 
 // 코드 스타일 검사 도구 설정
@@ -94,11 +105,12 @@ dependencies {
         exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
     }
 
-        // log4j2 사용
+    // log4j2 사용
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+//    implementation 'org.springframework.session:spring-session-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -147,6 +159,10 @@ dependencies {
 
     // sentry
     implementation 'io.sentry:sentry-spring-boot-starter:6.32.0'
+
+    // Jackson
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
 
 }
 

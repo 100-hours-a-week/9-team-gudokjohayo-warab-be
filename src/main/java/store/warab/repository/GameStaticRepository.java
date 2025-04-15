@@ -1,9 +1,9 @@
 package store.warab.repository;
 
-import io.lettuce.core.dynamic.annotation.Param;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import store.warab.entity.GameStatic;
 
@@ -116,4 +116,13 @@ public interface GameStaticRepository extends JpaRepository<GameStatic, Long> {
         """,
       nativeQuery = true)
   List<GameStatic> findTop10ByCategoryId(@Param("categoryId") Long categoryId);
+
+  @Query(
+      value =
+          "SELECT gs.title "
+              + "FROM game_static gs "
+              + "WHERE (COALESCE(:keyword, '') = '' OR LOWER(gs.title) LIKE LOWER(CONCAT('%', :keyword, '%'))) "
+              + "LIMIT 5",
+      nativeQuery = true)
+  List<String> findGameTitlesByKeyword(@Param("keyword") String keyword);
 }

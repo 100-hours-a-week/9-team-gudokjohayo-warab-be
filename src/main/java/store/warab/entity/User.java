@@ -1,6 +1,7 @@
 package store.warab.entity;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +16,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User implements Serializable {
+  private static final long serialVersionUID = 1L;
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
@@ -27,8 +30,8 @@ public class User {
   @Column(nullable = false, unique = true, length = 12)
   private String nickname;
 
-  @Column(name = "discord_link", length = 255)
-  private String discordLink;
+  // @Column(name = "discord_link", length = 255)
+  // private String discordLink;
 
   @ManyToMany
   @JoinTable(
@@ -49,24 +52,20 @@ public class User {
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 
-  // 엔티티가 처음 저장될 때 자동으로 생성일 설정
-  //    @PrePersist
-  //    protected void onCreate() {
-  //        this.createdAt = Timestamp.valueOf(LocalDateTime.now());
-  //    }
-
   @Builder
-  public User(String kakaoId, String nickname, String discordLink) {
+  // public User(String kakaoId, String nickname, String discordLink) {
+  public User(String kakaoId, String nickname) {
     this.kakaoId = kakaoId;
     this.nickname = nickname;
-    this.discordLink = discordLink;
+    // this.discordLink = discordLink;
   }
 
   @Builder
-  public User(String kakaoId, String nickname, String discordLink, Set<Category> categories) {
+  // public User(String kakaoId, String nickname, String discordLink, Set<Category> categories) {
+  public User(String kakaoId, String nickname, Set<Category> categories) {
     this.kakaoId = kakaoId;
     this.nickname = nickname;
-    this.discordLink = discordLink;
+    // this.discordLink = discordLink;
     this.categories = categories;
   }
 }

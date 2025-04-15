@@ -16,9 +16,15 @@ public class GameStatic {
   private Long id;
 
   private String title;
-  private String original_title;
+
+  @Column(name = "original_title")
+  private String originalTitle;
+
   private String description;
-  private String release_date;
+
+  @Column(name = "release_date")
+  private String releaseDate;
+
   private String publisher;
   private String developer;
   private String thumbnail;
@@ -32,25 +38,25 @@ public class GameStatic {
 
   // 🔹 FK를 갖는 쪽(GameDynamic)에서 관계를 설정하므로 mappedBy 사용
   @OneToOne(
-      mappedBy = "game_static",
+      mappedBy = "gameStatic",
       cascade = CascadeType.ALL,
       fetch = FetchType.LAZY,
       optional = true)
-  private GameDynamic game_dynamic;
+  private GameDynamic gameDynamic;
 
   // ✅ 다대다 관계 매핑: 중간 테이블 (game_category) 사용
   @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<GameCategory> game_categories;
+  private List<GameCategory> gameCategories;
 
   public List<GameCategory> getGame_categories() {
-    if (game_categories == null) {
+    if (gameCategories == null) {
       return List.of(); // ✅ Null 방지 (빈 리스트 반환)
     }
-    return game_categories;
+    return gameCategories;
   }
 
   // ✅ getter 추가
   public GameDynamic getGameDynamic() {
-    return game_dynamic;
+    return gameDynamic;
   }
 }

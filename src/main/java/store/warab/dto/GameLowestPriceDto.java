@@ -1,15 +1,18 @@
 package store.warab.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import store.warab.entity.GameDynamic;
 
 @Getter
 @NoArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GameLowestPriceDto {
-  private int history_lowest_price;
+  private int historyLowestPrice;
 
   public GameLowestPriceDto(GameDynamic gameDynamic) {
-    this.history_lowest_price = gameDynamic.getHistory_lowest_Price();
+    this.historyLowestPrice = gameDynamic.getHistoryLowestPrice();
   }
 }
