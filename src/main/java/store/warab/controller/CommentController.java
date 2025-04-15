@@ -47,7 +47,7 @@ public class CommentController {
     return ResponseEntity.ok(new ApiResponse("comment_list inquiry_success", data));
   }
 
-  /** [PUT] api/v1/games/{gameId}/comment/{commentId} 댓글 수정 */
+  /** [PUT] api/v1/games/comment/{commentId} 댓글 수정 */
   @PutMapping("/comment/{commentId}")
   public ResponseEntity<ApiResponse> updateComment(
       @PathVariable Integer commentId,
@@ -64,7 +64,7 @@ public class CommentController {
     return ResponseEntity.ok(new ApiResponse("update_comment_success", data));
   }
 
-  /** [DELETE] api/v1/games/{gameId}/comment/{commentId} 댓글 삭제(softDelete 여부에 따라 분기) */
+  /** [DELETE] api/v1/games/comment/{commentId} 댓글 삭제(softDelete 여부에 따라 분기) */
   @DeleteMapping("/comment/{commentId}")
   public ResponseEntity<ApiResponse> deleteComment(
       @PathVariable Integer commentId,
