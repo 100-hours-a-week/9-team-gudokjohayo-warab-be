@@ -91,11 +91,8 @@ jobs:
                         secret: "${{ secrets.JWT_SECRET_KEY }}"
                       data:
                         redis:
-                          host: "${{ secrets.REDIS_HOST }}"
-                          port: ${{
-                            secrets.REDIS_PORT
-                          }}
-                          password: "${{ secrets.REDIS_PASSWD }}"
+                          host: localhost
+                          port: 6379
                       profiles:
                         active: "${{ inputs.environment }}"
 
