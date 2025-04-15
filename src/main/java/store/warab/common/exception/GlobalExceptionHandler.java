@@ -1,5 +1,6 @@
 package store.warab.common.exception;
 
+import io.sentry.Sentry;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,8 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(BadRequestException.class)
   public ResponseEntity<ErrorResponse> handleBadRequestException(
       BadRequestException e, HttpServletRequest request) {
-    log.error("400 Error: {}", e.getMessage());
+    log.warn("400 Error: {}", e.getMessage());
+    Sentry.captureException(e);
     return buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage(), request.getRequestURI());
   }
 
@@ -48,6 +50,7 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleNotFoundException(
       NotFoundException e, HttpServletRequest request) {
     log.error("404 Error: {}", e.getMessage());
+    Sentry.captureException(e);
     return buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage(), request.getRequestURI());
   }
 
@@ -55,6 +58,7 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleInternalServerException(
       InternalServerException e, HttpServletRequest request) {
     log.error("500 Error: ", e);
+    Sentry.captureException(e);
     return buildErrorResponse(
         HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), request.getRequestURI());
   }
@@ -81,6 +85,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> fallback(Exception ex, HttpServletRequest request) {
     log.error("Unhandled exception", ex);
+    Sentry.captureException(ex);
     return buildErrorResponse(
         HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류", request.getRequestURI());
   }
